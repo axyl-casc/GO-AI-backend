@@ -1,0 +1,27 @@
+{
+  "name": "go-ai-backend",
+  "version": "1.0.0",
+  "description": "Node JS application serving as the backend of a GO playing program",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axyl-casc/GO-AI-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/axyl-casc/GO-AI-backend/issues"
+  },
+  "homepage": "https://github.com/axyl-casc/GO-AI-backend#readme",
+  "dependencies": {
+    "express": "^4.21.2",
+    "jsdom": "^25.0.1",
+    "shell-quote": "^1.8.2",
+    "sqlite3": "^5.1.7",
+    "tenuki": "^0.3.1"
+  }
+}

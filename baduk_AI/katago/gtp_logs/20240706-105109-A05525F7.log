@@ -1,0 +1,56 @@
+2024-07-06 10:51:09-0600: Running with following config:
+allowResignation = true
+lagBuffer = 1.0
+logAllGTPCommunication = true
+logDir = gtp_logs
+logSearchInfo = true
+logSearchInfoForChosenMove = false
+logToStderr = false
+maxTimePondering = 60.0
+maxVisits = 500
+numSearchThreads = 6
+ponderingEnabled = false
+resignConsecTurns = 3
+resignThreshold = -0.90
+rules = tromp-taylor
+searchFactorAfterOnePass = 0.50
+searchFactorAfterTwoPass = 0.25
+searchFactorWhenWinning = 0.40
+searchFactorWhenWinningThreshold = 0.95
+
+2024-07-06 10:51:09-0600: GTP Engine starting...
+2024-07-06 10:51:09-0600: KataGo v1.14.1
+2024-07-06 10:51:09-0600: Using TrompTaylor rules initially, unless GTP/GUI overrides this
+2024-07-06 10:51:09-0600: Using 6 CPU thread(s) for search
+2024-07-06 10:51:09-0600: nnRandSeed0 = 6543196135259256450
+2024-07-06 10:51:09-0600: After dedups: nnModelFile0 = ../weak_network.gz useFP16 auto useNHWC auto
+2024-07-06 10:51:09-0600: Initializing neural net buffer to be size 19 * 19 exactly
+2024-07-06 10:51:10-0600: Found OpenCL Platform 0: NVIDIA CUDA (NVIDIA Corporation) (OpenCL 3.0 CUDA 12.4.131)
+2024-07-06 10:51:10-0600: Found 1 device(s) on platform 0 with type CPU or GPU or Accelerator
+2024-07-06 10:51:10-0600: Found OpenCL Device 0: NVIDIA GeForce GTX 1080 (NVIDIA Corporation) (score 11000300)
+2024-07-06 10:51:10-0600: Creating context for OpenCL Platform: NVIDIA CUDA (NVIDIA Corporation) (OpenCL 3.0 CUDA 12.4.131)
+2024-07-06 10:51:11-0600: Using OpenCL Device 0: NVIDIA GeForce GTX 1080 (NVIDIA Corporation) OpenCL 3.0 CUDA (Extensions: cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_fp64 cl_khr_3d_image_writes cl_khr_byte_addressable_store cl_khr_icd cl_khr_gl_sharing cl_nv_compiler_options cl_nv_device_attribute_query cl_nv_pragma_unroll cl_nv_d3d10_sharing cl_khr_d3d10_sharing cl_nv_d3d11_sharing cl_nv_copy_opts cl_nv_create_buffer cl_khr_int64_base_atomics cl_khr_int64_extended_atomics cl_khr_device_uuid cl_khr_pci_bus_info cl_khr_external_semaphore cl_khr_external_memory cl_khr_external_semaphore_win32 cl_khr_external_memory_win32)
+2024-07-06 10:51:11-0600: No existing tuning parameters found or parseable or valid at: C:\Users\caref\Documents\DUNGEON_v1\godotDungeonServer\igo_ai\baduk_AI\katago/KataGoData/opencltuning/tune11_gpuNVIDIAGeForceGTX1080_x19_y19_c256_mv8.txt
+2024-07-06 10:51:11-0600: Performing autotuning
+2024-07-06 10:51:11-0600: *** On some systems, this may take several minutes, please be patient ***
+2024-07-06 10:51:11-0600: Found OpenCL Platform 0: NVIDIA CUDA (NVIDIA Corporation) (OpenCL 3.0 CUDA 12.4.131)
+2024-07-06 10:51:11-0600: Found 1 device(s) on platform 0 with type CPU or GPU or Accelerator
+2024-07-06 10:51:11-0600: Found OpenCL Device 0: NVIDIA GeForce GTX 1080 (NVIDIA Corporation) (score 11000300)
+2024-07-06 10:51:11-0600: Creating context for OpenCL Platform: NVIDIA CUDA (NVIDIA Corporation) (OpenCL 3.0 CUDA 12.4.131)
+2024-07-06 10:51:11-0600: Using OpenCL Device 0: NVIDIA GeForce GTX 1080 (NVIDIA Corporation) OpenCL 3.0 CUDA (Extensions: cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_fp64 cl_khr_3d_image_writes cl_khr_byte_addressable_store cl_khr_icd cl_khr_gl_sharing cl_nv_compiler_options cl_nv_device_attribute_query cl_nv_pragma_unroll cl_nv_d3d10_sharing cl_khr_d3d10_sharing cl_nv_d3d11_sharing cl_nv_copy_opts cl_nv_create_buffer cl_khr_int64_base_atomics cl_khr_int64_extended_atomics cl_khr_device_uuid cl_khr_pci_bus_info cl_khr_external_semaphore cl_khr_external_memory cl_khr_external_semaphore_win32 cl_khr_external_memory_win32)
+2024-07-06 10:51:11-0600: Dummy tuning thread starting
+2024-07-06 10:51:11-0600: Creating context for OpenCL Platform: NVIDIA CUDA (NVIDIA Corporation) (OpenCL 3.0 CUDA 12.4.131)
+2024-07-06 10:51:11-0600: Using OpenCL Device 0: NVIDIA GeForce GTX 1080 (NVIDIA Corporation) OpenCL 3.0 CUDA (Extensions: cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_fp64 cl_khr_3d_image_writes cl_khr_byte_addressable_store cl_khr_icd cl_khr_gl_sharing cl_nv_compiler_options cl_nv_device_attribute_query cl_nv_pragma_unroll cl_nv_d3d10_sharing cl_khr_d3d10_sharing cl_nv_d3d11_sharing cl_nv_copy_opts cl_nv_create_buffer cl_khr_int64_base_atomics cl_khr_int64_extended_atomics cl_khr_device_uuid cl_khr_pci_bus_info cl_khr_external_semaphore cl_khr_external_memory cl_khr_external_semaphore_win32 cl_khr_external_memory_win32)
+2024-07-06 10:51:57-0600: Tuning dummy thread numeric total: 4.70364e+08
+2024-07-06 10:51:57-0600: Done tuning, saved results to C:\Users\caref\Documents\DUNGEON_v1\godotDungeonServer\igo_ai\baduk_AI\katago/KataGoData/opencltuning/tune11_gpuNVIDIAGeForceGTX1080_x19_y19_c256_mv8.txt
+2024-07-06 10:51:58-0600: OpenCL backend thread 0: Model version 8
+2024-07-06 10:51:58-0600: OpenCL backend thread 0: Model name: g170-b20c256x2-s5303129600-d1228401921
+2024-07-06 10:52:00-0600: OpenCL backend thread 0: FP16Storage false FP16Compute false FP16TensorCores false FP16TensorCoresFor1x1 false
+2024-07-06 10:52:00-0600: Loaded neural net with nnXLen 19 nnYLen 19
+2024-07-06 10:52:00-0600: Initializing board with boardXSize 19 boardYSize 19
+2024-07-06 10:52:00-0600: Loaded config C:\Users\caref\Documents\DUNGEON_v1\godotDungeonServer\igo_ai\baduk_AI\katago/default_gtp.cfg
+2024-07-06 10:52:00-0600: Loaded model ../weak_network.gz
+2024-07-06 10:52:00-0600: Model name: g170-b20c256x2-s5303129600-d1228401921
+2024-07-06 10:52:00-0600: GTP ready, beginning main protocol loop
+2024-07-06 10:54:21-0600: Controller: komi 5
+2024-07-06 10:54:21-0600: = 
