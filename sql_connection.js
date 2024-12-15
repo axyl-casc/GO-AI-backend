@@ -157,6 +157,7 @@ class SqlConnection {
         max: max
       };
     }
+
     async getRank(path, boardsize) {
       const sql = `SELECT level_${boardsize} FROM AI WHERE path="${path}";`;
       const result = await this._send(sql);
@@ -182,7 +183,7 @@ class SqlConnection {
           console.error("Error updating game status:", error);
           return 0;
       }
-  }
+  }// 994
 
   async getIsAnchor(path) {
       const sql = `SELECT is_anchor FROM AI WHERE path="${path}";`;
@@ -191,13 +192,56 @@ class SqlConnection {
   }
 
   async changeRank(path, boardsize, diff) {
-      const isAnchor = await this.getIsAnchor(path);
-      if (parseInt(isAnchor, 10) === 1) {
-          return 0;
-      }
-      const sql = `UPDATE AI SET level_${boardsize}=level_${boardsize}+${diff} WHERE path="${path}";`;
-      return await this._send(sql, true);
-  }
+    const isAnchor = await this.getIsAnchor(path);
+    if (parseInt(isAnchor, 10) === 1) {
+        return 0;
+    }
+
+    // Update season_games and season_wins based on diff
+    const incrementGameSql = `
+        UPDATE AI 
+        SET 
+            season_games_${boardsize} = season_games_${boardsize} + 1,
+            season_wins_${boardsize} = season_wins_${boardsize} + CASE WHEN ${diff} > 0 THEN ${diff} ELSE 0 END
+        WHERE path="${path}";
+    `;
+    await this._send(incrementGameSql, true);
+
+    // Check if season_games reaches 10
+    const getSeasonStatsSql = `
+        SELECT season_games_${boardsize} AS season_games, 
+               season_wins_${boardsize} AS season_wins, 
+               level_${boardsize} AS current_level
+        FROM AI
+        WHERE path="${path}";
+    `;
+    const stats = await this._send(getSeasonStatsSql, false);
+    const { season_games, season_wins, current_level } = stats[0];
+
+    if (season_games >= 10) {
+        // Reset season_games and season_wins, and adjust level based on season_wins
+        const resetSql = `
+          UPDATE AI 
+          SET 
+              season_games_${boardsize} = 0,
+              season_wins_${boardsize} = 0,
+              level_${boardsize} = CASE 
+                  WHEN ${season_wins} >= 9 THEN level_${boardsize} + 2 
+                  WHEN ${season_wins} > 7 THEN level_${boardsize} + 1 
+                  WHEN ${season_wins} < 3 AND ${season_wins} > 1 THEN level_${boardsize} - 1
+                  WHEN ${season_wins} <= 1 THEN level_${boardsize} - 2
+                  ELSE level_${boardsize}
+              END
+          WHERE path="${path}";
+        `;
+        await this._send(resetSql, true);
+    }
+
+    // Return updated level for verification or debugging
+    return current_level;
+}
+
+
 
   async getNearestLevel(kyudan, boardsize) {
       const level = convertKyuDanToLevel(kyudan);

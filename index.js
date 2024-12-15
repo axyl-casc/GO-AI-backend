@@ -112,6 +112,12 @@ function sortTable(n) {
     html += `
             </tbody>
         </table>
+    
+    <script>
+        sortTable(1);
+        sortTable(1);
+    </script>
+
     </body>
     </html>
     `;
