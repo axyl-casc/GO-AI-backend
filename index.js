@@ -1,5 +1,6 @@
 const { SqlConnection } = require('./sql_connection');
 const { convertKyuDanToLevel, convertLevelToKyuDan } = require('./rank_conversion');
+const path = require('path');
 
 
 const express = require('express');
@@ -151,6 +152,9 @@ app.get('/ai-table', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 module.exports = generateAiTable;
 
