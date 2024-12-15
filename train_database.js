@@ -4,7 +4,7 @@ const { playGame } = require('./GoAIPlay');
 const { convertKyuDanToLevel, convertLevelToKyuDan } = require('./rank_conversion');
 const {playRatedGame} = require('./rated_game');
 
-
+const MAX_HANDICAP_COMP = 6
 
 
 function getDist(a, b) {
@@ -38,7 +38,7 @@ function sleep(ms) {
                     AI2 = await sql.getRandomAI()
                 }
                 accepted_dist++;
-                accepted_dist = (accepted_dist % 3);
+                accepted_dist = (accepted_dist % MAX_HANDICAP_COMP);
         
             }
         

@@ -23,24 +23,30 @@ class GoAIInstance {
 
   setupListeners() {
     this.rl.on('line', (line) => {
-      // If we're currently collecting lines for a request, accumulate them
       if (this.currentRequest) {
         this.currentRequest.lines.push(line);
 
+        // Special handling for "final_score" command
+        if (line.includes('final_score')) {
+          const { resolve } = this.currentRequest;
+          const allLines = this.currentRequest.lines;
+          this.currentRequest = null;
+
+          resolve(allLines);
+
+          // Exit process after resolving the current request
+          this.terminate();
+          return;
+        }
+
         // Check termination condition:
-        // For this example, let's say we terminate on an empty line.
-        // Adjust this logic based on your protocol.
         if (line.trim() === '') {
-          // We've reached a termination condition
+          // Termination based on empty line
           const { resolve } = this.currentRequest;
           const allLines = this.currentRequest.lines;
           this.currentRequest = null;
           resolve(allLines);
         }
-      } else {
-        // If we have no active request collecting lines, this line might be stray or
-        // we could wait for the next sendCommand call to handle it.
-        // Usually, this shouldn't happen if we structure requests well.
       }
     });
 
@@ -71,6 +77,15 @@ class GoAIInstance {
   }
 
   /**
+   * Terminates the child process and cleans up resources.
+   */
+  terminate() {
+    this.rl.close();
+    this.child.stdin.end();
+    this.child.kill();
+  }
+
+  /**
    * Sends a command and returns a promise that resolves with all lines until termination.
    *
    * @param {string} command - Command to send
@@ -81,18 +96,15 @@ class GoAIInstance {
     return new Promise((resolve, reject) => {
       const request = { resolve, reject, lines: [] };
 
-      // If there's a request in progress, queue this one
       if (this.currentRequest) {
         this.pendingRequests.push(request);
       } else {
-        // Start collecting lines immediately
         this.currentRequest = request;
       }
 
       this.child.stdin.write(command + '\n');
 
       const timer = setTimeout(() => {
-        // If timed out, remove this request from currentRequest or pending queue
         if (this.currentRequest === request) {
           this.currentRequest = null;
         } else {
@@ -104,13 +116,11 @@ class GoAIInstance {
         reject(new Error('Timeout waiting for response'));
       }, timeout);
 
-      // Wrap resolve to clear timeout and possibly start the next request in the queue
       const originalResolve = request.resolve;
       request.resolve = (lines) => {
         clearTimeout(timer);
         originalResolve(lines);
 
-        // If there are pending requests, start the next one now
         if (this.pendingRequests.length > 0) {
           this.currentRequest = this.pendingRequests.shift();
         }

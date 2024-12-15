@@ -116,6 +116,11 @@ function sortTable(n) {
     <script>
         sortTable(1);
         sortTable(1);
+        // Timer to refresh the page every 10 minutes
+setTimeout(() => {
+    location.reload(); // Reload the webpage
+}, 600000); // 600,000 milliseconds = 10 minutes
+
     </script>
 
     </body>
