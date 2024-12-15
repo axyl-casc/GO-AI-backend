@@ -2,7 +2,7 @@
 const { GoAIInstance } = require('./ExternalAI');
 const { Game } = require('tenuki');
 
-async function playGame(team1_paths, team2_paths, handicap_stone_count, komi) {
+async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, boardsize) {
     console.log(`New game started\n\n${team1_paths}\n\nVERSUS\n\n${team2_paths}\n`);
     const team1 = [];
     const team2 = [];
@@ -19,7 +19,6 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi) {
         team2.push(new GoAIInstance(exePath, args));
     }
 
-    const boardsize = 13;
     const colors = ['black', 'white'];
     let turn_counter = 0;
 
@@ -124,6 +123,11 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi) {
         let game_result = countResults(scores);
         console.log(game_result);
         let certainty = 0;
+
+        // tell AI to exit
+        for (let ai of allAIs) {
+            await ai.sendCommand(`quit`);
+        }
 
         // for a tie breaker, assume server is correct
         if(game_result.bCount == game_result.wCount){

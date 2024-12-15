@@ -1,4 +1,6 @@
 const { SqlConnection } = require('./sql_connection');
+const { trainingGame } = require('./train_database');
+
 const { convertKyuDanToLevel, convertLevelToKyuDan } = require('./rank_conversion');
 const path = require('path');
 
@@ -148,12 +150,31 @@ app.get('/ai-table', async (req, res) => {
     }
 });
 
+
+// for training games in the database
+async function task() {
+    try {
+        console.log(`Training game started at ${new Date().toISOString()}`);
+        await trainingGame(sql, 13); // Run training game
+        console.log(`Training game completed at ${new Date().toISOString()}`);
+    } catch (error) {
+        console.error(`Error during training game: ${error.message}`);
+    } finally {
+        // Schedule the next execution 1 minute after the current one completes
+        setTimeout(task, 60 * 1000);
+    }
+}
+
+// Start the first task
+task();
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 
 module.exports = generateAiTable;

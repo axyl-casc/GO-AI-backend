@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go Baduk with Tenuki</title>
-    <!-- Tenuki CSS -->
-    <link rel="stylesheet" href="tenuki.min.css">
-    <!-- Tailwind CSS CDN -->
+    <title>Go Baduk with WGo.js</title>
+    <!-- Tailwind CSS -->
     <script src="./js/tailwind.js"></script>
-    <!-- Optional: Custom Tailwind Configuration for Go Theme -->
+    <!-- Custom Tailwind Configuration -->
     <script>
         tailwind.config = {
             theme: {
@@ -24,11 +22,10 @@
                     },
                 },
             },
-        }
+        };
     </script>
-    <!-- Tenuki JS -->
-    <script src="tenuki.min.js" defer></script>
 
+    <link rel="stylesheet" type="text/css" href="extensions/tsumego/tsumego.css">
 </head>
 <body class="bg-badukWood min-h-screen font-sans">
     <!-- Header -->
@@ -65,20 +62,9 @@
 
                     <!-- Selectors -->
                     <div id="selectors" class="space-y-4">
-                        <div>
-                            <label for="level" class="block text-gray-700 mb-2">Select Level:</label>
-                            <select id="level" class="w-full p-2 border border-gray-300 rounded">
-                                <option value="" disabled selected>Select your level</option>
-                                <option value="30k">30k</option>
-                                <option value="20k">20k</option>
-                                <option value="10k">10k</option>
-                                <option value="5k">5k</option>
-                                <option value="1k">1k</option>
-                                <option value="1d">1d</option>
-                                <option value="2d">2d</option>
-                                <option value="3d">3d</option>
-                                <option value="4d">4d</option>
-                            </select>
+                        <div id="rankSelector" class="hidden">
+                            <label for="playerRank" class="block text-gray-700 mb-2">Enter Your Rank (30k to 1d):</label>
+                            <input type="text" id="playerRank" class="w-full p-2 border border-gray-300 rounded" placeholder="e.g., 10k">
                         </div>
                         <div>
                             <label for="boardSize" class="block text-gray-700 mb-2">Select Board Size:</label>
@@ -90,14 +76,14 @@
                                 <option value="19">19x19</option>
                             </select>
                         </div>
-                        <button id="startGame" class="bg-badukAccent text-white px-4 py-2 rounded hover:bg-yellow-500">
+                        <button id="startGame" class="bg-badukAccent text-white px-4 py-2 rounded hover:bg-yellow-500 hidden">
                             Start Game
                         </button>
                     </div>
 
-                    <!-- Tenuki Board -->
-                    <div id="tenukiBoard" class="mt-6 hidden">
-                        <div class="tenuki-board" data-include-coordinates="true"></div>
+                    <!-- WGo.js Board -->
+                    <div id="wgoBoard" class="mt-6 hidden">
+                        <div id="boardContainer" class="mx-auto" style="width: 90%; height: 90%;"></div>
                         <div class="mt-4 text-center">
                             <button id="newGame" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
                                 New Game
@@ -105,52 +91,58 @@
                         </div>
                     </div>
                 </div>
+
+<!-- Puzzles Tab -->
+<div id="puzzles" class="tab-content hidden w-full">
+    <h1 class="text-2xl font-bold mb-6 text-badukBlack w-full text-center">Puzzles</h1>
+    <div id="tsumego_wrapper" 
+         class="mx-auto" 
+         style="width: 40%; background-color: #f9f9f9; padding: 10px; border-radius: 10px; text-align: center;">
+        Your browser doesn't support WGo Player. Use a modern browser like IE9, Google Chrome, or Mozilla Firefox.
+    </div>
+</div>
+
+                <!-- Learn Tab -->
+                <div id="learn" class="tab-content hidden">
+                    <h1 class="text-2xl font-bold mb-6 text-badukBlack">Learn</h1>
+                    <p>Coming soon: Tutorials and resources to learn Go!</p>
+                </div>
             </div>
         </div>
     </main>
 
     <!-- Script -->
+	<script type="text/javascript" src="wgo/wgo.js"></script>
+	<script type="text/javascript" src="wgo/kifu.js"></script>
+	<script type="text/javascript" src="wgo/sgfparser.js"></script>
+	<script type="text/javascript" src="wgo/player.js"></script>
+	<script type="text/javascript" src="wgo/basicplayer.js"></script>
+	<script type="text/javascript" src="wgo/basicplayer.component.js"></script>
+	<script type="text/javascript" src="wgo/basicplayer.infobox.js"></script>
+	<script type="text/javascript" src="wgo/basicplayer.commentbox.js"></script>
+	<script type="text/javascript" src="wgo/basicplayer.control.js"></script>
+	<script type="text/javascript" src="wgo/player.editable.js"></script>
+	<script type="text/javascript" src="wgo/scoremode.js"></script>
+	<script type="text/javascript" src="wgo/player.permalink.js"></script>
+
+    <script src="./extensions/tsumego/tsumego.js"></script>
+    <script src="js/ranks.js"></script>
+    <script src="js/tsumego.js"></script>
+    <script src="js/main.js"></script>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const selectors = document.getElementById('selectors');
-            const tenukiBoardDiv = document.getElementById('tenukiBoard');
-            const startGameButton = document.getElementById('startGame');
-            const newGameButton = document.getElementById('newGame');
-            const boardElement = document.querySelector('.tenuki-board');
-            let game = null;
+        window.addEventListener('resize', () => {
+    console.log('Page fully loaded, triggering resize.');
+    
+    // Optional: Force reflow/repaint to ensure elements are laid out correctly
+    const boardElement = document.getElementById('tsumego_wrapper');
+    if (boardElement) {
+        boardElement.style.display = 'block'; // Ensure it's visible
+        boardElement.offsetHeight; // Trigger reflow
+    }
+});
 
-            // Start Game
-            startGameButton.addEventListener('click', () => {
-                const level = document.getElementById('level').value;
-                const boardSize = parseInt(document.getElementById('boardSize').value, 10);
-
-                if (!level || !boardSize) {
-                    alert('Please select both level and board size.');
-                    return;
-                }
-
-                // Hide selectors and show Tenuki board
-                selectors.classList.add('hidden');
-                tenukiBoardDiv.classList.remove('hidden');
-
-                // Initialize Tenuki Game
-                game = new tenuki.Game({
-                    element: boardElement,
-                    boardSize: boardSize
-                });
-            });
-
-            // New Game
-            newGameButton.addEventListener('click', () => {
-                // Reset game and show selectors
-                if (game) {
-                    boardElement.innerHTML = ''; // Clear the board
-                    game = null; // Reset the game instance
-                }
-                tenukiBoardDiv.classList.add('hidden');
-                selectors.classList.remove('hidden');
-            });
-        });
     </script>
+
 </body>
 </html>

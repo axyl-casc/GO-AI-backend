@@ -34,11 +34,11 @@ async function playRatedGame(ai1_path, ai2_path, boardsize, sql) {
     if (rank1 > rank2) { 
         // team1 is stronger, so team2 plays as Black and team1 as White
         console.log(`Black: ${team2_paths}, White: ${team1_paths}`);
-        ({ winner, certainty } = await playGame(team2_paths, team1_paths, rank_diff, komi));
+        ({ winner, certainty } = await playGame(team2_paths, team1_paths, rank_diff, komi, boardsize));
     } else if (rank1 <= rank2) {
         // team2 is stronger, so team1 plays as Black and team2 as White
         console.log(`Black: ${team1_paths}, White: ${team2_paths}`);
-        ({ winner, certainty } = await playGame(team1_paths, team2_paths, rank_diff, komi));
+        ({ winner, certainty } = await playGame(team1_paths, team2_paths, rank_diff, komi, boardsize));
     }
     
     

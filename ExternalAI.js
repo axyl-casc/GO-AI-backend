@@ -26,19 +26,6 @@ class GoAIInstance {
       if (this.currentRequest) {
         this.currentRequest.lines.push(line);
 
-        // Special handling for "final_score" command
-        if (line.includes('final_score')) {
-          const { resolve } = this.currentRequest;
-          const allLines = this.currentRequest.lines;
-          this.currentRequest = null;
-
-          resolve(allLines);
-
-          // Exit process after resolving the current request
-          this.terminate();
-          return;
-        }
-
         // Check termination condition:
         if (line.trim() === '') {
           // Termination based on empty line
