@@ -42,16 +42,26 @@ class SqlConnection {
       this.reader = new SQLiteReader(fullPath);
     }
   
-    async _send(sql, commit = false) {
+    async _send(sql, options = { single: false }) {
       if (this.debug) {
-        console.log(sql);
+          console.log(sql);
       }
+  
       const result = await this.reader.query(sql);
+  
       if (this.debug) {
-        console.log(result);
+          console.log(result);
       }
-      return result;
-    }
+  
+      if (options.single) {
+          // Return the first row as a single object
+          return Array.isArray(result) && result.length > 0 ? result[0] : null;
+      }
+  
+      // Return all rows as an array
+      return Array.isArray(result) ? result : [result];
+  }
+  
   
     async getCount() {
       const sql = "SELECT COUNT(level_19) FROM AI";
@@ -90,7 +100,7 @@ class SqlConnection {
     }
   
     async getBetween(boardsize, kyudan) {
-      const rank = this.convertKyuDanToLevel(kyudan);
+      const rank = convertKyuDanToLevel(kyudan);
       const sql = `
         WITH ExactMatch AS (
           SELECT *
@@ -147,11 +157,66 @@ class SqlConnection {
         max: max
       };
     }
-  
-    convertKyuDanToLevel(kyudan) {
-      // Conversion logic placeholder
-      return kyudan * 10; // Example conversion logic
-    }
+    async getRank(path, boardsize) {
+      const sql = `SELECT level_${boardsize} FROM AI WHERE path="${path}";`;
+      const result = await this._send(sql);
+      return result[0][`level_${boardsize}`];
+  }
+
+  async getEngines(engineName) {
+      const sql = `SELECT path FROM AI WHERE engine="${engineName}";`;
+      return await this._send(sql);
+  }
+
+  async gamePlayed(path, won) {
+      try {
+          let sql = `UPDATE AI SET games_played=games_played+1 WHERE path="${path}";`;
+          await this._send(sql, true);
+
+          if (won) {
+              sql = `UPDATE AI SET games_won=games_won+1 WHERE path="${path}";`;
+              await this.sqlConnection._send(sql, true);
+          }
+          return 1;
+      } catch (error) {
+          console.error("Error updating game status:", error);
+          return 0;
+      }
+  }
+
+  async getIsAnchor(path) {
+      const sql = `SELECT is_anchor FROM AI WHERE path="${path}";`;
+      const result = await this._send(sql);
+      return result[0].is_anchor;
+  }
+
+  async changeRank(path, boardsize, diff) {
+      const isAnchor = await this.getIsAnchor(path);
+      if (parseInt(isAnchor, 10) === 1) {
+          return 0;
+      }
+      const sql = `UPDATE AI SET level_${boardsize}=level_${boardsize}+${diff} WHERE path="${path}";`;
+      return await this._send(sql, true);
+  }
+
+  async getNearestLevel(kyudan, boardsize) {
+      const level = convertKyuDanToLevel(kyudan);
+      const sql = `
+          SELECT path, level_${boardsize} 
+          FROM AI 
+          ORDER BY ABS(level_${boardsize} - ${level}) 
+          LIMIT 1;
+      `;
+      const result = await this._send(sql);
+      return result[0];
+  }
+
+  async getRandomAI() {
+      const sql = `SELECT path FROM AI;`;
+      const paths = await this._send(sql);
+      const randomIndex = Math.floor(Math.random() * paths.length);
+      return paths[randomIndex].path;
+  }
   
     close() {
       this.reader.close();
