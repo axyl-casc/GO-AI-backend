@@ -13,7 +13,7 @@ async function trainingGame(sql, boardsize) {
         let AI2 = await sql.getRandomAI();
 
         let validPair = false;
-        let acceptedDist = 0;
+        let acceptedDist = 3;
 
         while (!validPair) {
             let rank1 = await sql.getRank(AI1, boardsize);

@@ -242,4 +242,4 @@ function formatToGTP(x, y, boardSize) {
     return `${column}${row}`;
 }
 
-module.exports = { playGame };
+module.exports = { playGame, formatToGTP, scanBoardStones, parseCoordinates, parseCommand, cleanMove };

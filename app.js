@@ -1,14 +1,20 @@
 const { SqlConnection } = require('./sql_connection');
 const { trainingGame } = require('./train_database');
 const { generateTsumego } = require('./tsumego_gen.js');
+const { GoAIInstance } = require('./ExternalAI');
+const {parseCommand} = require('./GoAIPlay')
 
 const { convertKyuDanToLevel, convertLevelToKyuDan } = require('./rank_conversion');
 const path = require('path');
+const { v4: uuidv4 } = require("uuid"); // For generating unique game IDs
 
 
 const express = require('express');
 
 const sql = new SqlConnection("./AI_Data.db")
+
+const aiInstances = {};
+
 
 const generateAiTable = async (dbConnection, boardSize) => {
     const sql = `SELECT path, level_${boardSize} FROM AI;`;
@@ -185,7 +191,7 @@ async function task() {
         console.error(`Error during training game: ${error.message}`);
     } finally {
         // Schedule the next execution 1 minute after the current one completes
-        setTimeout(task, 60 * 1000);
+        setTimeout(task, 1000);
     }
 }
 
@@ -193,6 +199,68 @@ async function task() {
 task();
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+
+// AI move creation / game creation
+
+// Endpoint to create a new game
+app.get("/create-game", (req, res) => {
+    const { exePath = "./baduk_AI/gnugo/gnugo.exe --mode gtp --level 0", komi = 6.5, handicap = 0, rank = "30k" } =
+      req.query;
+  
+    if (isNaN(komi) || isNaN(handicap)) {
+      komi = 6.5
+      handicap = 0
+    }
+  
+    const gameId = uuidv4();
+
+    const [exe, args] = parseCommand(exePath)
+  
+    const aiInstance = new GoAIInstance(exe, args);
+    aiInstances[gameId] = {
+      ai: aiInstance,
+      komi: parseFloat(komi),
+      handicap: parseInt(handicap),
+      rank,
+      ai_color: "white"
+    };
+  
+    res.json({ gameId });
+  });
+  
+// Endpoint to make a move
+app.get("/move", async (req, res) => {
+    const { id, move } = req.query;
+    console.log("?GOT MOVE REQUEST:")
+    console.log(id)
+    console.log(move)
+    if (!id || !move) {
+
+      return res.status(400).json({ error: "Game ID and move are required." });
+    }
+  
+    const game = aiInstances[id];
+    if (!game) {
+      return res.status(404).json({ error: "Game not found." });
+    }
+  
+    try {
+        console.log("Playing the move B")
+      // Send the player's move to the AI
+      let response = await game.ai.sendCommand(`play black ${move}`);
+  
+      // Request the AI to generate its move
+      console.log("Requestiing the move")
+      response = await game.ai.sendCommand(`genmove ${game.ai_color}`);
+  
+      res.json({ aiResponse: response.join("\n") });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+  
 
 
 // Start the server
