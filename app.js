@@ -1,5 +1,6 @@
 const { SqlConnection } = require('./sql_connection');
 const { trainingGame } = require('./train_database');
+const { generateTsumego } = require('./tsumego_gen.js');
 
 const { convertKyuDanToLevel, convertLevelToKyuDan } = require('./rank_conversion');
 const path = require('path');
@@ -148,6 +149,29 @@ app.get('/ai-table', async (req, res) => {
     } catch (error) {
         res.status(500).send("Error generating AI table.<br>"+error);
     }
+});
+
+
+
+// get requests
+
+// for tsumego puzzles
+app.get('/get-tsumego', (req, res) => {
+    // Extract query parameters
+    const { difficulty, type } = req.query;
+
+    // Validate the parameters
+    if (!difficulty || !type) {
+        return res.status(400).json({ error: 'Missing required parameters: difficulty and type' });
+    }
+
+
+    // Example JSON response
+    const response = {
+        puzzle: generateTsumego(difficulty, type)
+    };
+
+    res.status(200).json(response);
 });
 
 

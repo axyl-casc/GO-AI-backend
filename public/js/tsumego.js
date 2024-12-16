@@ -1,31 +1,39 @@
-document.addEventListener('DOMContentLoaded', () => {
-    var tsumego = new WGo.Tsumego(document.getElementById("tsumego_wrapper"), {
-        sgf: `(;GM[1]FF[4]CA[UTF-8]AP[CGoban:3]ST[2]VW[ao:sg]
-        RU[Japanese]SZ[19]KM[0.00]
-        PW[White]PB[Black]AW[qa][qb][qc][qd][qe][re][se]AB[ra][rb][rc][rd][sd]
-        (;B[sb]LB[sa:1][sc:2]C[Very Good! Now black has two eyes, marked by 1 and 2. ]TE[1])
-        (;B[sa]
-        (;W[sb]SQ[sb][sc]C[Incorrect, keep playing to see why. Black only has space to create 1 eye now. ]
-        ;B[sc]
-        ;W[sb])
-        (;W[sc]
-        ;B[sb]
-        ;W[sc]))
-        (;B[sc]
-        (;W[sb]SQ[sa][sb]C[Incorrect, keep playing to see why. Black only has space to create 1 eye now. ]
-        ;B[sa]
-        ;W[sb])
-        (;W[sa]
-        ;B[sb]
-        ;W[sa])))`,
-        debug: false, /* Set to false to hide solution */
-        answerDelay: 500,
-        displayHintButton: false
-    });
-    
-    
-    // Enable coordinates display
-    tsumego.setCoordinates(true);
+function getRandomElement(array) {
+    const randomIndex = Math.floor(Math.random() * array.length);
+    return array[randomIndex];
+}
 
+document.addEventListener('DOMContentLoaded', async () => {
+    // Clear the tsumego wrapper content
+    document.getElementById("tsumego_wrapper").innerHTML = "";
+
+    // Get rank and type
+    let rank = getRank();
+    let type = "any";
+
+    try {
+        // Fetch tsumego data from the server
+        const response = await fetch(`http://10.0.0.228:3001/get-tsumego?difficulty=${rank}&type=${type}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json(); // Assuming the server sends a JSON object
+
+        // Initialize the Tsumego with the response data
+        var tsumego = new WGo.Tsumego(document.getElementById("tsumego_wrapper"), {
+            sgf: data.puzzle,
+            debug: false, // Set to false to hide solution
+            answerDelay: 500,
+            displayHintButton: false
+        });
+
+        // Enable coordinates display
+        tsumego.setCoordinates(true);
+
+    } catch (error) {
+        console.error("Failed to fetch tsumego data:", error);
+        document.getElementById("tsumego_wrapper").innerText = "Failed to load tsumego data.";
+    }
 });
-
