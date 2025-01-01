@@ -4,3 +4,4 @@
 ./node_modules
 ./gtp_logs
 *.log
+/node_modules

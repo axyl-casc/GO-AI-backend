@@ -1,7 +1,7 @@
 const { SqlConnection } = require('./sql_connection');
 const { trainingGame } = require('./train_database');
 const { generateTsumego } = require('./tsumego_gen.js');
-const { GoAIInstance } = require('./ExternalAI');
+const { PlayerAI } = require('./playerAI');
 const {parseCommand} = require('./GoAIPlay')
 
 const { convertKyuDanToLevel, convertLevelToKyuDan } = require('./rank_conversion');
@@ -14,6 +14,9 @@ const express = require('express');
 const sql = new SqlConnection("./AI_Data.db")
 
 const aiInstances = {};
+
+
+const AI_game_delay_seconds = 5
 
 
 const generateAiTable = async (dbConnection, boardSize) => {
@@ -185,46 +188,62 @@ app.get('/get-tsumego', (req, res) => {
 async function task() {
     try {
         console.log(`Training game started at ${new Date().toISOString()}`);
+        await trainingGame(sql, 7); // Run training game
+        await trainingGame(sql, 9); // Run training game
         await trainingGame(sql, 13); // Run training game
         console.log(`Training game completed at ${new Date().toISOString()}`);
     } catch (error) {
         console.error(`Error during training game: ${error.message}`);
     } finally {
         // Schedule the next execution 1 minute after the current one completes
-        setTimeout(task, 1000);
+        setTimeout(task, AI_game_delay_seconds * 1000);
     }
 }
-
-// Start the first task
-task();
-
+async function cleanup() {
+    try {
+        for (let key in aiInstances) {
+            const oneHour = 60 * 60 * 1000; // One hour in milliseconds
+            const now = new Date();
+        
+            const aiInstance = aiInstances[key]; // Access the AI instance
+        
+            // Check if the instance's last move time is older than an hour
+            if (now - aiInstance.ai.last_move_time > oneHour) {
+                console.log(`Terminating AI instance: ${key}`);
+                await aiInstance.ai.terminate(); // Call terminate method
+            }
+        }
+        
+    } catch (error) {
+        console.error(`Error during training game: ${error.message}`);
+    } finally {
+        setTimeout(cleanup, 60 * 1000);
+    }
+}
 app.use(express.static(path.join(__dirname, 'public')));
-
-
 
 // AI move creation / game creation
 
 // Endpoint to create a new game
-app.get("/create-game", (req, res) => {
-    const { exePath = "./baduk_AI/gnugo/gnugo.exe --mode gtp --level 0", komi = 6.5, handicap = 0, rank = "30k" } =
+app.get("/create-game", async (req, res) => {
+    let { komi = 6.5, handicap = 0, rank = "30k", boardsize=13, ai_color="white" } =
       req.query;
-  
-    if (isNaN(komi) || isNaN(handicap)) {
-      komi = 6.5
-      handicap = 0
-    }
-  
+
+    komi = parseInt(komi)
+    handicap = parseInt(handicap)
+    boardsize = parseInt(boardsize)
+
     const gameId = uuidv4();
 
-    const [exe, args] = parseCommand(exePath)
-  
-    const aiInstance = new GoAIInstance(exe, args);
+    const pAI = new PlayerAI();
+
+    await pAI.create(sql, komi, boardsize, handicap, rank, ai_color);
+
     aiInstances[gameId] = {
-      ai: aiInstance,
-      komi: parseFloat(komi),
-      handicap: parseInt(handicap),
-      rank,
-      ai_color: "white"
+      ai: pAI,
+      komi: komi,
+      handicap: handicap,
+      rank: rank
     };
   
     res.json({ gameId });
@@ -237,7 +256,6 @@ app.get("/move", async (req, res) => {
     console.log(id)
     console.log(move)
     if (!id || !move) {
-
       return res.status(400).json({ error: "Game ID and move are required." });
     }
   
@@ -249,20 +267,19 @@ app.get("/move", async (req, res) => {
     try {
         console.log("Playing the move B")
       // Send the player's move to the AI
-      let response = await game.ai.sendCommand(`play black ${move}`);
-  
-      // Request the AI to generate its move
-      console.log("Requestiing the move")
-      response = await game.ai.sendCommand(`genmove ${game.ai_color}`);
-  
-      res.json({ aiResponse: response.join("\n") });
+      let {response, score} = await game.ai.play(move);
+
+      res.json({ aiResponse: response, aiScore: score });
     } catch (err) {
+        console.error(err);
       res.status(500).json({ error: err.message });
     }
   });
   
 
 
+cleanup()
+task()
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

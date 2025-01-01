@@ -21,13 +21,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const data = await response.json(); // Assuming the server sends a JSON object
 
-        // Initialize the Tsumego with the response data
-        var tsumego = new WGo.Tsumego(document.getElementById("tsumego_wrapper"), {
-            sgf: data.puzzle,
-            debug: false, // Set to false to hide solution
-            answerDelay: 500,
-            displayHintButton: false
-        });
+// Initialize the Tsumego with the response data
+var tsumego = new WGo.Tsumego(document.getElementById("tsumego_wrapper"), {
+    sgf: data.puzzle,
+    debug: false, // Set to false to hide solution
+    answerDelay: 500,
+    displayHintButton: false,
+    layout: {
+        bottom: ["CommentBox", "Control","InfoBox"] // Place CommentBox and Control at the bottom
+    },
+    board: {
+        width: 600, // Adjust board size as needed
+    },
+});
+
+
 
         // Enable coordinates display
         tsumego.setCoordinates(true);

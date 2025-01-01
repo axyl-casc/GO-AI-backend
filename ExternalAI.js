@@ -79,7 +79,7 @@ class GoAIInstance {
    * @param {number} timeout - Timeout in ms, defaults to 60 seconds
    * @returns {Promise<string[]>} - Promise that resolves with an array of lines
    */
-  sendCommand(command, timeout = 60000) {
+  sendCommand(command, timeout = 5 * 60000) {
     return new Promise((resolve, reject) => {
       const request = { resolve, reject, lines: [] };
 

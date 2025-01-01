@@ -137,6 +137,7 @@ class SqlConnection {
           ELSE 2 -- 2 rows if no exact match
         END;
       `;
+
       return await this._send(sql);
     }
   

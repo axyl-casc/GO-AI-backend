@@ -54,18 +54,14 @@
 
     <!-- Main Content -->
     <main class="pt-20 px-4">
-        <div class="max-w-4xl mx-auto bg-badukWhite shadow-lg rounded-lg overflow-hidden">
+        <div class="mx-auto bg-badukWhite shadow-lg rounded-lg overflow-hidden">
             <div class="p-6">
                 <!-- Play Tab -->
                 <div id="play" class="tab-content block">
                     <h1 class="text-2xl font-bold mb-6 text-badukBlack">Play</h1>
 
                     <!-- Selectors -->
-                    <div id="selectors" class="space-y-4">
-                        <div id="rankSelector" class="hidden">
-                            <label for="playerRank" class="block text-gray-700 mb-2">Enter Your Rank (30k to 1d):</label>
-                            <input type="text" id="playerRank" class="w-full p-2 border border-gray-300 rounded" placeholder="e.g., 10k">
-                        </div>
+                    <div id="selectors" class="space-y-4 hidden">
                         <div>
                             <label for="boardSize" class="block text-gray-700 mb-2">Select Board Size:</label>
                             <select id="boardSize" class="w-full p-2 border border-gray-300 rounded">
@@ -76,25 +72,48 @@
                                 <option value="19">19x19</option>
                             </select>
                         </div>
+                        <div id="rankSelector" class="hidden">
+                            <label for="playerRank" class="block text-gray-700 mb-2">Enter Your Rank (30k to 1d):</label>
+                            <input type="text" id="playerRank" class="w-full p-2 border border-gray-300 rounded" placeholder="e.g., 10k">
+                        </div>
                         <button id="startGame" class="bg-badukAccent text-white px-4 py-2 rounded hover:bg-yellow-500 hidden">
                             Start Game
                         </button>
                     </div>
+                    <div id="wgoBoard" class="mt-6 hidden z-10 mx-auto">
+                        <div id="boardContainer" class="mx-auto flex items-center"></div>
+                        <div class="mt-4 flex items-center relative">
+                            <!-- Centered Buttons -->
+                            <div class="mx-auto">
+                                <button id="newGame" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 hidden">
+                                    New Game
+                                </button>
+                                <button id="endGame" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                                    End Game
+                                </button>
+                            </div>
+                            
+<!-- Right-aligned Text -->
+<div class="absolute right-0 text-gray-600 text-sm flex flex-col items-end space-y-1">
+    <div class="flex justify-between w-full">
+        <span>Score:</span>
+        <span id="scorespan" class="ml-2">...</span>
+    </div>
+    <div class="flex justify-between w-full">
+        <span>Move Count:</span>
+        <span id="movecountspan" class="ml-2">...</span>
+    </div>
+</div>
 
-                    <!-- WGo.js Board -->
-                    <div id="wgoBoard" class="mt-6 hidden z-10">
-                        <div id="boardContainer" class="mx-auto" style="width: 90%; height: 90%;"></div>
-                        <div class="mt-4 text-center">
-                            <button id="newGame" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                                New Game
-                            </button>
                         </div>
                     </div>
+                    
+                    
                 </div>
 
                 <!-- Puzzles Tab -->
                 <div id="puzzles" class="tab-content hidden w-full">
-                    <h1 class="text-2xl font-bold mb-6 text-badukBlack w-full text-center">Puzzles</h1>
+                    <h1 class="font-bold mb-6 text-badukBlack w-full">Puzzles</h1>
                     <div id="tsumego_wrapper" 
                         class="mx-auto" 
                         style="width: 40%; background-color: #f9f9f9; padding: 10px; border-radius: 10px; text-align: center;">
@@ -143,6 +162,70 @@
 });
 
     </script>
+    <style>
+.wgo-tsumego-comment {
+    position: fixed; /* Fixed at the bottom middle of the screen */
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%; /* Adjust as needed */
+    max-width: 600px; /* Limit the width for large screens */
+    background: linear-gradient(135deg, #ffffff, #f3f3f3); /* Gradient background */
+    border: 1px solid #ccc;
+    padding: 15px;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    z-index: 1000; /* Ensure it stays on top */
+    transition: all 0.3s ease-in-out; /* Smooth transitions */
+    font-family: Arial, sans-serif; /* Clean font */
+    font-size: 16px;
+    color: #333; /* Dark text for readability */
+}
+
+/* Fun hover effects */
+.wgo-tsumego-comment:hover {
+    transform: translateX(-50%) scale(1.05); /* Slightly enlarge */
+    background: linear-gradient(135deg, #f0f8ff, #e6f7ff); /* Change background color */
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+    border-color: #87ceeb; /* Light blue border */
+    cursor: pointer; /* Pointer cursor to invite interaction */
+}
+
+/* Optional: Pulsing glow effect for hover */
+.wgo-tsumego-comment:hover::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 12px; /* Match the parent radius */
+    background: rgba(135, 206, 235, 0.3); /* Light blue glow */
+    box-shadow: 0 0 15px rgba(135, 206, 235, 0.5); /* Glow effect */
+    animation: pulse 1.5s infinite; /* Pulsing animation */
+    z-index: -1; /* Behind the content */
+}
+
+/* Pulsing animation */
+@keyframes pulse {
+    0% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.4;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+}
+
+
+    </style>
 
 </body>
 </html>
