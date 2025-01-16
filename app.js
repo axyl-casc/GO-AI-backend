@@ -16,7 +16,12 @@ const sql = new SqlConnection("./AI_Data.db")
 const aiInstances = {};
 
 
-const AI_game_delay_seconds = 5
+const AI_game_delay_seconds = 60
+
+// seconds per week = 604800
+// seconds per day = 86400
+// seconds per hour = 3600
+// seconds per minute = 60
 
 
 const generateAiTable = async (dbConnection, boardSize) => {
@@ -191,6 +196,7 @@ async function task() {
         await trainingGame(sql, 7); // Run training game
         await trainingGame(sql, 9); // Run training game
         await trainingGame(sql, 13); // Run training game
+        await trainingGame(sql, 19); // Run training game
         console.log(`Training game completed at ${new Date().toISOString()}`);
     } catch (error) {
         console.error(`Error during training game: ${error.message}`);

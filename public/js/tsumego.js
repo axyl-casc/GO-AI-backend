@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         // Fetch tsumego data from the server
-        const response = await fetch(`http://10.0.0.228:3001/get-tsumego?difficulty=${rank}&type=${type}`);
+        const response = await fetch(`${window.location.href}get-tsumego?difficulty=${rank}&type=${type}`);
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
