@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hide all content and remove active state from tabs
             contents.forEach(content => content.classList.add('hidden'));
             tabs.forEach(t => t.classList.remove('border-b-4', 'border-badukAccent'));
-
             if(targetTab == "play"){
                 const startGameButton = document.getElementById('startGame');
 
@@ -44,6 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById(targetTab).classList.remove('hidden');
             tab.classList.add('border-b-4', 'border-badukAccent');
             window.dispatchEvent(new Event('resize'));
+            document.getElementById('profile-rank').innerHTML = localStorage.getItem('local_rank') || "Error" // set rank to last rank used  
+
 
         });
     });

@@ -267,6 +267,111 @@ class SqlConnection {
       this.reader.close();
     }
   }
+  class TsumegoConnection {
+    constructor(filePath, debug = false) {
+      const fullPath = path.resolve(filePath);
+      this.debug = debug;
+      this.reader = new SQLiteReader(fullPath);
+    }
   
-module.exports = { SqlConnection };
+    async _send(sql, options = { single: false }) {
+      if (this.debug) {
+        console.log(sql);
+      }
+  
+      const result = await this.reader.query(sql);
+  
+      if (this.debug) {
+        console.log(result);
+      }
+  
+      if (options.single) {
+        return Array.isArray(result) && result.length > 0 ? result[0] : null;
+      }
+  
+      return Array.isArray(result) ? result : [result];
+    }
+  
+    async clearTable() {
+      const sql = "DELETE FROM puzzles;";
+      await this._send(sql);
+    }
+  
+    async insertPuzzle(filename, rating = 0, attempts = 0, solved = 0, isAnchor = 0, happyScore = 0) {
+      const sql = `INSERT INTO puzzles (filename, rating, attempts, solved, is_anchor, happy_score) VALUES (?, ?, ?, ?, ?, ?);`;
+      await this._send(sql, { params: [filename, rating, attempts, solved, isAnchor, happyScore] });
+    }
+  
+    async getPuzzleCount() {
+      const sql = "SELECT COUNT(*) AS count FROM puzzles;";
+      const result = await this._send(sql, { single: true });
+      return result.count;
+    }
+  
+    async getPuzzlesByRating(rating) {
+      const sql = `SELECT * FROM puzzles WHERE rating = ?;`;
+      return await this._send(sql, { params: [rating] });
+    }
+  
+    async getSolvedPuzzles() {
+      const sql = "SELECT * FROM puzzles WHERE solved > 0;";
+      return await this._send(sql);
+    }
+  
+    async markPuzzleAsSolved(id) {
+      const sql = `UPDATE puzzles SET solved = solved + 1 WHERE id = ?;`;
+      await this._send(sql, { params: [id] });
+    }
+  
+    async deletePuzzle(id) {
+      const sql = `DELETE FROM puzzles WHERE id = ?;`;
+      await this._send(sql, { params: [id] });
+    }
+  
+    async numberSummary() {
+      const sql = `
+        SELECT COUNT(*) AS count,
+               AVG(rating) AS avg_rating,
+               MIN(rating) AS min_rating,
+               MAX(rating) AS max_rating
+        FROM puzzles;
+      `;
+      const result = await this._send(sql, { single: true });
+      return {
+        count: result.count,
+        avgRating: result.avg_rating,
+        minRating: result.min_rating,
+        maxRating: result.max_rating
+      };
+    }
+  
+    async getRandomPuzzle(rating) {
+      const sql = `
+        WITH Nearest AS (
+          SELECT *, ABS(rating - ?) AS diff
+          FROM puzzles
+          ORDER BY diff, attempts ASC
+          LIMIT 1
+        )
+        SELECT * FROM Nearest;
+      `;
+      const result = await this._send(sql, { params: [rating], single: true });
+      return result;
+    }
+  
+    async adjustRating(puzzleId, delta) {
+      const sql = `UPDATE puzzles SET rating = rating + ? WHERE id = ?;`;
+      await this._send(sql, { params: [delta, puzzleId] });
+    }
+  
+    async adjustHappyScore(puzzleId, delta) {
+      const sql = `UPDATE puzzles SET happy_score = happy_score + ? WHERE id = ?;`;
+      await this._send(sql, { params: [delta, puzzleId] });
+    }
+  
+    close() {
+      this.reader.close();
+    }
+  }
+module.exports = { SqlConnection, TsumegoConnection };
 
