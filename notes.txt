@@ -1,0 +1,32 @@
+import { scanBoardStones } from "./GoAIPlay"
+
+currency (?)
+
+tsumego puzzles =
+2 if wrong
+3 if right
+
+game =
+50 if loss
+100 if win 
+
+lesson =
+10 per lesson
+
+tsumego lesson?
+joseki lesson? pick random from joseki.sgf
+
+
+spend on
+avatar
+background 
+board 
+stones 
+gamemodes?
+
+
+todo
+--------------------------------------------
+fix tsumego board sizing 
+add buttons for adjusting tsumego stuff
+add lessons or lesson structure
