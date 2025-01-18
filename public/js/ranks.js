@@ -1,3 +1,7 @@
+
+const LOWEST_RANK = '40k';
+const DEFAULT_RANK = '30k';
+
 // Ranks conversion utility
 const ALL_RANKS = (() => {
     const ranks = [];
@@ -28,7 +32,7 @@ function convertLevelToKyuDan(level) {
 function getRank() {
     let localRank = localStorage.getItem('local_rank');
     if (!localRank) {
-        localRank = '30k';
+        localRank = DEFAULT_RANK;
         localStorage.setItem('local_rank', localRank);
     }
     return localRank;
@@ -51,7 +55,12 @@ function adjustRank(amount) {
         return;
     }
 
-    const newLevel = Math.max(0, Math.min(ALL_RANKS.length - 1, currentLevel + amount));
+    let newLevel = Math.max(0, Math.min(ALL_RANKS.length - 1, currentLevel + amount));
+
+    if(newLevel < convertKyuDanToLevel(LOWEST_RANK)){
+        newLevel = convertKyuDanToLevel(LOWEST_RANK); // lowest rank
+    }
+
     const newRank = convertLevelToKyuDan(newLevel);
 
     setRank(newRank);

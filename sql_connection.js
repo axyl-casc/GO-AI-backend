@@ -293,41 +293,44 @@ class SqlConnection {
     }
   
     async clearTable() {
-      const sql = "DELETE FROM puzzles;";
+      const sql = `DELETE FROM puzzles;`;
       await this._send(sql);
     }
-  
+    
     async insertPuzzle(filename, rating = 0, attempts = 0, solved = 0, isAnchor = 0, happyScore = 0) {
-      const sql = `INSERT INTO puzzles (filename, rating, attempts, solved, is_anchor, happy_score) VALUES (?, ?, ?, ?, ?, ?);`;
-      await this._send(sql, { params: [filename, rating, attempts, solved, isAnchor, happyScore] });
+      const sql = `
+        INSERT INTO puzzles (filename, rating, attempts, solved, is_anchor, happy_score)
+        VALUES ('${filename}', ${rating}, ${attempts}, ${solved}, ${isAnchor}, ${happyScore});
+      `;
+      await this._send(sql);
     }
-  
+    
     async getPuzzleCount() {
-      const sql = "SELECT COUNT(*) AS count FROM puzzles;";
-      const result = await this._send(sql, { single: true });
+      const sql = `SELECT COUNT(*) AS count FROM puzzles;`;
+      const result = await this._send(sql);
       return result.count;
     }
-  
+    
     async getPuzzlesByRating(rating) {
-      const sql = `SELECT * FROM puzzles WHERE rating = ?;`;
-      return await this._send(sql, { params: [rating] });
-    }
-  
-    async getSolvedPuzzles() {
-      const sql = "SELECT * FROM puzzles WHERE solved > 0;";
+      const sql = `SELECT * FROM puzzles WHERE rating = ${rating};`;
       return await this._send(sql);
     }
-  
+    
+    async getSolvedPuzzles() {
+      const sql = `SELECT * FROM puzzles WHERE solved > 0;`;
+      return await this._send(sql);
+    }
+    
     async markPuzzleAsSolved(id) {
-      const sql = `UPDATE puzzles SET solved = solved + 1 WHERE id = ?;`;
-      await this._send(sql, { params: [id] });
+      const sql = `UPDATE puzzles SET solved = solved + 1 WHERE id = ${id};`;
+      await this._send(sql);
     }
-  
+    
     async deletePuzzle(id) {
-      const sql = `DELETE FROM puzzles WHERE id = ?;`;
-      await this._send(sql, { params: [id] });
+      const sql = `DELETE FROM puzzles WHERE id = ${id};`;
+      await this._send(sql);
     }
-  
+    
     async numberSummary() {
       const sql = `
         SELECT COUNT(*) AS count,
@@ -336,7 +339,7 @@ class SqlConnection {
                MAX(rating) AS max_rating
         FROM puzzles;
       `;
-      const result = await this._send(sql, { single: true });
+      const result = await this._send(sql);
       return {
         count: result.count,
         avgRating: result.avg_rating,
@@ -344,34 +347,50 @@ class SqlConnection {
         maxRating: result.max_rating
       };
     }
-  
+    
     async getRandomPuzzle(rating) {
       const sql = `
         WITH Nearest AS (
-          SELECT *, ABS(rating - ?) AS diff
+          SELECT *, ABS(rating - ${rating}) AS diff
           FROM puzzles
           ORDER BY diff, attempts ASC
           LIMIT 1
         )
         SELECT * FROM Nearest;
       `;
-      const result = await this._send(sql, { params: [rating], single: true });
-      return result;
+      
+      const puzzle = await this._send(sql, { single: true });
+      
+      if (puzzle) {
+        const updateSql = `
+          UPDATE puzzles
+          SET attempts = attempts + 1
+          WHERE id = ${puzzle.id};
+        `;
+        await this._send(updateSql);
+      }
+      
+      return puzzle;
     }
-  
+    
     async adjustRating(puzzleId, delta) {
-      const sql = `UPDATE puzzles SET rating = rating + ? WHERE id = ?;`;
-      await this._send(sql, { params: [delta, puzzleId] });
+      const sql = `UPDATE puzzles SET rating = rating + ${delta} WHERE id = ${puzzleId};`;
+      await this._send(sql);
     }
-  
+    
     async adjustHappyScore(puzzleId, delta) {
-      const sql = `UPDATE puzzles SET happy_score = happy_score + ? WHERE id = ?;`;
-      await this._send(sql, { params: [delta, puzzleId] });
+      const sql = `UPDATE puzzles SET happy_score = happy_score + ${delta} WHERE id = ${puzzleId};`;
+      await this._send(sql);
     }
+    
   
     close() {
       this.reader.close();
     }
   }
+
+
+
+
 module.exports = { SqlConnection, TsumegoConnection };
 

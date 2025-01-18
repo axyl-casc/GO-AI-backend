@@ -170,7 +170,7 @@ board.addEventListener("click", async function (x, y) {
     // Fetch and play AI move
     await handleAIMove(playerMove, board);
 
-    if(move_count > 20){
+    if(move_count > boardsize*boardsize / 3){
         endGameButton.classList.remove('hidden');
     }
 });
