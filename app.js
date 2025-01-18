@@ -16,7 +16,7 @@ const tsumego_sql = new TsumegoConnection("./tsumego_sets.db")
 const aiInstances = {};
 
 
-const AI_game_delay_seconds = 60
+const AI_game_delay_seconds = 1
 
 // seconds per week = 604800
 // seconds per day = 86400
@@ -207,6 +207,7 @@ async function task() {
         setTimeout(task, AI_game_delay_seconds * 1000);
     }
 }
+
 async function cleanup() {
     try {
         const min_5 = 5 * 60 * 1000; // 5 minutes in milliseconds
@@ -229,6 +230,7 @@ async function cleanup() {
         setTimeout(cleanup, 60 * 1000);
     }
 }
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // AI move creation / game creation
@@ -292,11 +294,4 @@ app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-
-module.exports = generateAiTable;
-
-
-
-
-
-
+// End of file

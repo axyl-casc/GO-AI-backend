@@ -15,9 +15,7 @@ async function fetchData(url) {
 let game_id = "0"
 let move_count = 0
 
-
 document.addEventListener('DOMContentLoaded', () => {
-
 
     const tabs = document.querySelectorAll('[data-tab]');
     const contents = document.querySelectorAll('.tab-content');
@@ -37,6 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
                   startGameButton.dispatchEvent(clickEvent);
                 }
                 
+            }
+
+            if(targetTab == "learn"){
+                updateLessonsVisibility();
             }
 
             // Show selected content and highlight tab
@@ -65,8 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
     rankSelector.addEventListener("change", () => {
         startGameButton.classList.remove('hidden');
     })
-
-
 
     endGameButton.addEventListener('click', async () => {
         game_id = "0"
@@ -240,6 +240,57 @@ function convertToCoords(x, y) {
         startGameButton.classList.add('hidden');
         rankSelector.classList.add('hidden');
     });
+
+
+
+    
+    // init learn tab
+    console.log("DOMContentLoaded event fired.");
+
+    // Update lessons visibility based on rank
+    function updateLessonsVisibility() {
+        const currentRank = getRank();
+        const currentLevel = convertKyuDanToLevel(currentRank);
+
+        console.log("Current Rank:", currentRank, "Current Level:", currentLevel);
+
+        document.querySelectorAll('.lesson-item').forEach(lesson => {
+            const lessonRank = lesson.getAttribute('data-rank');
+            const lessonLevel = convertKyuDanToLevel(lessonRank);
+
+            console.log(`Lesson Rank: ${lessonRank}, Level: ${lessonLevel}`);
+
+            // Show the lesson if current rank level is greater than or equal to the lesson's required level
+            if (currentLevel >= lessonLevel) {
+                console.log(`Unlocking lesson: ${lessonRank}`);
+                lesson.classList.remove('hidden');
+            } else {
+                console.log(`Locking lesson: ${lessonRank}`);
+                lesson.classList.add('hidden');
+            }
+        });
+    }
+
+// Add click event listeners to lesson titles for toggling content
+document.querySelectorAll('.lesson-title').forEach(title => {
+    title.addEventListener('click', () => {
+        // Hide all other lesson contents
+        document.querySelectorAll('.lesson-content').forEach(content => {
+            if (content !== title.nextElementSibling) {
+                content.classList.add('hidden');
+            }
+        });
+
+        // Toggle the visibility of the current content
+        const content = title.nextElementSibling;
+        content.classList.toggle('hidden');
+    });
+});
+
+
+    // Call the function to update lessons visibility
+    updateLessonsVisibility();
+    // end init learn tab
 });
 
 
@@ -277,5 +328,3 @@ function addMarker(x, y, board, color) {
     // Update the last marker position
     lastMarkerPosition = { x: x, y: y };
 }
-
-

@@ -1,4 +1,4 @@
-(;GM[1]FF[4]CA[UTF-8]AP[CGoban:3]ST[2]
+(;GM[1]FF[4]CA[UTF-8]AP[CGoban:3]ST[2]VW[aa:ee]
 RU[Japanese]SZ[19]KM[0.00]
 PW[White]PB[Black]AW[ba][ab][bb]AB[ca][cb][ac][bc][cc]C[Black to play. This is a tricky problem, and its the only time black is allowed to place in a spot with no liberties. ]
 (;B[aa]C[Correct! White has no liberties so now black has taken the stones.])

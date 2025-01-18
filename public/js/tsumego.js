@@ -29,12 +29,14 @@ async function new_tsumego(){
                 answerDelay: 500,
                 displayHintButton: false,
                 layout: {
-                    bottom: ["CommentBox", "Control","InfoBox"] // Place CommentBox and Control at the bottom
+                    bottom: ["CommentBox", "Control", "InfoBox"] // Place CommentBox and Control at the bottom
                 },
                 board: {
-                    width: 600, // Adjust board size as needed
+                    width: Math.min(window.innerWidth * 0.8, 600), // Responsive width
+                    height: Math.min(window.innerHeight * 0.8, 600), // Responsive height
                 },
             });
+            
             // Enable coordinates display
             tsumego.setCoordinates(true);
     
@@ -49,5 +51,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById("nextTsumego").addEventListener("click", async () => {
         await new_tsumego();
     });
-    
+
 });

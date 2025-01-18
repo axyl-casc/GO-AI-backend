@@ -51,7 +51,7 @@ class PlayerAI {
     async terminate(){
         for (let i of this.instances) {
             score = await i.sendCommand(`quit`); 
-            i.terminate()
+            await i.terminate()
         }
     }
     

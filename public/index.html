@@ -59,67 +59,63 @@
     </header>
 
     <!-- Main Content -->
-    <main class="pt-20 px-4">
+    <main class="pt-20 p-8">
         <div class="mx-auto bg-badukWhite shadow-lg rounded-lg overflow-hidden">
             <div class="p-6">
-                <!-- Play Tab -->
-                <div id="play" class="tab-content block">
-                    <h1 class="text-2xl font-bold mb-6 text-badukBlack">Play</h1>
+               <!-- Play Tab -->
+<div id="play" class="tab-content block flex justify-center items-center h-screen">
+    <div class="text-center w-full max-w-screen-lg">
+        <!-- Selectors -->
+        <div id="selectors" class="space-y-4">
+            <div>
+                <label for="boardSize" class="block text-gray-700 mb-2">Select Board Size:</label>
+                <select id="boardSize" class="w-full p-2 border border-gray-300 rounded">
+                    <option value="" disabled selected>Select board size</option>
+                    <option value="7">7x7</option>
+                    <option value="9">9x9</option>
+                    <option value="13">13x13</option>
+                    <option value="19">19x19</option>
+                </select>
+            </div>
+            <div id="rankSelector" class="hidden">
+                <label for="playerRank" class="block text-gray-700 mb-2">Enter Your Rank (30k to 1d):</label>
+                <input type="text" id="playerRank" class="w-full p-2 border border-gray-300 rounded" placeholder="e.g., 10k">
+            </div>
+            <button id="startGame" class="bg-badukAccent text-white px-4 py-2 rounded hover:bg-yellow-500 hidden">
+                Start Game
+            </button>
+        </div>
 
-                    <!-- Selectors -->
-                    <div id="selectors" class="space-y-4 hidden">
-                        <div>
-                            <label for="boardSize" class="block text-gray-700 mb-2">Select Board Size:</label>
-                            <select id="boardSize" class="w-full p-2 border border-gray-300 rounded">
-                                <option value="" disabled selected>Select board size</option>
-                                <option value="7">7x7</option>
-                                <option value="9">9x9</option>
-                                <option value="13">13x13</option>
-                                <option value="19">19x19</option>
-                            </select>
-                        </div>
-                        <div id="rankSelector" class="hidden">
-                            <label for="playerRank" class="block text-gray-700 mb-2">Enter Your Rank (30k to 1d):</label>
-                            <input type="text" id="playerRank" class="w-full p-2 border border-gray-300 rounded" placeholder="e.g., 10k">
-                        </div>
-                        <button id="startGame" class="bg-badukAccent text-white px-4 py-2 rounded hover:bg-yellow-500 hidden">
-                            Start Game
-                        </button>
-                    </div>
-                    <div id="wgoBoard" class="mt-6 hidden z-10 mx-auto">
-                        <div id="boardContainer" class="mx-auto flex items-center"></div>
-                        <div class="mt-4 flex items-center relative">
-                            <!-- Centered Buttons -->
-                            <div class="mx-auto">
-                                <button id="newGame" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 hidden">
-                                    New Game
-                                </button>
-                                <button id="endGame" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                                    End Game
-                                </button>
-                            </div>
-                            
-<!-- Right-aligned Text -->
-<div class="absolute right-0 text-gray-600 text-sm flex flex-col items-end space-y-1">
-    <div class="flex justify-between w-full">
-        <span>Score:</span>
-        <span id="scorespan" class="ml-2">...</span>
-    </div>
-    <div class="flex justify-between w-full">
-        <span>Move Count:</span>
-        <span id="movecountspan" class="ml-2">...</span>
+        <!-- Board Area -->
+        <div id="wgoBoard" class="mt-6">
+            <div id="boardContainer" class="mx-auto flex justify-center items-center"></div>
+            <div class="mt-4 flex items-center justify-center space-x-4">
+                <!-- Buttons -->
+                <button id="newGame" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 hidden">
+                    New Game
+                </button>
+                <button id="endGame" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                    End Game
+                </button>
+            </div>
+        </div>
+
+        <!-- Score Info -->
+        <div class="mt-4 text-gray-600 text-sm">
+            <div class="flex justify-between w-1/2 mx-auto">
+                <span>Score:</span>
+                <span id="scorespan">...</span>
+            </div>
+            <div class="flex justify-between w-1/2 mx-auto">
+                <span>Move Count:</span>
+                <span id="movecountspan">...</span>
+            </div>
+        </div>
     </div>
 </div>
 
-                        </div>
-                    </div>
-                    
-                    
-                </div>
-
                 <!-- Puzzles Tab -->
                 <div id="puzzles" class="tab-content hidden w-full">
-                    <h1 class="font-bold mb-6 text-badukBlack w-full">Puzzles</h1>
                     <div id="tsumego_wrapper" 
                         class="mx-auto" 
                         style="width: 25%; background-color: #f9f9f9; padding: 10px; border-radius: 10px; text-align: center;">
@@ -129,11 +125,33 @@
                         Next Puzzle
                     </button>
                 </div>
-
                 <!-- Learn Tab -->
                 <div id="learn" class="tab-content hidden">
-                    <h1 class="text-2xl font-bold mb-6 text-badukBlack">Learn</h1>
-                    <p>Coming soon: Tutorials and resources to learn Go!</p>
+                    <div class="p-4" id="learnboard"></div>
+                    <div class="p-2" id="learninfo"></div>
+                    <!-- Lessons Section -->
+                    <div id="lessons" class="space-y-4">
+                        <!-- Lesson Item 1 -->
+                        <div class="lesson-item border rounded-lg bg-white shadow" data-rank="50k">
+                            <div class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
+                                Lesson 1: Introduction to Go
+                            </div>
+                            <div class="lesson-content hidden px-4 py-2 text-gray-700">
+                                Learn the basic rules, concepts, and history of the game of Go.
+                                <br><button class="btn mt-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow" onclick="startInteractiveTutorial('intro', 5)">Start Tutorial</button>
+                            </div>
+                        </div>
+                        <!-- Lesson Item 2 -->
+                        <div class="lesson-item border rounded-lg bg-white shadow" data-rank="30k">
+                            <div class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
+                                Lesson 2: Understanding Liberties
+                            </div>
+                            <div class="lesson-content hidden px-4 py-2 text-gray-700">
+                                Understand the concept of liberties, a critical aspect of Go strategy.
+                                <br><button class="btn mt-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow" onclick="startInteractiveTutorial('liberties', 5)">Practice Liberties</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- Profile Tab -->
                 <div id="profile" class="tab-content hidden">
@@ -161,6 +179,7 @@
     <script src="./extensions/tsumego/tsumego.js"></script>
     <script src="js/ranks.js"></script>
     <script src="js/tsumego.js"></script>
+    <script src="js/go_tutorial.js"></script>
     <script src="js/main.js"></script>
 
     <script>
@@ -176,70 +195,15 @@
 });
 
     </script>
-    <style>
-.wgo-tsumego-comment {
-    position: fixed; /* Fixed at the bottom middle of the screen */
-    bottom: 30px;
-    left: 25%;
-    transform: translateX(-50%);
-    width: 50%; /* Adjust as needed */
-    max-width: 600px; /* Limit the width for large screens */
-    background: linear-gradient(135deg, #ffffff, #f3f3f3); /* Gradient background */
-    border: 1px solid #ccc;
-    padding: 15px;
-    box-sizing: border-box;
-    text-align: center;
-    border-radius: 12px; /* Rounded corners */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-    z-index: 1000; /* Ensure it stays on top */
-    transition: all 0.3s ease-in-out; /* Smooth transitions */
-    font-family: Arial, sans-serif; /* Clean font */
-    font-size: 16px;
-    color: #333; /* Dark text for readability */
+
+<style>
+
+.wgo-board {
+    max-width: 95vw; /* Maximum width at 95% of the viewport width */
+    max-height: 95vh; /* Maximum height at 95% of the viewport height */
 }
 
-/* Fun hover effects */
-.wgo-tsumego-comment:hover {
-    transform: translateX(-50%) scale(1.05); /* Slightly enlarge */
-    background: linear-gradient(135deg, #f0f8ff, #e6f7ff); /* Change background color */
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
-    border-color: #87ceeb; /* Light blue border */
-    cursor: pointer; /* Pointer cursor to invite interaction */
-}
-
-/* Optional: Pulsing glow effect for hover */
-.wgo-tsumego-comment:hover::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 12px; /* Match the parent radius */
-    background: rgba(135, 206, 235, 0.3); /* Light blue glow */
-    box-shadow: 0 0 15px rgba(135, 206, 235, 0.5); /* Glow effect */
-    animation: pulse 1.5s infinite; /* Pulsing animation */
-    z-index: -1; /* Behind the content */
-}
-
-/* Pulsing animation */
-@keyframes pulse {
-    0% {
-        opacity: 0.8;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.4;
-        transform: scale(1.1);
-    }
-    100% {
-        opacity: 0.8;
-        transform: scale(1);
-    }
-}
-
-
-    </style>
+</style>
 
 </body>
 </html>
