@@ -207,25 +207,25 @@ async function task() {
         setTimeout(task, AI_game_delay_seconds * 1000);
     }
 }
-
 async function cleanup() {
     try {
-        for (let key in aiInstances) {
-            const oneHour = 60 * 60 * 1000; // One hour in milliseconds
-            const now = new Date();
-        
-            const aiInstance = aiInstances[key]; // Access the AI instance
-        
-            // Check if the instance's last move time is older than an hour
-            if (now - aiInstance.ai.last_move_time > oneHour) {
+        const min_5 = 5 * 60 * 1000; // 5 minutes in milliseconds
+        const now = Date.now(); // Current timestamp in milliseconds
+
+        for (const key in aiInstances) {
+            const aiInstance = aiInstances[key];
+
+            // Check if the instance's last move time is older than 5 minutes
+            if (now - aiInstance.ai.last_move_time > min_5) {
                 console.log(`Terminating AI instance: ${key}`);
                 await aiInstance.ai.terminate(); // Call terminate method
+                delete aiInstances[key]; // Remove the instance from the collection
             }
         }
-        
     } catch (error) {
-        console.error(`Error during training game: ${error.message}`);
+        console.error(`Error during cleanup: ${error.message}`);
     } finally {
+        // Schedule the cleanup function to run again after 1 minute
         setTimeout(cleanup, 60 * 1000);
     }
 }
@@ -285,8 +285,6 @@ app.get("/move", async (req, res) => {
     }
   });
   
-
-
 cleanup()
 task()
 // Start the server
