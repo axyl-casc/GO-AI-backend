@@ -1,4 +1,4 @@
-const { SqlConnection } = require('./sql_connection');
+const { SqlConnection, TsumegoConnection } = require('./sql_connection');
 const { trainingGame } = require('./train_database');
 const { generateTsumego } = require('./tsumego_gen.js');
 const { PlayerAI } = require('./playerAI');
@@ -12,7 +12,7 @@ const { v4: uuidv4 } = require("uuid"); // For generating unique game IDs
 const express = require('express');
 
 const sql = new SqlConnection("./AI_Data.db")
-
+const tsumego_sql = new TsumegoConnection("./tsumego_sets.db")
 const aiInstances = {};
 
 
@@ -170,8 +170,7 @@ app.get('/ai-table', async (req, res) => {
 // get requests
 
 // for tsumego puzzles
-app.get('/get-tsumego', (req, res) => {
-    // Extract query parameters
+app.get('/get-tsumego', async (req, res) => {
     const { difficulty, type } = req.query;
 
     // Validate the parameters
@@ -179,21 +178,24 @@ app.get('/get-tsumego', (req, res) => {
         return res.status(400).json({ error: 'Missing required parameters: difficulty and type' });
     }
 
+    try {
+        const puzzle = await generateTsumego(difficulty, type, tsumego_sql);
 
-    // Example JSON response
-    const response = {
-        puzzle: generateTsumego(difficulty, type)
-    };
+        if (!puzzle) {
+            return res.status(404).json({ error: 'Puzzle not found or failed to generate.' });
+        }
 
-    res.status(200).json(response);
+        res.status(200).json({ puzzle });
+    } catch (err) {
+        console.error('Error handling /get-tsumego request:', err);
+        res.status(500).json({ error: 'Internal server error.' });
+    }
 });
-
 
 // for training games in the database
 async function task() {
     try {
         console.log(`Training game started at ${new Date().toISOString()}`);
-        await trainingGame(sql, 7); // Run training game
         await trainingGame(sql, 9); // Run training game
         await trainingGame(sql, 13); // Run training game
         await trainingGame(sql, 19); // Run training game
@@ -205,6 +207,7 @@ async function task() {
         setTimeout(task, AI_game_delay_seconds * 1000);
     }
 }
+
 async function cleanup() {
     try {
         for (let key in aiInstances) {

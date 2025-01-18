@@ -127,6 +127,7 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
         // tell AI to exit
         for (let ai of allAIs) {
             await ai.sendCommand(`quit`);
+            await ai.terminate();
         }
 
         // for a tie breaker, assume server is correct

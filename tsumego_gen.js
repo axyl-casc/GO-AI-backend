@@ -7,85 +7,102 @@ const path = require('path');
  * @param {Array} array - The array to select a random element from.
  * @returns {*} - A random element from the array.
  */
-function getRandomElement(array) {
+async function getRandomElement(array) {
     const randomIndex = Math.floor(Math.random() * array.length);
     return array[randomIndex];
 }
+async function parseSGFAndAddVW(sgf) {
+  // Valid letters for a 19x19 board, skipping 'i'
+  const validLetters = "abcdefghjklmnopqrst";
 
-function parseSGFAndAddVW(sgf) {
-    console.log("Original SGF:\n", sgf); // Debugging log
-  
-    // Step 1: Helper function to parse SGF coordinates
-    const parseCoord = (coord) => ({
-      x: coord.charCodeAt(0) - "a".charCodeAt(0), // 'a' = 0, 'b' = 1, etc.
-      y: 19 - parseInt(coord.slice(1)), // Reverse for Go coordinates
-    });
-  
-    // Step 2: Helper function to convert numeric indices back to Go coordinates
-    const toGoCoord = ({ x, y }) =>
-      String.fromCharCode(x + "a".charCodeAt(0)) + (19 - y);
-  
-    // Step 3: Extract all `AW` and `AB` entries
-    const stones = [...sgf.matchAll(/(AW|AB)\[([a-z]\d+)\]/g)];
-    console.log("Extracted stones:", stones); // Debugging log
-  
-    const positions = stones.map(([, , coord]) => parseCoord(coord));
-  
-    // Step 4: If no stones are found, return the SGF unchanged
-    if (positions.length === 0) {
-      console.warn("No stones found in SGF.");
-      return sgf;
+  // Regex to find B[...] or W[...] with two coordinates
+  const regex = /[BW]\[([a-z])([a-z])\]/g;
+
+  let minLeftIndex = Infinity;
+  let maxLeftIndex = -Infinity;
+  let minRightIndex = Infinity;
+  let maxRightIndex = -Infinity;
+
+  let match;
+  while ((match = regex.exec(sgf)) !== null) {
+    const left = match[1];
+    const right = match[2];
+
+    // Skip invalid letters or 'i'
+    if (!validLetters.includes(left) || !validLetters.includes(right)) {
+      continue;
     }
-  
-    // Step 5: Calculate the bounding box for all stones
-    const minX = Math.min(...positions.map((pos) => pos.x));
-    const maxX = Math.max(...positions.map((pos) => pos.x));
-    const minY = Math.min(...positions.map((pos) => pos.y));
-    const maxY = Math.max(...positions.map((pos) => pos.y));
-  
-    // Step 6: Generate the `VW` tag
-    const startCoord = toGoCoord({ x: minX, y: minY });
-    const endCoord = toGoCoord({ x: maxX, y: maxY });
-    const vwTag = `VW[${startCoord}:${endCoord}]`;
-    console.log("Generated VW tag:", vwTag); // Debugging log
-  
-    // Step 7: Insert the VW tag after RU[...] in the SGF
-    const sgfWithVW = sgf.replace(/(RU\[.*?\])/, `$1${vwTag}`);
-  
-    console.log("Updated SGF:\n", sgfWithVW); // Debugging log
-  
-    return sgfWithVW;
-  } // doesnt work
+
+    const leftIndex = validLetters.indexOf(left);
+    const rightIndex = validLetters.indexOf(right);
+
+    // Update smallest/largest indices for left and right
+    minLeftIndex = Math.min(minLeftIndex, leftIndex);
+    maxLeftIndex = Math.max(maxLeftIndex, leftIndex);
+    minRightIndex = Math.min(minRightIndex, rightIndex);
+    maxRightIndex = Math.max(maxRightIndex, rightIndex);
+  }
+
+  // If no valid coordinates were found, return SGF unchanged
+  if (minLeftIndex === Infinity) {
+    return sgf;
+  }
+
+  // Determine the overall smallest and largest indices, including padding
+  const overallMinIndex = Math.min(minLeftIndex, minRightIndex);
+  const overallMaxIndex = Math.max(maxLeftIndex, maxRightIndex);
+
+  const clamp = (val) => Math.max(0, Math.min(val, validLetters.length - 1));
+  const paddedMinIndex = clamp(overallMinIndex - 5);
+  const paddedMaxIndex = clamp(overallMaxIndex + 5);
+
+  const smallestLetter = validLetters[paddedMinIndex];
+  const largestLetter = validLetters[paddedMaxIndex];
+
+  // Create the VW property
+  const vwValue = `${smallestLetter}${smallestLetter}:${largestLetter}${largestLetter}`;
+
+  // Add VW property right after the first "(;"
+  return sgf.replace("(;", `(;VW[${vwValue}]`);
+}
+
 
 /**
  * Generates a random Tsumego (Go problem) from the "puzzles" directory.
  * @returns {string|null} - The content of a randomly selected Tsumego file, or null if the directory is empty.
  */
-function generateTsumego() {
-    // Directory containing the Tsumego puzzles
-    const puzzlesDir = path.join(__dirname, 'puzzles');
-
+async function generateTsumego(difficulty, type, tsumego_sql) {
     try {
+        // Directory containing the Tsumego puzzles
+        const puzzlesDir = path.join(__dirname, 'puzzles');
+
         // Read all files in the puzzles directory
-        const files = fs.readdirSync(puzzlesDir);
+        const files = await fs.readdir(puzzlesDir);
 
         if (files.length === 0) {
             console.warn('No Tsumego puzzles found in the directory.');
             return null;
         }
 
-        // Select a random file from the list
-        const randomFile = getRandomElement(files);
+        // Convert difficulty to ELO level
+        const elo = await convertKyuDanToLevel(difficulty);
+        const puzzle = await tsumego_sql.getRandomPuzzle(elo);
 
-        // Read and return the content of the selected file
-        let contents = fs.readFileSync(path.join(puzzlesDir, randomFile), 'utf-8');
-        contents = parseSGFAndAddVW(contents)
+        if (!puzzle || !puzzle.filename) {
+            console.error('No valid puzzle returned from the database.');
+            return null;
+        }
 
-        return contents;
+        // Read and parse the selected file
+        const filePath = path.join(puzzlesDir, puzzle.filename);
+        const contents = fs.readFile(filePath, 'utf-8');
+        const parsedContents = await parseSGFAndAddVW(contents);
+
+        console.log('Returning puzzle:', puzzle);
+        return parsedContents;
     } catch (err) {
-        console.error('Error reading puzzles directory:', err);
+        console.error('Error generating Tsumego puzzle:', err);
         return null;
     }
 }
-
 module.exports = { generateTsumego };

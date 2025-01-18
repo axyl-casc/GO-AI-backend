@@ -20,7 +20,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const data = await response.json(); // Assuming the server sends a JSON object
-
+        console.log("Received Puzzle")
+        console.log(data.puzzle)
 // Initialize the Tsumego with the response data
 var tsumego = new WGo.Tsumego(document.getElementById("tsumego_wrapper"), {
     sgf: data.puzzle,
