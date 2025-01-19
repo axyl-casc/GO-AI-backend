@@ -28,7 +28,16 @@
 
     <link rel="stylesheet" type="text/css" href="extensions/tsumego/tsumego.css">
 </head>
-<body class="bg-badukWood min-h-screen font-sans m-0">
+<body class="bg-badukWood font-sans m-0">
+
+      <!-- Toast Container -->
+      <div id="toast-container" class="fixed top-1/2 right-20 hidden z-50">
+        <div id="toast"
+            class="bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg opacity-0 transition-opacity duration-500 text-lg max-w-lg">
+
+        </div>
+    </div>
+    
 <!-- Header -->
 <header class="sticky fixed top-0 left-0 right-0 bg-badukBlack shadow-md z-50">
     <nav class="flex border-b border-gray-300">
@@ -59,14 +68,14 @@
     </nav>
 </header>
 
-
-
     <!-- Main Content -->
-    <main class="mx-8 bg-badukWhite shadow-lg rounded-b-lg overflow-auto">
+    <main class="py-20 mx-8 bg-badukWhite shadow-lg rounded-b-lg overflow-auto">
+
+        
         <div class="p-6">
                 <!-- Play Tab -->
-                <div id="play" class="sticky top-0 tab-content block flex justify-center items-start min-h-[90vh] bg-badukWhite overflow-auto">
-                    <div class="text-center w-full max-w-screen-lg space-y-8 py-16 h-3/4">
+                <div id="play" class="sticky top-0 tab-content block flex justify-center bg-badukWhite overflow-auto">
+                    <div class="text-center w-full max-w-screen-lg space-y-8 py-16">
                         <!-- Selectors -->
                         <div id="selectors" class="space-y-4">
                             <div>
@@ -121,27 +130,29 @@
                 </div>
 
 <!-- Puzzles Tab -->
-<div id="puzzles" class="sticky top-0 tab-content block flex justify-center items-start min-h-[90vh] bg-badukWhite overflow-auto hidden">
-    <div class="text-center w-full max-w-screen-lg space-y-8 py-16 h-3/4">
-        <!-- Buttons -->
-        <div class="flex justify-center items-center space-x-4 block">
-            <button id="likeTsumego" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                Like Puzzle
-            </button>
-            <button id="dislikeTsumego" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                Dislike Puzzle
-            </button>
-            <button id="nextTsumego" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Next Puzzle
-            </button>
-        </div>
-        <!-- Tsumego Wrapper -->
-        <div id="tsumego_wrapper" 
-            class="flex justify-center items-center h-3/4 bg-gray-200 rounded-lg p-4 shadow-md">
-            <p>Your browser doesn't support WGo Player. Use a modern browser like IE9, Google Chrome, or Mozilla Firefox.</p>
+<div id="puzzles" class="sticky top-0 tab-content block flex justify-center items-start bg-badukWhite overflow-auto hidden">
+    <div class="text-center w-full max-w-screen-lg space-y-8">
+        <div class="flex justify-center items-center space-x-8">
+            <!-- Buttons -->
+            <div class="flex flex-col space-y-4">
+                <button id="likeTsumego" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    Like Puzzle
+                </button>
+                <button id="dislikeTsumego" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                    Dislike Puzzle
+                </button>
+                <button id="nextTsumego" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Next Puzzle
+                </button>
+            </div>
+            <!-- Tsumego Wrapper -->
+            <div id="tsumego_wrapper" class="flex-grow max-w-[70%]">
+                <p>Your browser doesn't support WGo Player. Use a modern browser like IE9, Google Chrome, or Mozilla Firefox.</p>
+            </div>
         </div>
     </div>
 </div>
+
 
                 <!-- Learn Tab -->
                 <div id="learn" class="tab-content hidden">
@@ -193,6 +204,7 @@
 	<script type="text/javascript" src="wgo/player.permalink.js"></script>
 
     <script src="./extensions/tsumego/tsumego.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/ranks.js"></script>
     <script src="js/tsumego.js"></script>
     <script src="js/go_tutorial.js"></script>
@@ -215,14 +227,8 @@
 <style>
 
 .wgo-board {
-    max-width: 95vw; /* Maximum width at 95% of the viewport width */
-    max-height: 95vh; /* Maximum height at 95% of the viewport height */
-}
-
-
-.tsumego_wrapper{
-    max-width: 95vw; /* Maximum width at 95% of the viewport width */
-    max-height: 95vh; /* Maximum height at 95% of the viewport height */
+    max-width: 80vw; /* Maximum width at 95% of the viewport width */
+    max-height: 80vh; /* Maximum height at 95% of the viewport height */
 }
 
 html {
@@ -235,6 +241,7 @@ html {
 body {
     -webkit-transform: translateZ(0); /* Optimizes rendering on high-DPI screens */
 }
+
 @media (min-resolution: 2dppx) {
     .wgo-board {
         transform: scale(0.75); /* Scale down for high-DPI screens */

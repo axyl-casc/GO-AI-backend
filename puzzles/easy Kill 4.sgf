@@ -1,0 +1,28 @@
+(;GM[1]FF[4]CA[UTF-8]AP[CGoban:3]ST[2]
+RU[Japanese]SZ[19]KM[0.00]
+PW[White]PB[Black]AW[dq][eq][ar][br][cr][dr][er][es]AB[co][go][dp][ep][bq][cq][fq][fr][cs][fs]C[Can black kill white?]
+(;B[bs]
+(;W[ds]
+;B[aq]
+;W[as]
+(;B[bs]
+;W[cs]
+;B[bs]C[Correct!])
+(;B[cs]
+;W[bs]
+;B[cs]C[Correct]))
+(;W[as]
+;B[aq]
+;W[ds]
+(;B[cs]
+;W[bs]
+;B[cs]C[Correct])
+(;B[bs]
+;W[cs]
+;B[bs]C[Correct])))
+(;B[as]
+;W[bs]LB[as:1][ds:2]C[Now white has space for two eyes.])
+(;B[ds]
+;W[bs]LB[as:1][cs:2]C[Now white has space for two eyes.])
+(;B[aq]
+;W[bs]LB[as:1][ds:2]C[Now white has space for two eyes.]))

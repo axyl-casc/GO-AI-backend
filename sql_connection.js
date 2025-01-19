@@ -393,9 +393,14 @@ class SqlConnection {
     }
     
     async adjustHappyScore(puzzleId, delta) {
-      const sql = `UPDATE puzzles SET happy_score = happy_score + ${delta} WHERE id = ${puzzleId};`;
+      const sql = `
+        UPDATE puzzles 
+        SET happy_score = GREATEST(1, LEAST(100, happy_score + ${delta})) 
+        WHERE id = ${puzzleId};
+      `;
       await this._send(sql);
     }
+    
     
     async getPuzzleRatingById(id) {
       const sql = `SELECT rating FROM puzzles WHERE id = ${id};`;

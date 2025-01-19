@@ -26,6 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hide all content and remove active state from tabs
             contents.forEach(content => content.classList.add('hidden'));
             tabs.forEach(t => t.classList.remove('border-b-4', 'border-badukAccent'));
+
+            // Show selected content and highlight tab
+            document.getElementById(targetTab).classList.remove('hidden');
+
+
             if(targetTab == "play"){
                 const startGameButton = document.getElementById('startGame');
 
@@ -34,6 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
                   const clickEvent = new Event('click', { bubbles: true, cancelable: true });
                   startGameButton.dispatchEvent(clickEvent);
                 }
+                let testDiv = document.getElementById("boardContainer");
+                testDiv.scrollIntoView({
+                  behavior: "auto",
+                  block: "center",
+                  inline: "center",
+                });
+
                 
             }
 
@@ -41,26 +53,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateLessonsVisibility();
             }
 
-            // Show selected content and highlight tab
-            document.getElementById(targetTab).classList.remove('hidden');
+            if(targetTab == "puzzle"){
+                let testDiv = document.getElementById("tsumego_wrapper");
+                testDiv.scrollIntoView({
+                  behavior: "auto",
+                  block: "center",
+                  inline: "center",
+                });
+
+            }
+
+
             tab.classList.add('border-b-4', 'border-badukAccent');
             window.dispatchEvent(new Event('resize'));
             document.getElementById('profile-rank').innerHTML = localStorage.getItem('local_rank') || "Error" // set rank to last rank used  
-            // Scroll to the bottom of the page instantly
-document.body.style.overflow = "auto";
-window.scrollTo({
-    top: document.body.scrollHeight,
-    behavior: "auto" // Instant scrolling
-});
-
-
-// Disable scrolling
-function disableScroll() {
-    document.body.style.overflow = "hidden";
-}
-
-// Wait for scrolling to complete, then disable scrolling
-setTimeout(disableScroll, 500); // Adjust timeout as needed
 
 
         });
@@ -85,17 +91,19 @@ setTimeout(disableScroll, 500); // Adjust timeout as needed
 
     endGameButton.addEventListener('click', async () => {
         game_id = "0"
-        move_count = 0
         let score = document.querySelector("#scorespan").textContent
-        if(score[0] == "B"){
-            alert("You won!")
+        if(score[0] == "B" && move_count != 0){
+            showToast("You won!")
             adjustRank(2) // increase rank by 2 on win
-        }else{
-            alert("You lost!")
+        }else if(move_count != 0){
+            showToast("You lost!")
             adjustRank(-1) // decrease rank by 1 on loss
         }
         document.getElementById("rankspan").innerHTML = getRank()
-        
+        document.getElementById("movecountspan").innerHTML = "..."
+        move_count = 0
+        document.querySelector('[data-tab="play"]').click();
+
     })
 
     // Start Game
@@ -111,11 +119,20 @@ setTimeout(disableScroll, 500); // Adjust timeout as needed
         rank = getRank()
         if(isNaN(boardsize) || rank.endsWith("k") == false){
             console.log("Auto game started...")
-            const beginner = convertKyuDanToLevel("35k")
-            const intermediate = convertKyuDanToLevel("25k")
-            const advanced = convertKyuDanToLevel("15k")
 
-            const playerlevel = convertKyuDanToLevel(getRank())
+            // 7x7
+            const beginner = convertKyuDanToLevel("35k")
+            // 9x9
+            const intermediate = convertKyuDanToLevel("10k")
+            // 13x13
+            const advanced = convertKyuDanToLevel("5k")
+            // 19x19
+
+            // spread
+            const rndSpread = 3;
+            let playerlevel = convertKyuDanToLevel(getRank()) + getRandomInt(-rndSpread,rndSpread);
+
+            // add a bit of randomness to the player level
 
             if(playerlevel < beginner){
                 boardsize = 7
@@ -126,6 +143,7 @@ setTimeout(disableScroll, 500); // Adjust timeout as needed
             }else{
                 boardsize = 19
             }
+            playerlevel = convertKyuDanToLevel(getRank())
 
         }
         console.log("New Game")
@@ -275,6 +293,8 @@ function convertToCoords(x, y) {
     // init learn tab
     console.log("DOMContentLoaded event fired.");
 
+
+
     // Update lessons visibility based on rank
     function updateLessonsVisibility() {
         const currentRank = getRank();
@@ -319,6 +339,18 @@ document.querySelectorAll('.lesson-title').forEach(title => {
     // Call the function to update lessons visibility
     updateLessonsVisibility();
     // end init learn tab
+
+
+
+    let testDiv = document.getElementById("boardContainer");
+    testDiv.scrollIntoView({
+      behavior: "auto",
+      block: "center",
+      inline: "center",
+    });
+
+
+
 });
 
 

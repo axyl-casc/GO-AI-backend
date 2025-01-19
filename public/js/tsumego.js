@@ -26,14 +26,6 @@ async function new_tsumego() {
 
 // Initialize the Tsumego with responsive board dimensions
 function setupTsumego() {
-
-
-    const width = Math.min(window.innerHeight, window.innerWidth) * (70 / 100);
-    const height = Math.min(window.innerHeight, window.innerWidth) * (70 / 100);
-
-    wrapper.style.width = `${width}px`;
-    wrapper.style.height = `${height}px`;
-
     return new WGo.Tsumego(wrapper, {
         sgf: data.puzzle,
         debug: false, // Set to false to hide solution
@@ -41,12 +33,9 @@ function setupTsumego() {
         displayHintButton: false, // Disable hint button
         layout: {
             bottom: ["CommentBox", "InfoBox"], // Exclude "Control" to remove buttons
-        },
-        board: {
-            width: width,
-            height: height,
-        },
+        }
     });
+    
 }
 
 
@@ -104,25 +93,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             .catch(error => console.error('Fetch error:', error));
         current_puzzle_id = await new_tsumego();
 
-        // Scroll to the bottom of the page instantly
-document.body.style.overflow = "auto";
-window.scrollTo({
-    top: document.body.scrollHeight,
-    behavior: "auto" // Instant scrolling
-});
-
-
-// Disable scrolling
-function disableScroll() {
-    document.body.style.overflow = "hidden";
-}
-
-// Wait for scrolling to complete, then disable scrolling
-setTimeout(disableScroll, 500); // Adjust timeout as needed
 
     
     });
     document.getElementById("likeTsumego").addEventListener("click", async () => {
+        showToast("Thanks for the feedback!");
         // Send data to the local tsumego-rate endpoint for a like
         fetch(`${window.location.href}tsumego-rate?puzzle_id=${current_puzzle_id}&delta=1`, {
             method: 'GET'
@@ -140,6 +115,7 @@ setTimeout(disableScroll, 500); // Adjust timeout as needed
     });
     
     document.getElementById("dislikeTsumego").addEventListener("click", async () => {
+        showToast("Disliked Tsumego");
         // Send data to the local tsumego-rate endpoint for a dislike
         fetch(`${window.location.href}tsumego-rate?puzzle_id=${current_puzzle_id}&delta=-1`, {
             method: 'GET'

@@ -1,0 +1,12 @@
+(;GM[1]FF[4]CA[UTF-8]AP[CGoban:3]ST[2]
+RU[Japanese]SZ[19]KM[0.00]
+PW[Weiß]PB[Schwarz]AW[ca][bb][cb][ac][bc]AB[da][db][cc][dc][ad][bd][cd]C[Can black kill white?]
+(;B[aa]
+(;W[ba]
+;B[ab]C[Correct])
+(;W[ab]
+;B[ba]C[Correct]))
+(;B[ba]
+;W[aa]LB[ba:2][ab:1]C[Now white has two eyes])
+(;B[ab]
+;W[aa]LB[ba:2][ab:1]C[Now white has two eyes]))
