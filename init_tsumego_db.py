@@ -33,7 +33,7 @@ def insert_filenames_into_db(db_path, directory_path):
             cursor.execute(
                 """INSERT INTO puzzles (filename, rating, attempts, solved, is_anchor, happy_score)
                 VALUES (?, ?, ?, ?, ?, ?)""",
-                (filename, rating, 0, 0, anchor, 100)  # Default values for attempts, solved, and is_anchor
+                (filename, rating, 0, 0, anchor, 75)  # Default values for attempts, solved, and is_anchor
             )
 
         # Commit the changes

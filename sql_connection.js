@@ -394,12 +394,17 @@ class SqlConnection {
     
     async adjustHappyScore(puzzleId, delta) {
       const sql = `
-        UPDATE puzzles 
-        SET happy_score = GREATEST(1, LEAST(100, happy_score + ${delta})) 
+        UPDATE puzzles
+        SET happy_score = CASE
+          WHEN happy_score + ${delta} > 100 THEN 100
+          WHEN happy_score + ${delta} < 1 THEN 1
+          ELSE happy_score + ${delta}
+        END
         WHERE id = ${puzzleId};
       `;
       await this._send(sql);
     }
+    
     
     
     async getPuzzleRatingById(id) {
