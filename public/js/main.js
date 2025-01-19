@@ -94,6 +94,7 @@ setTimeout(disableScroll, 500); // Adjust timeout as needed
             alert("You lost!")
             adjustRank(-1) // decrease rank by 1 on loss
         }
+        document.getElementById("rankspan").innerHTML = getRank()
         
     })
 
@@ -104,19 +105,28 @@ setTimeout(disableScroll, 500); // Adjust timeout as needed
     rungame()
 
     async function rungame(){
+        document.getElementById("rankspan").innerHTML = getRank()
         boardsize = parseInt(document.getElementById('boardSize').value, 10)
         let rank = document.getElementById('playerRank').value
-
+        rank = getRank()
         if(isNaN(boardsize) || rank.endsWith("k") == false){
             console.log("Auto game started...")
             const beginner = convertKyuDanToLevel("35k")
+            const intermediate = convertKyuDanToLevel("25k")
+            const advanced = convertKyuDanToLevel("15k")
+
             const playerlevel = convertKyuDanToLevel(getRank())
+
             if(playerlevel < beginner){
                 boardsize = 7
-            }else{
+            }else if(playerlevel < intermediate){
                 boardsize = 9
+            }else if(playerlevel < advanced){
+                boardsize = 13
+            }else{
+                boardsize = 19
             }
-            rank = getRank()
+
         }
         console.log("New Game")
 

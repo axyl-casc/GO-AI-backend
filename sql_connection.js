@@ -353,8 +353,8 @@ class SqlConnection {
           WITH Nearest AS (
             SELECT *, ABS(rating - ${rating}) AS diff
             FROM puzzles
-            ORDER BY diff - happy_score, attempts ASC
-            LIMIT 5
+            ORDER BY 10 * diff - happy_score, attempts ASC
+            LIMIT 15
           )
           SELECT * FROM Nearest;
       `;

@@ -65,8 +65,8 @@
     <main class="mx-8 bg-badukWhite shadow-lg rounded-b-lg overflow-auto">
         <div class="p-6">
                 <!-- Play Tab -->
-                <div id="play" class="tab-content block flex justify-center items-center min-h-[calc(90vh - 40rem)]">
-                    <div class="text-center w-full max-w-screen-lg">
+                <div id="play" class="sticky top-0 tab-content block flex justify-center items-start min-h-[90vh] bg-badukWhite overflow-auto">
+                    <div class="text-center w-full max-w-screen-lg space-y-8 py-16 h-3/4">
                         <!-- Selectors -->
                         <div id="selectors" class="space-y-4">
                             <div>
@@ -104,6 +104,10 @@
 
                         <!-- Score Info -->
                         <div class="mt-4 text-gray-600 text-sm">
+                            <div class="flex justify-between w-1/2 mx-auto">
+                                <span>Rank:</span>
+                                <span id="rankspan">...</span>
+                            </div>
                             <div class="flex justify-between w-1/2 mx-auto">
                                 <span>Score:</span>
                                 <span id="scorespan">...</span>
