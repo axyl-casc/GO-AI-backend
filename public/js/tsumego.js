@@ -3,53 +3,156 @@ function getRandomElement(array) {
     return array[randomIndex];
 }
 
-async function new_tsumego(){
-        // Clear the tsumego wrapper content
-        document.getElementById("tsumego_wrapper").innerHTML = "";
+let current_puzzle_id = -1
+async function new_tsumego() {
+    // Clear the tsumego wrapper content
+    const wrapper = document.getElementById("tsumego_wrapper");
+    wrapper.innerHTML = "";
 
-        // Get rank and type
-        let rank = getRank();
-        let type = "any";
-    
-        try {
-            // Fetch tsumego data from the server
-            const response = await fetch(`${window.location.href}get-tsumego?difficulty=${rank}&type=${type}`);
-    
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-    
-            const data = await response.json(); // Assuming the server sends a JSON object
-            console.log("Received Puzzle")
-            console.log(data.puzzle)
-            // Initialize the Tsumego with the response data
-            var tsumego = new WGo.Tsumego(document.getElementById("tsumego_wrapper"), {
-                sgf: data.puzzle,
-                debug: false, // Set to false to hide solution
-                answerDelay: 500,
-                displayHintButton: false,
-                layout: {
-                    bottom: ["CommentBox", "Control", "InfoBox"] // Place CommentBox and Control at the bottom
-                },
-                board: {
-                    width: Math.min(window.innerWidth * 0.8, 600), // Responsive width
-                    height: Math.min(window.innerHeight * 0.8, 600), // Responsive height
-                },
-            });
-            
-            // Enable coordinates display
-            tsumego.setCoordinates(true);
-    
-        } catch (error) {
-            console.error("Failed to fetch tsumego data:", error);
-            document.getElementById("tsumego_wrapper").innerText = "Failed to load tsumego data.";
+    // Get rank and type
+    let rank = getRank();
+    let type = "any";
+
+    try {
+        // Fetch tsumego data from the server
+        const response = await fetch(`${window.location.href}get-tsumego?difficulty=${rank}&type=${type}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
+
+        const data = await response.json(); // Assuming the server sends a JSON object
+        console.log("Received Puzzle:", data.puzzle);
+
+// Initialize the Tsumego with responsive board dimensions
+function setupTsumego() {
+
+
+    const width = Math.min(window.innerHeight, window.innerWidth) * (70 / 100);
+    const height = Math.min(window.innerHeight, window.innerWidth) * (70 / 100);
+
+    wrapper.style.width = `${width}px`;
+    wrapper.style.height = `${height}px`;
+
+    return new WGo.Tsumego(wrapper, {
+        sgf: data.puzzle,
+        debug: false, // Set to false to hide solution
+        answerDelay: 500,
+        displayHintButton: false, // Disable hint button
+        layout: {
+            bottom: ["CommentBox", "InfoBox"], // Exclude "Control" to remove buttons
+        },
+        board: {
+            width: width,
+            height: height,
+        },
+    });
+}
+
+
+        // Create the initial tsumego
+        let tsumego = setupTsumego();
+
+        // Enable coordinates display
+        tsumego.setCoordinates(true);
+
+        // Adjust the board size on window resize
+        window.addEventListener("resize", () => {
+            wrapper.innerHTML = ""; // Clear the wrapper
+            tsumego = setupTsumego(); // Recreate the tsumego with new dimensions
+            tsumego.setCoordinates(true); // Enable coordinates again
+        });
+
+        return data.id; // Assuming `id` is part of the JSON response
+    } catch (error) {
+        console.error("Failed to fetch tsumego data:", error);
+        wrapper.innerText = "Failed to load tsumego data.";
+        return null; // Return null in case of an error
+    }
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    await new_tsumego();
+    current_puzzle_id = await new_tsumego();
     document.getElementById("nextTsumego").addEventListener("click", async () => {
-        await new_tsumego();
-    });
+        document.getElementById("dislikeTsumego").classList.remove("hidden");
+        document.getElementById("likeTsumego").classList.remove("hidden");
+        const tsumegoCommentElement = document.querySelector(".wgo-tsumego-comment");
+        let correct = false;
+    
+        if (tsumegoCommentElement) {
+            const text = tsumegoCommentElement.textContent.toLowerCase();
+            correct = text.includes("correct") && !text.includes("incorrect");
+        }
+        
+    
+        console.log(`Correct flag is set to: ${correct}`);
+    
+        // Get user rank from local storage
+        const localRank = localStorage.getItem('local_rank');
+    
+        // Send data to the local tsumego-complete endpoint
+        fetch(`${window.location.href}tsumego-complete?is_correct=${correct}&puzzle_id=${current_puzzle_id}&user_rank=${localRank}`, {
+            method: 'GET'
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Tsumego completion data sent successfully');
+                } else {
+                    console.error('Error sending tsumego completion data');
+                }
+            })
+            .catch(error => console.error('Fetch error:', error));
+        current_puzzle_id = await new_tsumego();
 
+        // Scroll to the bottom of the page instantly
+document.body.style.overflow = "auto";
+window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "auto" // Instant scrolling
+});
+
+
+// Disable scrolling
+function disableScroll() {
+    document.body.style.overflow = "hidden";
+}
+
+// Wait for scrolling to complete, then disable scrolling
+setTimeout(disableScroll, 500); // Adjust timeout as needed
+
+    
+    });
+    document.getElementById("likeTsumego").addEventListener("click", async () => {
+        // Send data to the local tsumego-rate endpoint for a like
+        fetch(`${window.location.href}tsumego-rate?puzzle_id=${current_puzzle_id}&delta=1`, {
+            method: 'GET'
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Tsumego like data sent successfully');
+                } else {
+                    console.error('Error sending tsumego like data');
+                }
+            })
+            .catch(error => console.error('Fetch error:', error));
+        document.getElementById("dislikeTsumego").classList.add("hidden");
+        document.getElementById("likeTsumego").classList.add("hidden");
+    });
+    
+    document.getElementById("dislikeTsumego").addEventListener("click", async () => {
+        // Send data to the local tsumego-rate endpoint for a dislike
+        fetch(`${window.location.href}tsumego-rate?puzzle_id=${current_puzzle_id}&delta=-1`, {
+            method: 'GET'
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Tsumego dislike data sent successfully');
+                } else {
+                    console.error('Error sending tsumego dislike data');
+                }
+            })
+            .catch(error => console.error('Fetch error:', error));
+        document.getElementById("dislikeTsumego").classList.add("hidden");
+        document.getElementById("likeTsumego").classList.add("hidden");   
+    });
 });

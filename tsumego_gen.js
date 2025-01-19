@@ -11,8 +11,17 @@ async function getRandomElement(array) {
     const randomIndex = Math.floor(Math.random() * array.length);
     return array[randomIndex];
 }
+
+async function insertTEAfterCorrect(input) {
+  // Regular expression to match C[...] containing 'correct' but not 'incorrect'
+  const regex = /C\[(?!.*incorrect)(.*?correct.*?)\]/gi;
+
+  // Replace function to insert TE[1] after the matched C[...]
+  return input.replace(regex, (match, content) => `C[${content}]TE[1]`);
+}
+
 async function parseSGFAndAddVW(sgf) {
-  return sgf
+  return await insertTEAfterCorrect(sgf)
   // Valid letters for a 19x19 board, skipping 'i'
   const validLetters = "abcdefghjklmnopqrst";
 
@@ -101,7 +110,7 @@ async function generateTsumego(difficulty, type, tsumego_sql) {
       const parsedContents = await parseSGFAndAddVW(contents);
 
       console.log('Returning puzzle:', puzzle);
-      return parsedContents;
+      return {sgf:parsedContents, id:puzzle.id};
   } catch (err) {
       console.error('Error generating Tsumego puzzle:', err);
       return null;

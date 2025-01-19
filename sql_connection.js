@@ -350,30 +350,44 @@ class SqlConnection {
     
     async getRandomPuzzle(rating) {
       const sql = `
-        WITH Nearest AS (
-          SELECT *, ABS(rating - ${rating}) AS diff
-          FROM puzzles
-          ORDER BY diff, attempts ASC
-          LIMIT 1
-        )
-        SELECT * FROM Nearest;
+          WITH Nearest AS (
+            SELECT *, ABS(rating - ${rating}) AS diff
+            FROM puzzles
+            ORDER BY diff - happy_score, attempts ASC
+            LIMIT 5
+          )
+          SELECT * FROM Nearest;
       `;
       
-      const puzzle = await this._send(sql, { single: true });
+      // Fetch the list of puzzles from the database
+      const puzzles = await this._send(sql);
       
-      if (puzzle) {
-        const updateSql = `
-          UPDATE puzzles
-          SET attempts = attempts + 1
-          WHERE id = ${puzzle.id};
-        `;
-        await this._send(updateSql);
+      if (puzzles && puzzles.length > 0) {
+          // Randomly select one puzzle from the list
+          const randomIndex = Math.floor(Math.random() * puzzles.length);
+          const selectedPuzzle = puzzles[randomIndex];
+          
+          // Update the attempts count for the selected puzzle
+          const updateSql = `
+              UPDATE puzzles
+              SET attempts = attempts + 1
+              WHERE id = ${selectedPuzzle.id};
+          `;
+          await this._send(updateSql);
+          
+          return selectedPuzzle;
+      } else {
+          return null; // Return null if no puzzles are found
       }
-      
-      return puzzle;
-    }
+  }
+  
     
     async adjustRating(puzzleId, delta) {
+      const anchor = await this.getAnchorById(puzzleId);
+      if(anchor == '1'){ // if the puzzle is an anchor, don't adjust the rating  
+        console.log("Anchor puzzle, rating not adjusted");
+        return;
+      }
       const sql = `UPDATE puzzles SET rating = rating + ${delta} WHERE id = ${puzzleId};`;
       await this._send(sql);
     }
@@ -383,7 +397,16 @@ class SqlConnection {
       await this._send(sql);
     }
     
-  
+    async getPuzzleRatingById(id) {
+      const sql = `SELECT rating FROM puzzles WHERE id = ${id};`;
+      const result = await this._send(sql, { single: true });
+      return result ? result.rating : null; // Return the rating or null if the puzzle doesn't exist
+  }
+  async getAnchorById(id) {
+    const sql = `SELECT is_anchor FROM puzzles WHERE id = ${id};`;
+    const result = await this._send(sql, { single: true });
+    return result ? result.is_anchor : null; // Return the rating or null if the puzzle doesn't exist
+}
     close() {
       this.reader.close();
     }

@@ -30,16 +30,38 @@ function startInteractiveTutorial(topic, boardsize) {
     // Handle tutorial cases
     switch (topic) {
         case "intro":
-            board.addObject({ x: 2, y: 2, c: WGo.B }); // Adjust coordinates for 5x5
-            board.addObject({ x: 3, y: 2, c: WGo.W });
             lessoninfo.innerHTML = "Black stones go first. Try placing a stone!"
             break;
 
-        case "liberties":
-            board.addObject({ x: 1, y: 1, c: WGo.B }); // Adjust coordinates for 5x5
-            board.addObject({ x: 1, y: 2, c: WGo.W });
-            lessoninfo.innerHTML = "Count liberties of the black stone."
-            break;
+            case "liberties":
+                const stoneX = 1, stoneY = 1; // Coordinates of the black stone
+                board.addObject({ x: stoneX, y: stoneY, c: WGo.B }); // Add black stone
+            
+                // Define adjacent coordinates and corresponding labels
+                const liberties = [
+                    { x: stoneX, y: stoneY + 1, text: "1" }, // Above
+                    { x: stoneX, y: stoneY - 1, text: "2" }, // Below
+                    { x: stoneX - 1, y: stoneY, text: "3" }, // Left
+                    { x: stoneX + 1, y: stoneY, text: "4" }  // Right
+                ];
+            
+                liberties.forEach(liberty => {
+                    // Only add label if it's within the board
+                    if (liberty.x >= 0 && liberty.x < board.size && liberty.y >= 0 && liberty.y < board.size) {
+                        board.addObject({
+                            x: liberty.x,
+                            y: liberty.y,
+                            type: "LB", // Label marker
+                            text: liberty.text // The number or label
+                        });
+                    }
+                });
+            
+                lessoninfo.innerHTML = "Count liberties of the black stone.";
+                break;
+            
+
+            
 
         // Add cases for other lessons
     }

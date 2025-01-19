@@ -16,7 +16,7 @@ const tsumego_sql = new TsumegoConnection("./tsumego_sets.db")
 const aiInstances = {};
 
 
-const AI_game_delay_seconds = 1
+const AI_game_delay_seconds = 60
 
 // seconds per week = 604800
 // seconds per day = 86400
@@ -164,7 +164,47 @@ app.get('/ai-table', async (req, res) => {
         res.status(500).send("Error generating AI table.<br>"+error);
     }
 });
+app.get('/tsumego-rate', async (req, res) => {
+    // Extract query parameters
+    const { puzzle_id, delta } = req.query; // 1 for like, -1 for dislike
 
+    console.log(`Tsumego Rating Data:`);
+    console.log(`  Puzzle ID: ${puzzle_id}`);
+    console.log(`  Delta: ${delta}`);
+
+    await tsumego_sql.adjustHappyScore(puzzle_id,delta);
+
+    // Send a simple response back
+    res.send('Tsumego rating data logged to the console.');
+});
+app.get('/tsumego-complete', async (req, res) => {
+    // Extract query parameters
+    const { is_correct, puzzle_id, user_rank } = req.query;
+
+    // Log the parameters to the console
+    console.log(`Tsumego Completion Data:`);
+    console.log(`  Is Correct: ${is_correct}`);
+    console.log(`  Puzzle ID: ${puzzle_id}`);
+    console.log(`  User Rank: ${user_rank}`);
+
+    const puzzle_rating = await tsumego_sql.getPuzzleRatingById(puzzle_id);
+    const user_rating = await convertKyuDanToLevel(user_rank);
+
+    if(puzzle_rating == user_rating){
+        if(is_correct == 'true'){
+            console.log("Correct")
+            await tsumego_sql.adjustRating(puzzle_id, -1)
+            await tsumego_sql.markPuzzleAsSolved(puzzle_id)
+        }else{
+            console.log("Incorrect")
+            await tsumego_sql.adjustRating(puzzle_id, 1)
+        }
+    }
+
+
+    // Send a simple response back
+    res.send('Tsumego completion data logged to the console.');
+});
 
 
 // get requests
@@ -185,7 +225,7 @@ app.get('/get-tsumego', async (req, res) => {
             return res.status(404).json({ error: 'Puzzle not found or failed to generate.' });
         }
 
-        res.status(200).json({ puzzle });
+        res.status(200).json({ puzzle:puzzle.sgf, id:puzzle.id });
     } catch (err) {
         console.error('Error handling /get-tsumego request:', err);
         res.status(500).json({ error: 'Internal server error.' });

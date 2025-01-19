@@ -46,6 +46,21 @@ document.addEventListener('DOMContentLoaded', () => {
             tab.classList.add('border-b-4', 'border-badukAccent');
             window.dispatchEvent(new Event('resize'));
             document.getElementById('profile-rank').innerHTML = localStorage.getItem('local_rank') || "Error" // set rank to last rank used  
+            // Scroll to the bottom of the page instantly
+document.body.style.overflow = "auto";
+window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "auto" // Instant scrolling
+});
+
+
+// Disable scrolling
+function disableScroll() {
+    document.body.style.overflow = "hidden";
+}
+
+// Wait for scrolling to complete, then disable scrolling
+setTimeout(disableScroll, 500); // Adjust timeout as needed
 
 
         });
@@ -113,8 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initialize WGo.js Board
         boardContainer.innerHTML = "";
         board = new WGo.Board(boardContainer, {
-            size: boardsize
+            size: boardsize, // Board size (e.g., 19 for standard)
+            width: Math.min(window.innerWidth * 0.8, 600), // Responsive width
+            height: Math.min(window.innerHeight * 0.8, 600), // Responsive height
         });
+        
         endGameButton.classList.add('hidden');
 
         // Dynamically set board size to fit most of the screen
