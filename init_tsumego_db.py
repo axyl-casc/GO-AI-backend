@@ -24,8 +24,13 @@ def insert_filenames_into_db(db_path, directory_path):
                 rating = 1000 # 1d
             else:
                 rating = 969  # Default rating (30k)
+            if "ggg" not in filename.lower():
+                if not (rating == 969):
+                    rating = rating - 5
+
+
             anchor = 0
-            if not rating == 969:
+            if not (rating == 969):
                 rating = rating + random.randint(-4,4)
             else:
                 anchor = 1
