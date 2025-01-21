@@ -236,8 +236,8 @@ async function task() {
     try {
         console.log(`Training game started at ${new Date().toISOString()}`);
         //await trainingGame(sql, 9); // Run training game
-        //await trainingGame(sql, 13); // Run training game
-        await trainingGame(sql, 19); // Run training game
+        await trainingGame(sql, 13); // Run training game
+        //await trainingGame(sql, 19); // Run training game
         console.log(`Training game completed at ${new Date().toISOString()}`);
     } catch (error) {
         console.error(`Error during training game: ${error.message}`);

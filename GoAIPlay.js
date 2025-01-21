@@ -75,9 +75,9 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
             stone_move = cleanMove(stone_move);
 
 
-            if (turn_counter % 5 == 0) {
-                print_board(game);
-            }
+            //if (turn_counter % 5 == 0) {
+             //   print_board(game);
+            //}
 
             // Check if the move is "resign" or "pass"
             if (stone_move.toLowerCase() === "resign" || stone_move.toLowerCase() === "pass") {

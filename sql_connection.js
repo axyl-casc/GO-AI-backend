@@ -106,6 +106,8 @@ class SqlConnection {
           SELECT *
           FROM AI
           WHERE level_${boardsize} = ${rank}
+          ORDER BY RANDOM()
+          LIMIT 1 
         ),
         NearestBelow AS (
           SELECT *
@@ -219,22 +221,24 @@ class SqlConnection {
     const stats = await this._send(getSeasonStatsSql, false);
     const { season_games, season_wins, current_level } = stats[0];
 
-    if (season_games >= 5) {
+    if (season_games >= 10) {
       // Reset season_games and season_wins, and adjust level based on season_wins
       const resetSql = `
-          UPDATE AI 
-          SET 
-              season_games_${boardsize} = 0,
-              season_wins_${boardsize} = 0,
-              level_${boardsize} = CASE 
-                  WHEN ${season_wins} >= 4 THEN level_${boardsize} + 1
-                  WHEN ${season_wins} <= 2 THEN level_${boardsize} - 1
-                  ELSE level_${boardsize}
-              END
-          WHERE path="${path}";
-        `;
+        UPDATE AI 
+        SET 
+            season_games_${boardsize} = 0,
+            season_wins_${boardsize} = 0,
+            level_${boardsize} = CASE 
+                WHEN ${season_wins} >= 9 THEN level_${boardsize} + 2 
+                WHEN ${season_wins} > 7 THEN level_${boardsize} + 1 
+                WHEN ${season_wins} < 3 AND ${season_wins} > 1 THEN level_${boardsize} - 1
+                WHEN ${season_wins} <= 1 THEN level_${boardsize} - 2
+                ELSE level_${boardsize}
+            END
+        WHERE path="${path}";
+      `;
       await this._send(resetSql, true);
-    }
+  }
 
     // Return updated level for verification or debugging
     return current_level;

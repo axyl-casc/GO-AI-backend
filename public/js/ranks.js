@@ -1,6 +1,6 @@
 
-const LOWEST_RANK = '40k';
-const DEFAULT_RANK = '30k';
+const LOWEST_RANK = '45k';
+const DEFAULT_RANK = '40k';
 
 // Ranks conversion utility
 const ALL_RANKS = (() => {

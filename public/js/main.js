@@ -1,4 +1,3 @@
-const { convertKyuDanToLevel } = require("../../rank_conversion");
 
 async function fetchData(url) {
     try {
@@ -125,13 +124,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // 7x7
             const beginner = convertKyuDanToLevel("35k")
             // 9x9
-            const intermediate = convertKyuDanToLevel("10k")
+            const intermediate = convertKyuDanToLevel("25k")
             // 13x13
-            const advanced = convertKyuDanToLevel("5k")
+            const advanced = convertKyuDanToLevel("17k")
             // 19x19
 
             // spread
-            const rndSpread = 3;
+            const rndSpread = 2;
             let playerlevel = convertKyuDanToLevel(getRank()) + getRandomInt(-rndSpread, rndSpread);
 
             // add a bit of randomness to the player level
@@ -153,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("New Game")
 
         // clamp rank
-        const MAXRANK = "5k"
+        const MAXRANK = "3d"
         if (convertKyuDanToLevel(getRank()) > convertKyuDanToLevel(MAXRANK)) {
             rank = MAXRANK
         }
