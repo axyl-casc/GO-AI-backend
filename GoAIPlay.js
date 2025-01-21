@@ -2,6 +2,8 @@
 const { GoAIInstance } = require('./ExternalAI');
 const { Game } = require('tenuki');
 
+const DEBUG = true;
+
 async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, boardsize) {
     console.log(`New game started\n\n${team1_paths}\n\nVERSUS\n\n${team2_paths}\n`);
     const team1 = [];
@@ -46,7 +48,7 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
             await ai.sendCommand(`play black ${gtpMove}`);
         }
     }
-    if(placed_stones.length > 0){
+    if (placed_stones.length > 0) {
         turn_counter++; // white goes first
     }
 
@@ -71,6 +73,11 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
             let stone_move = await currentPlayer.sendCommand(`genmove ${moveColor}`);
             stone_move = stone_move[0]
             stone_move = cleanMove(stone_move);
+
+
+            if (turn_counter % 5 == 0) {
+                print_board(game);
+            }
 
             // Check if the move is "resign" or "pass"
             if (stone_move.toLowerCase() === "resign" || stone_move.toLowerCase() === "pass") {
@@ -131,7 +138,7 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
         }
 
         // for a tie breaker, assume server is correct
-        if(game_result.bCount == game_result.wCount){
+        if (game_result.bCount == game_result.wCount) {
             if (game.score().black > game.score().white) {
                 scores.push(`B+${score_diff}`);
             } else {
@@ -143,11 +150,11 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
         if (game_result.bCount > game_result.wCount) {
             console.log("Black Won");
             certainty = (game_result.bCount / (game_result.bCount + game_result.wCount)) * 100
-            return {winner: team1_paths[0], certainty: certainty};
+            return { winner: team1_paths[0], certainty: certainty };
         } else {
             console.log("White Won");
             certainty = (game_result.wCount / (game_result.bCount + game_result.wCount)) * 100
-            return {winner: team2_paths[0], certainty: certainty};
+            return { winner: team2_paths[0], certainty: certainty };
         }
 
     } catch (err) {
@@ -155,7 +162,7 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
     }
 
     console.log("End of File");
-    return {winner: null, certainty: 100}; // In case of an error or tie
+    return { winner: null, certainty: 100 }; // In case of an error or tie
 }
 
 
@@ -194,7 +201,7 @@ function parseCoordinates(move, boardsize) {
     const row = parseInt(move.slice(1)) - 1; // Convert to 0-based index
 
     // Calculate column index, skipping 'I'
-    const col = colLetter < 'I' 
+    const col = colLetter < 'I'
         ? colLetter.charCodeAt(0) - 'A'.charCodeAt(0) // Before 'I'
         : colLetter.charCodeAt(0) - 'A'.charCodeAt(0) - 1; // After 'I'
 
@@ -202,6 +209,7 @@ function parseCoordinates(move, boardsize) {
 }
 
 function print_board(game) {
+    console.log('\n');
     // Print the board's current state
     const size = game.boardSize; // Assuming a 19x19 board
     for (let y = 0; y < size; y++) {

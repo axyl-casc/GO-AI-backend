@@ -1,3 +1,5 @@
+const { convertKyuDanToLevel } = require("../../rank_conversion");
+
 async function fetchData(url) {
     try {
         const response = await fetch(url);
@@ -31,34 +33,34 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById(targetTab).classList.remove('hidden');
 
 
-            if(targetTab == "play"){
+            if (targetTab == "play") {
                 const startGameButton = document.getElementById('startGame');
 
                 // Check if the button exists and trigger the click event
                 if (startGameButton) {
-                  const clickEvent = new Event('click', { bubbles: true, cancelable: true });
-                  startGameButton.dispatchEvent(clickEvent);
+                    const clickEvent = new Event('click', { bubbles: true, cancelable: true });
+                    startGameButton.dispatchEvent(clickEvent);
                 }
                 let testDiv = document.getElementById("boardContainer");
                 testDiv.scrollIntoView({
-                  behavior: "auto",
-                  block: "center",
-                  inline: "center",
+                    behavior: "auto",
+                    block: "center",
+                    inline: "center",
                 });
 
-                
+
             }
 
-            if(targetTab == "learn"){
+            if (targetTab == "learn") {
                 updateLessonsVisibility();
             }
 
-            if(targetTab == "puzzle"){
+            if (targetTab == "puzzle") {
                 let testDiv = document.getElementById("tsumego_wrapper");
                 testDiv.scrollIntoView({
-                  behavior: "auto",
-                  block: "center",
-                  inline: "center",
+                    behavior: "auto",
+                    block: "center",
+                    inline: "center",
                 });
 
             }
@@ -92,10 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
     endGameButton.addEventListener('click', async () => {
         game_id = "0"
         let score = document.querySelector("#scorespan").textContent
-        if(score[0] == "B" && move_count != 0){
+        if (score[0] == "B" && move_count != 0) {
             showToast("You won!")
-            adjustRank(2) // increase rank by 2 on win
-        }else if(move_count != 0){
+            adjustRank(1) // increase rank by 1 on win
+        } else if (move_count != 0) {
             showToast("You lost!")
             adjustRank(-1) // decrease rank by 1 on loss
         }
@@ -112,12 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     rungame()
 
-    async function rungame(){
+    async function rungame() {
         document.getElementById("rankspan").innerHTML = getRank()
         boardsize = parseInt(document.getElementById('boardSize').value, 10)
         let rank = document.getElementById('playerRank').value
         rank = getRank()
-        if(isNaN(boardsize) || rank.endsWith("k") == false){
+        if (isNaN(boardsize) || rank.endsWith("k") == false) {
             console.log("Auto game started...")
 
             // 7x7
@@ -130,23 +132,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // spread
             const rndSpread = 3;
-            let playerlevel = convertKyuDanToLevel(getRank()) + getRandomInt(-rndSpread,rndSpread);
+            let playerlevel = convertKyuDanToLevel(getRank()) + getRandomInt(-rndSpread, rndSpread);
 
             // add a bit of randomness to the player level
 
-            if(playerlevel < beginner){
+            if (playerlevel < beginner) {
                 boardsize = 7
-            }else if(playerlevel < intermediate){
+            } else if (playerlevel < intermediate) {
                 boardsize = 9
-            }else if(playerlevel < advanced){
+            } else if (playerlevel < advanced) {
                 boardsize = 13
-            }else{
+            } else {
                 boardsize = 19
             }
             playerlevel = convertKyuDanToLevel(getRank())
 
         }
+
+        // shift + alt + f
         console.log("New Game")
+
+        // clamp rank
+        const MAXRANK = "5k"
+        if (convertKyuDanToLevel(getRank()) > convertKyuDanToLevel(MAXRANK)) {
+            rank = MAXRANK
+        }
 
         move_count = 0
 
@@ -160,20 +170,20 @@ document.addEventListener('DOMContentLoaded', () => {
             width: Math.min(window.innerWidth * 0.8, 600), // Responsive width
             height: Math.min(window.innerHeight * 0.8, 600), // Responsive height
         });
-        
+
         endGameButton.classList.add('hidden');
 
         // Dynamically set board size to fit most of the screen
-function resizeBoard() {
-    const boardSize = Math.min(window.innerWidth, window.innerHeight) * 0.7; // 80% of the smaller dimension
-    board.setDimensions(boardSize, boardSize); // Adjust the board dimensions
-}
+        function resizeBoard() {
+            const boardSize = Math.min(window.innerWidth, window.innerHeight) * 0.7; // 80% of the smaller dimension
+            board.setDimensions(boardSize, boardSize); // Adjust the board dimensions
+        }
 
-// Attach resize listener to update the board on window resize
-window.addEventListener("resize", resizeBoard);
+        // Attach resize listener to update the board on window resize
+        window.addEventListener("resize", resizeBoard);
 
-// Set initial size
-resizeBoard();
+        // Set initial size
+        resizeBoard();
         const game = new WGo.Game(boardsize); // Manages game state and rules
         game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${rank}`);
         game_id = game_id.gameId
@@ -183,97 +193,97 @@ resizeBoard();
         const stoneColor = WGo.B; // WGo.B for Black, WGo.W for White
 
         // Add a click event listener to place a stone// Board click event listener for player's move
-board.addEventListener("click", async function (x, y) {
-    if (!game.isOnBoard(x, y)) return; // Ignore invalid clicks
+        board.addEventListener("click", async function (x, y) {
+            if (!game.isOnBoard(x, y)) return; // Ignore invalid clicks
 
-    // Check if it's the player's turn
-    const isBlackTurn = move_count % 2 === 0;
-    if ((stoneColor === WGo.B && !isBlackTurn) || (stoneColor === WGo.W && isBlackTurn)) {
-        return; // Not the player's turn
-    }
+            // Check if it's the player's turn
+            const isBlackTurn = move_count % 2 === 0;
+            if ((stoneColor === WGo.B && !isBlackTurn) || (stoneColor === WGo.W && isBlackTurn)) {
+                return; // Not the player's turn
+            }
 
-    // Play the move and validate using WGo.Game
-    const result = game.play(x, y, stoneColor); // Validates and checks captures
-    if (result === 1 || result === 2 || result === 3 || result === 4) {
-        console.log("Invalid move:", result); // 1 = Out of bounds, 2 = Occupied, 3 = Suicide
-        return;
-    }
+            // Play the move and validate using WGo.Game
+            const result = game.play(x, y, stoneColor); // Validates and checks captures
+            if (result === 1 || result === 2 || result === 3 || result === 4) {
+                console.log("Invalid move:", result); // 1 = Out of bounds, 2 = Occupied, 3 = Suicide
+                return;
+            }
 
-    // Add the player's stone to the board
-    board.addObject({ x: x, y: y, c: stoneColor });
-    addMarker(x, y, board, stoneColor); // Update the marker for the player's move
-
-    // Remove captured stones
-    result.forEach(captured => board.removeObjectsAt(captured.x, captured.y));
-
-    // Convert move to Go notation (e.g., "D4")
-    const playerMove = convertToCoords(x, y);
-    console.log(`Player (${stoneColor === WGo.B ? "Black" : "White"}) move: ${playerMove}`);
-
-    move_count++; // Switch turns
-    document.querySelector("#movecountspan").textContent = move_count
-
-    // Fetch and play AI move
-    await handleAIMove(playerMove, board);
-
-    if(move_count > boardsize*boardsize / 3){
-        endGameButton.classList.remove('hidden');
-    }
-});
-
-// Function to handle AI's move
-async function handleAIMove(playerMove, board) {
-    try {
-        // sleep
-        //await new Promise(resolve => setTimeout(resolve, 2000));
-
-        const AI_COLOR = WGo.W
-
-        // Fetch AI move, passing player's move as a parameter
-        const response = await fetchData(`/move?id=${game_id}&move=${playerMove}`);
-        console.log(response)
-        const score = response.aiScore[0]
-        const ai_move = response.aiResponse; // Example: "D4"
-        console.log(`AI move: ${ai_move}`);
-        if(ai_move == 'pass'){
-            move_count++; // Switch turns
-            document.querySelector("#movecountspan").textContent = move_count
-            document.querySelector("#scorespan").textContent = score
-            return;
-        }
-
-        // Convert AI move to coordinates
-        const ai_x = ai_move[0].charCodeAt(0) - "A".charCodeAt(0) - (ai_move[0] >= "J" ? 1 : 0);
-        const ai_y = parseInt(ai_move.slice(1)) - 1;
-
-        // Play AI's move using WGo.Game
-        const result = game.play(ai_x, ai_y, AI_COLOR); // AI is White
-        if (result instanceof Array) {
-            // Add AI's stone to the board
-            board.addObject({ x: ai_x, y: ai_y, c: AI_COLOR });
-            addMarker(ai_x, ai_y, board, AI_COLOR); // Update the marker for the AI's move
-
+            // Add the player's stone to the board
+            board.addObject({ x: x, y: y, c: stoneColor });
+            addMarker(x, y, board, stoneColor); // Update the marker for the player's move
 
             // Remove captured stones
             result.forEach(captured => board.removeObjectsAt(captured.x, captured.y));
 
-            console.log(`AI placed: ${ai_move}`);
+            // Convert move to Go notation (e.g., "D4")
+            const playerMove = convertToCoords(x, y);
+            console.log(`Player (${stoneColor === WGo.B ? "Black" : "White"}) move: ${playerMove}`);
+
             move_count++; // Switch turns
             document.querySelector("#movecountspan").textContent = move_count
-            document.querySelector("#scorespan").textContent = score
-        } else {
-            console.error("AI made an invalid move:", result);
-        }
-    } catch (error) {
-        console.error("Error fetching AI move:", error);
-    }
-}
 
-// Helper function to convert coordinates to Go format (e.g., D4)
-function convertToCoords(x, y) {
-    const letters = "ABCDEFGHJKLMNOPQRSTUVWXYZ"; // Skips 'I'
-    return `${letters[x]}${y + 1}`;
-}
+            // Fetch and play AI move
+            await handleAIMove(playerMove, board);
+
+            if (move_count > boardsize * boardsize / 3) {
+                endGameButton.classList.remove('hidden');
+            }
+        });
+
+        // Function to handle AI's move
+        async function handleAIMove(playerMove, board) {
+            try {
+                // sleep
+                //await new Promise(resolve => setTimeout(resolve, 2000));
+
+                const AI_COLOR = WGo.W
+
+                // Fetch AI move, passing player's move as a parameter
+                const response = await fetchData(`/move?id=${game_id}&move=${playerMove}`);
+                console.log(response)
+                const score = response.aiScore[0]
+                const ai_move = response.aiResponse; // Example: "D4"
+                console.log(`AI move: ${ai_move}`);
+                if (ai_move == 'pass') {
+                    move_count++; // Switch turns
+                    document.querySelector("#movecountspan").textContent = move_count
+                    document.querySelector("#scorespan").textContent = score
+                    return;
+                }
+
+                // Convert AI move to coordinates
+                const ai_x = ai_move[0].charCodeAt(0) - "A".charCodeAt(0) - (ai_move[0] >= "J" ? 1 : 0);
+                const ai_y = parseInt(ai_move.slice(1)) - 1;
+
+                // Play AI's move using WGo.Game
+                const result = game.play(ai_x, ai_y, AI_COLOR); // AI is White
+                if (result instanceof Array) {
+                    // Add AI's stone to the board
+                    board.addObject({ x: ai_x, y: ai_y, c: AI_COLOR });
+                    addMarker(ai_x, ai_y, board, AI_COLOR); // Update the marker for the AI's move
+
+
+                    // Remove captured stones
+                    result.forEach(captured => board.removeObjectsAt(captured.x, captured.y));
+
+                    console.log(`AI placed: ${ai_move}`);
+                    move_count++; // Switch turns
+                    document.querySelector("#movecountspan").textContent = move_count
+                    document.querySelector("#scorespan").textContent = score
+                } else {
+                    console.error("AI made an invalid move:", result);
+                }
+            } catch (error) {
+                console.error("Error fetching AI move:", error);
+            }
+        }
+
+        // Helper function to convert coordinates to Go format (e.g., D4)
+        function convertToCoords(x, y) {
+            const letters = "ABCDEFGHJKLMNOPQRSTUVWXYZ"; // Skips 'I'
+            return `${letters[x]}${y + 1}`;
+        }
 
     };
 
@@ -289,7 +299,7 @@ function convertToCoords(x, y) {
 
 
 
-    
+
     // init learn tab
     console.log("DOMContentLoaded event fired.");
 
@@ -319,21 +329,21 @@ function convertToCoords(x, y) {
         });
     }
 
-// Add click event listeners to lesson titles for toggling content
-document.querySelectorAll('.lesson-title').forEach(title => {
-    title.addEventListener('click', () => {
-        // Hide all other lesson contents
-        document.querySelectorAll('.lesson-content').forEach(content => {
-            if (content !== title.nextElementSibling) {
-                content.classList.add('hidden');
-            }
-        });
+    // Add click event listeners to lesson titles for toggling content
+    document.querySelectorAll('.lesson-title').forEach(title => {
+        title.addEventListener('click', () => {
+            // Hide all other lesson contents
+            document.querySelectorAll('.lesson-content').forEach(content => {
+                if (content !== title.nextElementSibling) {
+                    content.classList.add('hidden');
+                }
+            });
 
-        // Toggle the visibility of the current content
-        const content = title.nextElementSibling;
-        content.classList.toggle('hidden');
+            // Toggle the visibility of the current content
+            const content = title.nextElementSibling;
+            content.classList.toggle('hidden');
+        });
     });
-});
 
 
     // Call the function to update lessons visibility
@@ -344,9 +354,9 @@ document.querySelectorAll('.lesson-title').forEach(title => {
 
     let testDiv = document.getElementById("boardContainer");
     testDiv.scrollIntoView({
-      behavior: "auto",
-      block: "center",
-      inline: "center",
+        behavior: "auto",
+        block: "center",
+        inline: "center",
     });
 
 
@@ -366,7 +376,7 @@ function addMarker(x, y, board, color) {
         });
     }
 
-    if(color == WGo.W){
+    if (color == WGo.W) {
         // Add a new marker at the given coordinates
         board.addObject({
             x: x,
@@ -375,7 +385,7 @@ function addMarker(x, y, board, color) {
             c: "rgba(0, 0, 0, 0.6)", // Optional: Customize the marker color (semi-transparent blue)
         });
     }
-    if(color == WGo.B){
+    if (color == WGo.B) {
         // Add a new marker at the given coordinates
         board.addObject({
             x: x,

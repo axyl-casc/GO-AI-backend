@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -28,180 +29,182 @@
 
     <link rel="stylesheet" type="text/css" href="extensions/tsumego/tsumego.css">
 </head>
+
 <body class="bg-badukWood font-sans m-0">
 
-      <!-- Toast Container -->
-      <div id="toast-container" class="fixed top-1/2 right-20 hidden z-50">
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-1/2 right-20 hidden z-50">
         <div id="toast"
             class="bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg opacity-0 transition-opacity duration-500 text-lg max-w-lg">
 
         </div>
     </div>
-    
-<!-- Header -->
-<header class="sticky fixed top-0 left-0 right-0 bg-badukBlack shadow-md z-50">
-    <nav class="flex border-b border-gray-300">
-        <button 
-            class="flex-1 text-white py-4 px-2 focus:outline-none active-tab border-b-4 border-badukAccent" 
-            data-tab="play"
-        >
-            Play
-        </button>
-        <button 
-            class="flex-1 text-white py-4 px-2 focus:outline-none" 
-            data-tab="puzzles"
-        >
-            Puzzles
-        </button>
-        <button 
-            class="flex-1 text-white py-4 px-2 focus:outline-none" 
-            data-tab="learn"
-        >
-            Learn
-        </button>
-        <button 
-            class="flex-1 text-white py-4 px-2 focus:outline-none" 
-            data-tab="profile"
-        >
-            Profile
-        </button>
-    </nav>
-</header>
+
+    <!-- Header -->
+    <header class="sticky fixed top-0 left-0 right-0 bg-badukBlack shadow-md z-50">
+        <nav class="flex border-b border-gray-300">
+            <button class="flex-1 text-white py-4 px-2 focus:outline-none active-tab border-b-4 border-badukAccent"
+                data-tab="play">
+                Play
+            </button>
+            <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="puzzles">
+                Puzzles
+            </button>
+            <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="learn">
+                Learn
+            </button>
+            <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="profile">
+                Profile
+            </button>
+        </nav>
+    </header>
 
     <!-- Main Content -->
-    <main class="py-20 mx-8 bg-badukWhite shadow-lg rounded-b-lg overflow-auto">
-
-        
+    <main class="py-20 mb-16 mx-8 bg-badukWhite shadow-lg rounded-b-lg overflow-auto">
         <div class="p-6">
-                <!-- Play Tab -->
-                <div id="play" class="sticky top-0 tab-content block flex justify-center bg-badukWhite overflow-auto">
-                    <div class="text-center w-full max-w-screen-lg space-y-8 py-16">
-                        <!-- Selectors -->
-                        <div id="selectors" class="space-y-4">
-                            <div>
-                                <label for="boardSize" class="block text-gray-700 mb-2">Select Board Size:</label>
-                                <select id="boardSize" class="w-full p-2 border border-grayBorder rounded">
-                                    <option value="" disabled selected>Select board size</option>
-                                    <option value="7">7x7</option>
-                                    <option value="9">9x9</option>
-                                    <option value="13">13x13</option>
-                                    <option value="19">19x19</option>
-                                </select>
-                            </div>
-                            <div id="rankSelector" class="hidden">
-                                <label for="playerRank" class="block text-gray-700 mb-2">Enter Your Rank (30k to 1d):</label>
-                                <input type="text" id="playerRank" class="w-full p-2 border border-grayBorder rounded" placeholder="e.g., 10k">
-                            </div>
-                            <button id="startGame" class="bg-badukAccent text-white px-4 py-2 rounded hover:bg-yellow-500 hidden">
-                                Start Game
+            <!-- Play Tab -->
+            <div id="play" class="sticky top-0 tab-content block flex justify-center bg-badukWhite overflow-auto">
+                <div class="text-center w-full max-w-screen-lg space-y-8 py-16">
+                    <!-- Selectors -->
+                    <div id="selectors" class="space-y-4">
+                        <div>
+                            <label for="boardSize" class="block text-gray-700 mb-2">Select Board Size:</label>
+                            <select id="boardSize" class="w-full p-2 border border-grayBorder rounded">
+                                <option value="" disabled selected>Select board size</option>
+                                <option value="7">7x7</option>
+                                <option value="9">9x9</option>
+                                <option value="13">13x13</option>
+                                <option value="19">19x19</option>
+                            </select>
+                        </div>
+                        <div id="rankSelector" class="hidden">
+                            <label for="playerRank" class="block text-gray-700 mb-2">Enter Your Rank (30k to
+                                1d):</label>
+                            <input type="text" id="playerRank" class="w-full p-2 border border-grayBorder rounded"
+                                placeholder="e.g., 10k">
+                        </div>
+                        <button id="startGame"
+                            class="bg-badukAccent text-white px-4 py-2 rounded hover:bg-yellow-500 hidden">
+                            Start Game
+                        </button>
+                    </div>
+
+                    <!-- Board Area -->
+                    <div id="wgoBoard" class="mt-6">
+                        <div id="boardContainer" class="mx-auto flex justify-center items-center"></div>
+                        <div class="mt-4 flex items-center justify-center space-x-4">
+                            <!-- Buttons -->
+                            <button id="newGame"
+                                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 hidden">
+                                New Game
+                            </button>
+                            <button id="endGame" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                                End Game
                             </button>
                         </div>
+                    </div>
 
-                        <!-- Board Area -->
-                        <div id="wgoBoard" class="mt-6">
-                            <div id="boardContainer" class="mx-auto flex justify-center items-center"></div>
-                            <div class="mt-4 flex items-center justify-center space-x-4">
-                                <!-- Buttons -->
-                                <button id="newGame" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 hidden">
-                                    New Game
-                                </button>
-                                <button id="endGame" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                                    End Game
-                                </button>
-                            </div>
+                    <!-- Score Info -->
+                    <div class="mt-4 text-gray-600 text-sm">
+                        <div class="flex justify-between w-1/2 mx-auto">
+                            <span>Rank:</span>
+                            <span id="rankspan">...</span>
                         </div>
-
-                        <!-- Score Info -->
-                        <div class="mt-4 text-gray-600 text-sm">
-                            <div class="flex justify-between w-1/2 mx-auto">
-                                <span>Rank:</span>
-                                <span id="rankspan">...</span>
-                            </div>
-                            <div class="flex justify-between w-1/2 mx-auto">
-                                <span>Score:</span>
-                                <span id="scorespan">...</span>
-                            </div>
-                            <div class="flex justify-between w-1/2 mx-auto">
-                                <span>Move Count:</span>
-                                <span id="movecountspan">...</span>
-                            </div>
+                        <div class="flex justify-between w-1/2 mx-auto">
+                            <span>Score:</span>
+                            <span id="scorespan">...</span>
+                        </div>
+                        <div class="flex justify-between w-1/2 mx-auto">
+                            <span>Move Count:</span>
+                            <span id="movecountspan">...</span>
                         </div>
                     </div>
                 </div>
-
-<!-- Puzzles Tab -->
-<div id="puzzles" class="sticky top-0 tab-content block flex justify-center items-start bg-badukWhite overflow-auto hidden">
-    <div class="text-center w-full max-w-screen-lg space-y-8">
-        <div class="flex justify-center items-center space-x-8">
-            <!-- Buttons -->
-            <div class="flex flex-col space-y-4">
-                <button id="likeTsumego" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                    Like Puzzle
-                </button>
-                <button id="dislikeTsumego" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                    Dislike Puzzle
-                </button>
-                <button id="nextTsumego" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    Next Puzzle
-                </button>
             </div>
-            <!-- Tsumego Wrapper -->
-            <div id="tsumego_wrapper" class="flex-grow max-w-[70%]">
-                <p>Your browser doesn't support WGo Player. Use a modern browser like IE9, Google Chrome, or Mozilla Firefox.</p>
+
+            <!-- Puzzles Tab -->
+            <div id="puzzles"
+                class="sticky top-0 tab-content block flex justify-center items-start bg-badukWhite overflow-auto hidden">
+                <div class="text-center w-full max-w-screen-lg space-y-8">
+                    <div class="flex justify-center items-center space-x-8">
+                        <!-- Buttons -->
+                        <div class="flex flex-col space-y-4">
+                            <button id="likeTsumego"
+                                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                Like Puzzle
+                            </button>
+                            <button id="dislikeTsumego"
+                                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                                Dislike Puzzle
+                            </button>
+                            <button id="nextTsumego" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                Next Puzzle
+                            </button>
+                        </div>
+                        <!-- Tsumego Wrapper -->
+                        <div id="tsumego_wrapper" class="flex-grow max-w-[70%]">
+                            <p>Your browser doesn't support WGo Player. Use a modern browser like IE9, Google Chrome, or
+                                Mozilla Firefox.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Learn Tab -->
+            <div id="learn" class="tab-content hidden">
+                <div class="p-4" id="learnboard"></div>
+                <div class="p-2" id="learninfo"></div>
+                <div id="lessons" class="space-y-4">
+                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="50k">
+                        <div
+                            class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
+                            Lesson 1: Introduction to Go
+                        </div>
+                        <div class="lesson-content hidden px-4 py-2 text-gray-700">
+                            Learn the basic rules, concepts, and history of the game of Go.
+                            <br><button
+                                class="btn mt-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow"
+                                onclick="startInteractiveTutorial('intro', 5)">Start Tutorial</button>
+                        </div>
+                    </div>
+                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="30k">
+                        <div
+                            class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
+                            Lesson 2: Understanding Liberties
+                        </div>
+                        <div class="lesson-content hidden px-4 py-2 text-gray-700">
+                            Understand the concept of liberties, a critical aspect of Go strategy.
+                            <br><button
+                                class="btn mt-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow"
+                                onclick="startInteractiveTutorial('liberties', 5)">Practice Liberties</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile" class="tab-content hidden">
+                <h1 class="text-2xl font-bold mb-6 text-badukBlack">Profile</h1>
+                <p>Rank: <span id="profile-rank"></span></p>
             </div>
         </div>
-    </div>
-</div>
-
-
-                <!-- Learn Tab -->
-                <div id="learn" class="tab-content hidden">
-                    <div class="p-4" id="learnboard"></div>
-                    <div class="p-2" id="learninfo"></div>
-                    <div id="lessons" class="space-y-4">
-                        <div class="lesson-item border rounded-lg bg-white shadow" data-rank="50k">
-                            <div class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
-                                Lesson 1: Introduction to Go
-                            </div>
-                            <div class="lesson-content hidden px-4 py-2 text-gray-700">
-                                Learn the basic rules, concepts, and history of the game of Go.
-                                <br><button class="btn mt-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow" onclick="startInteractiveTutorial('intro', 5)">Start Tutorial</button>
-                            </div>
-                        </div>
-                        <div class="lesson-item border rounded-lg bg-white shadow" data-rank="30k">
-                            <div class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
-                                Lesson 2: Understanding Liberties
-                            </div>
-                            <div class="lesson-content hidden px-4 py-2 text-gray-700">
-                                Understand the concept of liberties, a critical aspect of Go strategy.
-                                <br><button class="btn mt-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow" onclick="startInteractiveTutorial('liberties', 5)">Practice Liberties</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Profile Tab -->
-                <div id="profile" class="tab-content hidden">
-                    <h1 class="text-2xl font-bold mb-6 text-badukBlack">Profile</h1>
-                    <p>Rank: <span id="profile-rank"></span></p>
-                </div>
-            </div>
     </main>
 
 
     <!-- Script -->
-	<script type="text/javascript" src="wgo/wgo.js"></script>
-	<script type="text/javascript" src="wgo/kifu.js"></script>
-	<script type="text/javascript" src="wgo/sgfparser.js"></script>
-	<script type="text/javascript" src="wgo/player.js"></script>
-	<script type="text/javascript" src="wgo/basicplayer.js"></script>
-	<script type="text/javascript" src="wgo/basicplayer.component.js"></script>
-	<script type="text/javascript" src="wgo/basicplayer.infobox.js"></script>
-	<script type="text/javascript" src="wgo/basicplayer.commentbox.js"></script>
-	<script type="text/javascript" src="wgo/basicplayer.control.js"></script>
-	<script type="text/javascript" src="wgo/player.editable.js"></script>
-	<script type="text/javascript" src="wgo/scoremode.js"></script>
-	<script type="text/javascript" src="wgo/player.permalink.js"></script>
+    <script type="text/javascript" src="wgo/wgo.js"></script>
+    <script type="text/javascript" src="wgo/kifu.js"></script>
+    <script type="text/javascript" src="wgo/sgfparser.js"></script>
+    <script type="text/javascript" src="wgo/player.js"></script>
+    <script type="text/javascript" src="wgo/basicplayer.js"></script>
+    <script type="text/javascript" src="wgo/basicplayer.component.js"></script>
+    <script type="text/javascript" src="wgo/basicplayer.infobox.js"></script>
+    <script type="text/javascript" src="wgo/basicplayer.commentbox.js"></script>
+    <script type="text/javascript" src="wgo/basicplayer.control.js"></script>
+    <script type="text/javascript" src="wgo/player.editable.js"></script>
+    <script type="text/javascript" src="wgo/scoremode.js"></script>
+    <script type="text/javascript" src="wgo/player.permalink.js"></script>
 
     <script src="./extensions/tsumego/tsumego.js"></script>
     <script src="js/utils.js"></script>
@@ -212,44 +215,46 @@
 
     <script>
         window.addEventListener('resize', () => {
-    console.log('Page fully loaded, triggering resize.');
-    
-    // Optional: Force reflow/repaint to ensure elements are laid out correctly
-    const boardElement = document.getElementById('tsumego_wrapper');
-    if (boardElement) {
-        boardElement.style.display = 'block'; // Ensure it's visible
-        boardElement.offsetHeight; // Trigger reflow
-    }
-});
+            console.log('Page fully loaded, triggering resize.');
+
+            // Optional: Force reflow/repaint to ensure elements are laid out correctly
+            const boardElement = document.getElementById('tsumego_wrapper');
+            if (boardElement) {
+                boardElement.style.display = 'block'; // Ensure it's visible
+                boardElement.offsetHeight; // Trigger reflow
+            }
+        });
 
     </script>
 
-<style>
+    <style>
+        .wgo-board {
+            max-width: 80vw;
+            /* Maximum width at 95% of the viewport width */
+            max-height: 80vh;
+            /* Maximum height at 95% of the viewport height */
+        }
 
-.wgo-board {
-    max-width: 80vw; /* Maximum width at 95% of the viewport width */
-    max-height: 80vh; /* Maximum height at 95% of the viewport height */
-}
-
-html {
-    transform: scale(1);
-    transform-origin: 0 0;
-    zoom: 1;
-}
-
-
-body {
-    -webkit-transform: translateZ(0); /* Optimizes rendering on high-DPI screens */
-}
-
-@media (min-resolution: 2dppx) {
-    .wgo-board {
-        transform: scale(0.75); /* Scale down for high-DPI screens */
-    }
-}
+        html {
+            transform: scale(1);
+            transform-origin: 0 0;
+            zoom: 1;
+        }
 
 
-</style>
+        body {
+            -webkit-transform: translateZ(0);
+            /* Optimizes rendering on high-DPI screens */
+        }
+
+        @media (min-resolution: 2dppx) {
+            .wgo-board {
+                transform: scale(0.75);
+                /* Scale down for high-DPI screens */
+            }
+        }
+    </style>
 
 </body>
+
 </html>

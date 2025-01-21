@@ -1,10 +1,13 @@
-KataGo v1.14.1
+KataGo v1.15.3
 https://github.com/lightvector/KataGo
 
 For neural nets from the latest run, download from here: 
 https://katagotraining.org/
 For nets from earlier runs, see:
-https://d3dndmfyhecmj0.cloudfront.net/g170/neuralnets/index.html
+https://katagoarchive.org/
+
+For the human SL net (b18c384nbt-humanv0.bin.gz), it was released with:
+https://github.com/lightvector/KataGo/releases/tag/v1.15.0
 
 For differences between this version and older versions, see releases page at
 https://github.com/lightvector/KataGo/releases/
@@ -45,8 +48,22 @@ If you encounter errors due to a missing "msvcp140.dll" or "msvcp140_1.dll" or "
 https://www.microsoft.com/en-us/download/details.aspx?id=48145
 If this is for a 64-bit Windows version of KataGo, these dll files have already been included for you, otherwise you will need to install them yourself. On a 64-bit Windows version, there is a rare chance that you may need to delete them if you already have it installed yourself separately and the pre-included files are actually causing problems running KataGo.
 
+-----------------------------------------------------
+HUMAN-STYLE PLAY AND ANALYSIS:
+-----------------------------------------------------
 
-Other things you can do:
+You can also have KataGo imitate human play if you download the human SL model b18c384nbt-humanv0.bin.gz from https://github.com/lightvector/KataGo/releases/tag/v1.15.0, and run a command like the following, providing both a model and the human SL model:
+
+./katago.exe gtp -model <NEURALNET>.bin.gz -human-model b18c384nbt-humanv0.bin.gz -config gtp_human5k_example.cfg
+
+The gtp_human5k_example.cfg configures KataGo to imitate 5-kyu-level players. You can change it to imitate other ranks too, as well as to do many more things, including making KataGo play in a human style but still at a strong level or analyze in interesting ways. Read the config file itself for documentation on some of these possibilities! 
+
+And see also this guide to using the human SL model, which is written from the perspective of the JSON-based analysis engine mentioned below, but is also applicable to gtp as well.
+https://github.com/lightvector/KataGo/blob/master/docs/Analysis_Engine.md#human-sl-analysis-guide
+
+-----------------------------------------------------
+OTHER THINGS YOU CAN DO:
+-----------------------------------------------------
 
 Run a JSON-based analysis engine (https://github.com/lightvector/KataGo/blob/master/docs/Analysis_Engine.md) that can do efficient batched evaluations for a backend Go service:
 

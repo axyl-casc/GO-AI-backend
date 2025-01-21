@@ -57,7 +57,7 @@ function adjustRank(amount) {
 
     let newLevel = Math.max(0, Math.min(ALL_RANKS.length - 1, currentLevel + amount));
 
-    if(newLevel < convertKyuDanToLevel(LOWEST_RANK)){
+    if (newLevel < convertKyuDanToLevel(LOWEST_RANK)) {
         newLevel = convertKyuDanToLevel(LOWEST_RANK); // lowest rank
     }
 

@@ -2,7 +2,7 @@ const { SqlConnection, TsumegoConnection } = require('./sql_connection');
 const { trainingGame } = require('./train_database');
 const { generateTsumego } = require('./tsumego_gen.js');
 const { PlayerAI } = require('./playerAI');
-const {parseCommand} = require('./GoAIPlay')
+const { parseCommand } = require('./GoAIPlay')
 
 const { convertKyuDanToLevel, convertLevelToKyuDan } = require('./rank_conversion');
 const path = require('path');
@@ -16,7 +16,7 @@ const tsumego_sql = new TsumegoConnection("./tsumego_sets.db")
 const aiInstances = {};
 
 
-const AI_game_delay_seconds = 3600
+const AI_game_delay_seconds = 1
 
 // seconds per week = 604800
 // seconds per day = 86400
@@ -36,7 +36,7 @@ const generateAiTable = async (dbConnection, boardSize) => {
         console.error("Error fetching data from the database:", err);
         throw err;
     }
-    
+
 
     if (!Array.isArray(rows)) {
         throw new Error("Query result is not an array.");
@@ -161,7 +161,7 @@ app.get('/ai-table', async (req, res) => {
         const html = await generateAiTable(sql, boardSize);
         res.send(html);
     } catch (error) {
-        res.status(500).send("Error generating AI table.<br>"+error);
+        res.status(500).send("Error generating AI table.<br>" + error);
     }
 });
 app.get('/tsumego-rate', async (req, res) => {
@@ -172,7 +172,7 @@ app.get('/tsumego-rate', async (req, res) => {
     console.log(`  Puzzle ID: ${puzzle_id}`);
     console.log(`  Delta: ${delta}`);
 
-    await tsumego_sql.adjustHappyScore(puzzle_id,delta);
+    await tsumego_sql.adjustHappyScore(puzzle_id, delta);
 
     // Send a simple response back
     res.send('Tsumego rating data logged to the console.');
@@ -190,12 +190,12 @@ app.get('/tsumego-complete', async (req, res) => {
     const puzzle_rating = await tsumego_sql.getPuzzleRatingById(puzzle_id);
     const user_rating = await convertKyuDanToLevel(user_rank);
 
-    if(Math.abs(puzzle_rating-user_rating) <= 4){
-        if(is_correct == 'true'){
+    if (Math.abs(puzzle_rating - user_rating) <= 4) {
+        if (is_correct == 'true') {
             console.log("Correct")
             await tsumego_sql.adjustRating(puzzle_id, -1)
             await tsumego_sql.markPuzzleAsSolved(puzzle_id)
-        }else{
+        } else {
             console.log("Incorrect")
             await tsumego_sql.adjustRating(puzzle_id, 1)
         }
@@ -224,7 +224,7 @@ app.get('/get-tsumego', async (req, res) => {
             return res.status(404).json({ error: 'Puzzle not found or failed to generate.' });
         }
 
-        res.status(200).json({ puzzle:puzzle.sgf, id:puzzle.id });
+        res.status(200).json({ puzzle: puzzle.sgf, id: puzzle.id });
     } catch (err) {
         console.error('Error handling /get-tsumego request:', err);
         res.status(500).json({ error: 'Internal server error.' });
@@ -235,8 +235,8 @@ app.get('/get-tsumego', async (req, res) => {
 async function task() {
     try {
         console.log(`Training game started at ${new Date().toISOString()}`);
-        await trainingGame(sql, 9); // Run training game
-        await trainingGame(sql, 13); // Run training game
+        //await trainingGame(sql, 9); // Run training game
+        //await trainingGame(sql, 13); // Run training game
         await trainingGame(sql, 19); // Run training game
         console.log(`Training game completed at ${new Date().toISOString()}`);
     } catch (error) {
@@ -276,8 +276,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Endpoint to create a new game
 app.get("/create-game", async (req, res) => {
-    let { komi = 6.5, handicap = 0, rank = "30k", boardsize=13, ai_color="white" } =
-      req.query;
+    let { komi = 6.5, handicap = 0, rank = "30k", boardsize = 13, ai_color = "white" } =
+        req.query;
 
     komi = parseInt(komi)
     handicap = parseInt(handicap)
@@ -290,15 +290,15 @@ app.get("/create-game", async (req, res) => {
     await pAI.create(sql, komi, boardsize, handicap, rank, ai_color);
 
     aiInstances[gameId] = {
-      ai: pAI,
-      komi: komi,
-      handicap: handicap,
-      rank: rank
+        ai: pAI,
+        komi: komi,
+        handicap: handicap,
+        rank: rank
     };
-  
+
     res.json({ gameId });
-  });
-  
+});
+
 // Endpoint to make a move
 app.get("/move", async (req, res) => {
     const { id, move } = req.query;
@@ -306,26 +306,26 @@ app.get("/move", async (req, res) => {
     console.log(id)
     console.log(move)
     if (!id || !move) {
-      return res.status(400).json({ error: "Game ID and move are required." });
+        return res.status(400).json({ error: "Game ID and move are required." });
     }
-  
+
     const game = aiInstances[id];
     if (!game) {
-      return res.status(404).json({ error: "Game not found." });
+        return res.status(404).json({ error: "Game not found." });
     }
-  
+
     try {
         console.log("Playing the move B")
-      // Send the player's move to the AI
-      let {response, score} = await game.ai.play(move);
+        // Send the player's move to the AI
+        let { response, score } = await game.ai.play(move);
 
-      res.json({ aiResponse: response, aiScore: score });
+        res.json({ aiResponse: response, aiScore: score });
     } catch (err) {
         console.error(err);
-      res.status(500).json({ error: err.message });
+        res.status(500).json({ error: err.message });
     }
-  });
-  
+});
+
 cleanup()
 task()
 // Start the server

@@ -1,11 +1,11 @@
 const { convertKyuDanToLevel, convertLevelToKyuDan } = require('./rank_conversion');
-const {parseCommand, cleanMove} = require('./GoAIPlay')
+const { parseCommand, cleanMove } = require('./GoAIPlay')
 const { GoAIInstance } = require('./ExternalAI');
 
-function get_opp_color(current){
-    if(current == "black"){
+function get_opp_color(current) {
+    if (current == "black") {
         return "white"
-    }else{
+    } else {
         return "black"
     }
 }
@@ -28,33 +28,33 @@ class PlayerAI {
         let ai_between = await sql.getBetween(boardsize, target_level)
         console.log(ai_between)
         this.ai_count = ai_between.length
-        if(this.ai_count == 1){
+        if (this.ai_count == 1) {
             ai_between = [ai_between[0].path]
-        }else{
+        } else {
             ai_between = [ai_between[0].path, ai_between[1].path]
         }
         this.paths = ai_between
         this.instances = []
         this.ai_color = ai_color
 
-        for(let i of this.paths){
+        for (let i of this.paths) {
             let [exe, args] = parseCommand(i)
             this.instances.push(new GoAIInstance(exe, args))
         }
 
-        for(let ai of this.instances){
+        for (let ai of this.instances) {
             ai.sendCommand(`komi ${komi}`)
             ai.sendCommand(`boardsize ${boardsize}`)
         }
     }
 
-    async terminate(){
+    async terminate() {
         for (let i of this.instances) {
-            await i.sendCommand(`quit`); 
+            await i.sendCommand(`quit`);
             await i.terminate()
         }
     }
-    
+
 
     /**
      * Makes a move based on the current game state.
@@ -66,16 +66,16 @@ class PlayerAI {
     async play(move) {
         this.last_move_time = new Date()
         let response = ""
-        if(this.ai_count == 1){
+        if (this.ai_count == 1) {
             response = await this.instances[0].sendCommand(`play ${get_opp_color(this.ai_color)} ${move}`)
             response = await this.instances[0].sendCommand(`genmove ${this.ai_color}`)
-    
+
             this.moveCount++;
 
-        }else{
+        } else {
             response = await this.instances[this.moveCount % this.ai_count].sendCommand(`play ${get_opp_color(this.ai_color)} ${move}`)
             response = await this.instances[this.moveCount % this.ai_count].sendCommand(`genmove ${this.ai_color}`)
-    
+
             this.moveCount++;
             this.instances[this.moveCount % this.ai_count].sendCommand(`play ${get_opp_color(this.ai_color)} ${move}`)
             this.instances[this.moveCount % this.ai_count].sendCommand(`play ${this.ai_color} ${cleanMove(response[0])}`)
@@ -94,8 +94,8 @@ class PlayerAI {
         //console.log(test);
         response = cleanMove(response[0])
 
-        return {response:response, score:this.score_estimate};
+        return { response: response, score: this.score_estimate };
     }
 }
 
-module.exports = {PlayerAI};
+module.exports = { PlayerAI };

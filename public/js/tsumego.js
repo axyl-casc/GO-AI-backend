@@ -24,19 +24,19 @@ async function new_tsumego() {
         const data = await response.json(); // Assuming the server sends a JSON object
         console.log("Received Puzzle:", data.puzzle);
 
-// Initialize the Tsumego with responsive board dimensions
-function setupTsumego() {
-    return new WGo.Tsumego(wrapper, {
-        sgf: data.puzzle,
-        debug: false, // Set to false to hide solution
-        answerDelay: 500,
-        displayHintButton: false, // Disable hint button
-        layout: {
-            bottom: ["CommentBox", "InfoBox"], // Exclude "Control" to remove buttons
+        // Initialize the Tsumego with responsive board dimensions
+        function setupTsumego() {
+            return new WGo.Tsumego(wrapper, {
+                sgf: data.puzzle,
+                debug: false, // Set to false to hide solution
+                answerDelay: 500,
+                displayHintButton: false, // Disable hint button
+                layout: {
+                    bottom: ["CommentBox", "InfoBox"], // Exclude "Control" to remove buttons
+                }
+            });
+
         }
-    });
-    
-}
 
 
         // Create the initial tsumego
@@ -67,18 +67,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById("likeTsumego").classList.remove("hidden");
         const tsumegoCommentElement = document.querySelector(".wgo-tsumego-comment");
         let correct = false;
-    
+
         if (tsumegoCommentElement) {
             const text = tsumegoCommentElement.textContent.toLowerCase();
             correct = text.includes("correct") && !text.includes("incorrect");
         }
-        
-    
+
+
         console.log(`Correct flag is set to: ${correct}`);
-    
+
         // Get user rank from local storage
         const localRank = localStorage.getItem('local_rank');
-    
+
         // Send data to the local tsumego-complete endpoint
         fetch(`${window.location.href}tsumego-complete?is_correct=${correct}&puzzle_id=${current_puzzle_id}&user_rank=${localRank}`, {
             method: 'GET'
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         current_puzzle_id = await new_tsumego();
 
 
-    
+
     });
     document.getElementById("likeTsumego").addEventListener("click", async () => {
         showToast("Thanks for the feedback!");
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById("dislikeTsumego").classList.add("hidden");
         document.getElementById("likeTsumego").classList.add("hidden");
     });
-    
+
     document.getElementById("dislikeTsumego").addEventListener("click", async () => {
         showToast("Disliked Tsumego");
         // Send data to the local tsumego-rate endpoint for a dislike
@@ -129,6 +129,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             })
             .catch(error => console.error('Fetch error:', error));
         document.getElementById("dislikeTsumego").classList.add("hidden");
-        document.getElementById("likeTsumego").classList.add("hidden");   
+        document.getElementById("likeTsumego").classList.add("hidden");
     });
 });
