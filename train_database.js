@@ -1,7 +1,7 @@
 const { SqlConnection } = require('./sql_connection');
 const { playRatedGame } = require('./rated_game');
 
-const MAX_HANDICAP_COMP = 6;
+const MAX_HANDICAP_COMP = 7;
 
 function getDist(a, b) {
     return Math.abs(a - b);
@@ -13,7 +13,7 @@ async function trainingGame(sql, boardsize) {
         let AI2 = await sql.getRandomAI();
 
         let validPair = false;
-        let acceptedDist = 3;
+        let acceptedDist = 5;
 
         while (!validPair) {
             let rank1 = await sql.getRank(AI1, boardsize);
