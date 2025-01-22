@@ -55,3 +55,33 @@ function setHasLost(value) {
     }
     localStorage.setItem("hasLost", JSON.stringify(value));
 }
+
+// For retrieving the number of games played
+function getGamesPlayed() {
+    // Check if "gamesPlayed" exists in local storage
+    if (localStorage.getItem("gamesPlayed") === null) {
+        // If it doesn't exist, initialize it to 0
+        localStorage.setItem("gamesPlayed", JSON.stringify(0));
+        return 0;
+    }
+
+    // Retrieve and parse the value of "gamesPlayed"
+    const gamesPlayed = JSON.parse(localStorage.getItem("gamesPlayed"));
+    
+    // Return the number of games played
+    return gamesPlayed;
+}
+
+// For incrementing the number of games played
+function incrementGamesPlayed() {
+    // Get the current number of games played
+    const currentGamesPlayed = getGamesPlayed();
+
+    // Increment the value
+    const newGamesPlayed = currentGamesPlayed + 1;
+
+    // Store the updated value back in local storage
+    localStorage.setItem("gamesPlayed", JSON.stringify(newGamesPlayed));
+
+    return newGamesPlayed;
+}

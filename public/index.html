@@ -157,6 +157,34 @@
                 <div class="p-2" id="learninfo"></div>
                 <div id="lessons" class="space-y-4">
                     <div class="lesson-item border rounded-lg bg-white shadow" data-rank="50k">
+                        <div class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
+                            Lesson 0: About this Website
+                        </div>
+                        <div class="lesson-content hidden px-4 py-2 text-gray-700">
+                            <p class="mb-4">
+                                Welcome to our Go learning platform! This website is designed to guide new players through their journey of discovering and mastering the game of Go.
+                            </p>
+                            <p class="mb-4">
+                                The most important advice for beginners is simple: play many games. By playing frequently, you will naturally uncover strategies, improve your instincts, and develop a deep appreciation for the game. There’s no substitute for hands-on experience.
+                            </p>
+                            <p class="mb-4">
+                                After building confidence through playing, feel free to explore other resources, such as puzzles and lessons. These materials are tailored to help you understand essential concepts like eyes, life and death, and efficient stone placement.
+                            </p>
+                            <p class="mb-4">
+                                To ensure a smooth start, we recommend beginning with smaller board sizes, such as 9x9 or 13x13. These compact boards help you focus on the fundamentals before transitioning to the standard 19x19 board.
+                            </p>
+                            <p class="mb-4">
+                                This website is powered by an AI backend developed specifically for teaching Go. You can explore the source code and contribute to the project on our <a href="https://github.com/axyl-casc/GO-AI-backend" target="_blank" class="text-blue-600 hover:underline">GitHub repository</a>.
+                            </p>
+                            <p>
+                                Remember, the key to improving in Go is consistent practice and an open mindset. Dive in, enjoy the process, and let your curiosity guide you as you explore this timeless and strategic game.
+                            </p>
+                            <p>
+                                Good luck, and most importantly, have fun!
+                            </p>
+                        </div>
+                    </div>
+                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="50k">
                         <div
                             class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
                             Lesson 1: Introduction to Go
@@ -168,7 +196,7 @@
                                 onclick="startInteractiveTutorial('intro', 5)">Start Tutorial</button>
                         </div>
                     </div>
-                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="30k">
+                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="35k">
                         <div
                             class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
                             Lesson 2: Understanding Liberties
@@ -178,6 +206,18 @@
                             <br><button
                                 class="btn mt-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow"
                                 onclick="startInteractiveTutorial('liberties', 5)">Practice Liberties</button>
+                        </div>
+                    </div>
+                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="35k">
+                        <div
+                            class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
+                            Lesson 3: A 9x9 Game
+                        </div>
+                        <div class="lesson-content hidden px-4 py-2 text-gray-700">
+                            Here we will review a 9x9 game and discuss the strategies and tactics used by both players.
+                            <br><button
+                                class="btn mt-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow"
+                                onclick="startInteractiveTutorial('9x9demo', 9)">Play Demo</button>
                         </div>
                     </div>
                 </div>
@@ -254,6 +294,9 @@
                 /* Scale down for high-DPI screens */
             }
         }
+
+
+
     </style>
 
 </body>

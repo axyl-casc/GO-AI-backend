@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const localRank = localStorage.getItem('local_rank');
 
         // only adjust the tsumego ranks if you have lost at least once
-        if(getHasLost()){
+        if(getHasLost() && getGamesPlayed() > 5){
         // Send data to the local tsumego-complete endpoint
         fetch(`${window.location.href}tsumego-complete?is_correct=${correct}&puzzle_id=${current_puzzle_id}&user_rank=${localRank}`, {
             method: 'GET'

@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     endGameButton.addEventListener('click', async () => {
+        incrementGamesPlayed();
         game_id = "0"
         let score = document.querySelector("#scorespan").textContent
         if (score[0] == "B" && move_count != 0) {
