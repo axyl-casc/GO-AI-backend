@@ -14,6 +14,9 @@ const ALL_RANKS = (() => {
     return ranks.reverse();
 })();
 
+
+
+
 function convertKyuDanToLevel(rank) {
     rank = String(rank);
     const index = ALL_RANKS.indexOf(rank);

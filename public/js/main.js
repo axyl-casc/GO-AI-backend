@@ -64,6 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             }
 
+            if(targetTab == "profile") {
+                document.getElementById('profile-rank').textContent = getRank();
+document.getElementById('profile-games-played').textContent = getGamesPlayed();
+document.getElementById('profile-wins').textContent = getPlayerWins();
+document.getElementById('profile-puzzles-done').textContent = getPuzzlesDone();
+document.getElementById('profile-puzzles-correct').textContent = getPuzzlesCorrect();
+            }
+
 
             tab.classList.add('border-b-4', 'border-badukAccent');
             window.dispatchEvent(new Event('resize'));
@@ -97,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (score[0] == "B" && move_count != 0) {
             showToast("You won!")
             adjustRank(1) // increase rank by 1 on win
+            incrementPlayerWins();
         } else if (move_count != 0) {
             showToast("You lost!")
             setHasLost(true);

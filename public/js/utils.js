@@ -85,3 +85,52 @@ function incrementGamesPlayed() {
 
     return newGamesPlayed;
 }
+
+
+// For checking the player's win status
+function getPlayerWins() {
+    if (localStorage.getItem("playerWins") === null) {
+        localStorage.setItem("playerWins", JSON.stringify(0));
+        return 0;
+    }
+    return JSON.parse(localStorage.getItem("playerWins"));
+}
+
+function incrementPlayerWins() {
+    const currentWins = getPlayerWins();
+    const newWins = currentWins + 1;
+    localStorage.setItem("playerWins", JSON.stringify(newWins));
+    return newWins;
+}
+
+// For managing puzzles done
+function getPuzzlesDone() {
+    if (localStorage.getItem("puzzlesDone") === null) {
+        localStorage.setItem("puzzlesDone", JSON.stringify(0));
+        return 0;
+    }
+    return JSON.parse(localStorage.getItem("puzzlesDone"));
+}
+
+function incrementPuzzlesDone() {
+    const currentPuzzlesDone = getPuzzlesDone();
+    const newPuzzlesDone = currentPuzzlesDone + 1;
+    localStorage.setItem("puzzlesDone", JSON.stringify(newPuzzlesDone));
+    return newPuzzlesDone;
+}
+
+// For managing correctly solved puzzles
+function getPuzzlesCorrect() {
+    if (localStorage.getItem("puzzlesCorrect") === null) {
+        localStorage.setItem("puzzlesCorrect", JSON.stringify(0));
+        return 0;
+    }
+    return JSON.parse(localStorage.getItem("puzzlesCorrect"));
+}
+
+function incrementPuzzlesCorrect() {
+    const currentPuzzlesCorrect = getPuzzlesCorrect();
+    const newPuzzlesCorrect = currentPuzzlesCorrect + 1;
+    localStorage.setItem("puzzlesCorrect", JSON.stringify(newPuzzlesCorrect));
+    return newPuzzlesCorrect;
+}

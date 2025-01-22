@@ -25,6 +25,7 @@ function startInteractiveTutorial(topic, boardsize) {
     });
 
     const lessoninfo = document.getElementById("learninfo");
+    lessoninfo.innerHTML = "";
 
     // Handle tutorial topics
     switch (topic) {

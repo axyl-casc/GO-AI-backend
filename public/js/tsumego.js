@@ -63,6 +63,7 @@ async function new_tsumego() {
 document.addEventListener('DOMContentLoaded', async () => {
     current_puzzle_id = await new_tsumego();
     document.getElementById("nextTsumego").addEventListener("click", async () => {
+        incrementPuzzlesDone();
         document.getElementById("dislikeTsumego").classList.remove("hidden");
         document.getElementById("likeTsumego").classList.remove("hidden");
         const tsumegoCommentElement = document.querySelector(".wgo-tsumego-comment");
@@ -73,6 +74,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             correct = text.includes("correct") && !text.includes("incorrect");
         }
 
+        if(correct){
+            incrementPuzzlesCorrect();
+        }
 
         console.log(`Correct flag is set to: ${correct}`);
 
