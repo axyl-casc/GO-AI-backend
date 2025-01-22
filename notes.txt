@@ -28,5 +28,4 @@ gamemodes?
 todo
 --------------------------------------------
 fix tsumego board sizing 
-add buttons for adjusting tsumego stuff
 add lessons or lesson structure

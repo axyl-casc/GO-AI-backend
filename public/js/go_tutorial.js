@@ -30,8 +30,44 @@ function startInteractiveTutorial(topic, boardsize) {
     // Handle tutorial topics
     switch (topic) {
         case "intro":
-            lessoninfo.innerHTML = "Black stones go first. Try placing a stone!";
-            break;
+            lessoninfo.innerHTML = `
+            <p class="mb-4"><strong>Black stones go first. Try placing a stone!</strong></p>
+            <p class="mb-4">
+                Go is one of the oldest strategy games in the world, with a history spanning over 4,000 years. Originating in ancient China, Go (or "Weiqi" in Chinese, "Baduk" in Korean, and "Igo" in Japanese) was played by scholars and generals alike as a means of developing strategic thinking. It is deeply embedded in East Asian culture and philosophy, often regarded as a metaphor for life, where every move reflects long-term planning and adaptability.
+            </p>
+        
+            <p class="mb-4">
+                The game spread to Japan in the 7th century, where it was refined and gained widespread popularity among samurai and nobles. By the 20th century, Go reached the Western world, where it continues to grow as a beloved and challenging intellectual pursuit.
+            </p>
+        
+            <p class="mb-4"><strong>How to Play Go</strong></p>
+            <p class="mb-4">
+                The game of Go is played between two players on a grid board, traditionally 19x19, though beginners often start on smaller boards like 9x9 or 13x13 to learn the fundamentals. One player uses black stones, and the other uses white stones.
+            </p>
+            
+            <p class="mb-4"><strong>Basic Rules:</strong></p>
+            <ul class="mb-4">
+                <li><strong>Turns:</strong> Black moves first, followed by White. Players take turns placing one stone on the board at a time.</li>
+                <li><strong>Objective:</strong> The goal is to claim the most territory by surrounding empty areas with your stones.</li>
+                <li><strong>Capturing Stones:</strong> Stones are captured if all their liberties (adjacent empty points) are surrounded by the opponent's stones.</li>
+                <li><strong>Ko Rule:</strong> A player cannot make a move that recreates a previous board state, ensuring the game progresses.</li>
+                <li><strong>Ending the Game:</strong> The game ends when both players pass their turn consecutively. The winner is determined by counting the surrounded territory and captured stones.</li>
+            </ul>
+        
+            <p class="mb-4"><strong>Why Play Go?</strong></p>
+            <p class="mb-4">
+                Go is more than just a game—it’s a lifelong journey of learning and self-improvement. Its simplicity in rules hides its incredible depth, offering limitless possibilities and strategies. Go sharpens your ability to think ahead, adapt to new challenges, and appreciate the beauty of balance and harmony.
+            </p>
+            
+            <p class="mb-4">
+                Whether you are a beginner exploring its mysteries or a seasoned player striving for mastery, Go offers an enriching experience that connects you to a timeless tradition of strategic thought.
+            </p>
+            
+            <p>
+                Dive into the world of Go, and discover a game that has captivated minds for millennia. Start by placing your first stone!
+            </p>
+        `;
+                    break;
 
         case "liberties":
             const stoneX = 1, stoneY = 1; // Coordinates of the black stone
@@ -73,14 +109,46 @@ function startInteractiveTutorial(topic, boardsize) {
                 layout: {
                     bottom: ["Control", "CommentBox"] // Customizable layout
                 },
-                enableScroll: true, // Enable mouse wheel scroll
-                enableKeys: true,  // Enable keyboard arrow interaction
+                enableWheel: false, // Proper setting to disable mouse wheel scrolling for move navigation
+                enableKeys: true,  // Disable keyboard arrow interaction for navigating moves
             });
+            
 
             createButtonContainer(".wgo-player-control", player);
-            lessoninfo.innerHTML = "<br>Explore the loaded 9x9 SGF demo.<br>(Scroll to view next move, or right/left arrow key)";
+            lessoninfo.innerHTML = "<br>Explore the loaded 9x9 SGF demo.<br>(right/left arrow key)";
             break;
-
+        case 'empty_triangle':
+            board.addObject({ x: 1, y: 1, c: WGo.B });
+            board.addObject({ x: 1, y: 2, c: WGo.B });
+            board.addObject({ x: 2, y: 1, c: WGo.B });
+            board.addObject({ x: 2, y: 2, type: "MA" });
+            lessoninfo.innerHTML = `
+            <p class="mb-4"><strong>The Concept of Shapes in Go</strong></p>
+            <p class="mb-4">
+                In Go, <strong>shape</strong> refers to the arrangement of stones on the board and how efficiently they work together to secure territory, maintain flexibility, and stay connected. Good shapes are efficient, providing strong connections, maximizing liberties, and leaving room for further development. Poor shapes are inefficient, making your stones vulnerable, over-concentrated, or less effective overall.
+            </p>
+            
+            <p class="mb-4"><strong>What is an Empty Triangle?</strong></p>
+            <p class="mb-4">
+                An <strong>empty triangle</strong> occurs when three stones of the same color form a triangular shape with an empty space in the middle. This is a classic example of an inefficient shape in Go. Here’s why:
+            </p>
+            <ul class="mb-4">
+                <li><strong>Loss of Efficiency:</strong> The three stones in an empty triangle could achieve better connectivity and influence with different placements. By forming this shape, you waste a move that could be used elsewhere on the board.</li>
+                <li><strong>Reduced Liberties:</strong> The empty triangle has fewer liberties (available breathing spaces) compared to other arrangements with three stones. This makes the group weaker and more vulnerable to attack.</li>
+                <li><strong>Over-concentration:</strong> The stones in an empty triangle are clustered too tightly, which means they control less territory and leave fewer options for growth or flexibility.</li>
+            </ul>
+            
+            <p class="mb-4"><strong>Good Shapes vs. Bad Shapes</strong></p>
+            <p class="mb-4">
+                Go players often compare shapes like the empty triangle to more effective patterns, such as a <em>bamboo joint</em> or a <em>diagonal connection</em>. These better shapes provide similar connectivity but with greater efficiency, more liberties, and better influence over the board.
+            </p>
+            
+            <p>
+                While sometimes an empty triangle might be unavoidable in specific tactical situations, it is generally a shape to be avoided in most positions. Recognizing and avoiding bad shapes like this is an important step in improving your play and developing a sense for good shape in Go.
+            </p>
+        `;
+        
+            break;     
         default:
             lessoninfo.innerHTML = "Topic not found!";
     }

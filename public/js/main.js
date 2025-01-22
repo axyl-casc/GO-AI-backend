@@ -30,8 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Show selected content and highlight tab
             document.getElementById(targetTab).classList.remove('hidden');
-
-
+            tab.classList.add('border-b-4', 'border-badukAccent');
+            window.dispatchEvent(new Event('resize'));
+            document.getElementById('profile-rank').innerHTML = localStorage.getItem('local_rank') || "Error" // set rank to last rank used  
+            document.querySelectorAll(".wgo-tsumego-control").forEach((element) => {
+                element.style.display = "none"; // Properly hides the elements
+            });
             if (targetTab == "play") {
                 const startGameButton = document.getElementById('startGame');
 
@@ -51,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (targetTab == "learn") {
-                learnboard.innerHTML = "";
+                document.querySelector("#learninfo").innerHTML = "";
+                document.querySelector("#learnboard").innerHTML = "";
                 updateLessonsVisibility();
             }
 
@@ -71,14 +76,6 @@ document.getElementById('profile-wins').textContent = getPlayerWins();
 document.getElementById('profile-puzzles-done').textContent = getPuzzlesDone();
 document.getElementById('profile-puzzles-correct').textContent = getPuzzlesCorrect();
             }
-
-
-            tab.classList.add('border-b-4', 'border-badukAccent');
-            window.dispatchEvent(new Event('resize'));
-            document.getElementById('profile-rank').innerHTML = localStorage.getItem('local_rank') || "Error" // set rank to last rank used  
-            document.querySelectorAll(".wgo-tsumego-control").forEach((element) => {
-                element.style.display = "none"; // Properly hides the elements
-            });
 
         });
     });
@@ -310,13 +307,6 @@ document.getElementById('profile-puzzles-correct').textContent = getPuzzlesCorre
         startGameButton.classList.add('hidden');
         rankSelector.classList.add('hidden');
     });
-
-
-
-
-    // init learn tab
-    console.log("DOMContentLoaded event fired.");
-
 
 
     // Update lessons visibility based on rank
