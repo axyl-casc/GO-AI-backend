@@ -16,7 +16,7 @@ const tsumego_sql = new TsumegoConnection("./tsumego_sets.db")
 const aiInstances = {};
 
 
-const AI_game_delay_seconds = 1
+const AI_game_delay_seconds = 60
 
 // seconds per week = 604800
 // seconds per day = 86400

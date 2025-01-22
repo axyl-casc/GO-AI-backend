@@ -32,3 +32,26 @@ function showToast(text) {
         }, 500);
     }, 3000);
 }
+
+
+// for checking if the user has lost a game yet
+function getHasLost() {
+    // Check if "hasLost" exists in local storage
+    if (localStorage.getItem("hasLost") === null) {
+        // If it doesn't exist, create it and set it to false
+        localStorage.setItem("hasLost", JSON.stringify(false));
+        return false;
+    }
+
+    // Retrieve the value of "hasLost" and parse it
+    const hasLost = JSON.parse(localStorage.getItem("hasLost"));
+    
+    // Return the boolean value
+    return hasLost;
+}
+function setHasLost(value) {
+    if (typeof value !== "boolean") {
+        throw new Error("Value must be a boolean.");
+    }
+    localStorage.setItem("hasLost", JSON.stringify(value));
+}

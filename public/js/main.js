@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             adjustRank(1) // increase rank by 1 on win
         } else if (move_count != 0) {
             showToast("You lost!")
+            setHasLost(true);
             adjustRank(-1) // decrease rank by 1 on loss
         }
         document.getElementById("rankspan").innerHTML = getRank()
@@ -124,9 +125,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // 7x7
             const beginner = convertKyuDanToLevel("35k")
             // 9x9
-            const intermediate = convertKyuDanToLevel("25k")
+            const intermediate = convertKyuDanToLevel("20k")
             // 13x13
-            const advanced = convertKyuDanToLevel("17k")
+            const advanced = convertKyuDanToLevel("16k")
             // 19x19
 
             // spread
@@ -245,7 +246,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const ai_move = response.aiResponse; // Example: "D4"
                 console.log(`AI move: ${ai_move}`);
                 if (ai_move == 'pass') {
+                    showToast("AI passed!")
                     move_count++; // Switch turns
+                    game.pass()
                     document.querySelector("#movecountspan").textContent = move_count
                     document.querySelector("#scorespan").textContent = score
                     return;

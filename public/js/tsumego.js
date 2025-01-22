@@ -79,6 +79,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Get user rank from local storage
         const localRank = localStorage.getItem('local_rank');
 
+        // only adjust the tsumego ranks if you have lost at least once
+        if(getHasLost()){
         // Send data to the local tsumego-complete endpoint
         fetch(`${window.location.href}tsumego-complete?is_correct=${correct}&puzzle_id=${current_puzzle_id}&user_rank=${localRank}`, {
             method: 'GET'
@@ -91,6 +93,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             })
             .catch(error => console.error('Fetch error:', error));
+        }else{
+            console.log("You have not lost yet, so we will not adjust your rank");
+        }
+
         current_puzzle_id = await new_tsumego();
 
 
