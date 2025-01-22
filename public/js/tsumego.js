@@ -51,13 +51,18 @@ async function new_tsumego() {
             tsumego = setupTsumego(); // Recreate the tsumego with new dimensions
             tsumego.setCoordinates(true); // Enable coordinates again
         });
-
+        document.querySelectorAll(".wgo-tsumego-control").forEach((element) => {
+            element.style.display = "none"; // Properly hides the elements
+        });
         return data.id; // Assuming `id` is part of the JSON response
     } catch (error) {
         console.error("Failed to fetch tsumego data:", error);
         wrapper.innerText = "Failed to load tsumego data.";
         return null; // Return null in case of an error
     }
+
+
+    
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -104,6 +109,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         current_puzzle_id = await new_tsumego();
 
 
+        document.querySelectorAll(".wgo-tsumego-control").forEach((element) => {
+            element.style.display = "none"; // Properly hides the elements
+        });
 
     });
     document.getElementById("likeTsumego").addEventListener("click", async () => {
@@ -140,5 +148,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             .catch(error => console.error('Fetch error:', error));
         document.getElementById("dislikeTsumego").classList.add("hidden");
         document.getElementById("likeTsumego").classList.add("hidden");
+    });
+
+    document.querySelectorAll(".wgo-tsumego-control").forEach((element) => {
+        element.style.display = "none"; // Properly hides the elements
     });
 });

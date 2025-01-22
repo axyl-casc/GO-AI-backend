@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (targetTab == "learn") {
+                learnboard.innerHTML = "";
                 updateLessonsVisibility();
             }
 
@@ -61,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     block: "center",
                     inline: "center",
                 });
-
             }
 
             if(targetTab == "profile") {
@@ -76,7 +76,9 @@ document.getElementById('profile-puzzles-correct').textContent = getPuzzlesCorre
             tab.classList.add('border-b-4', 'border-badukAccent');
             window.dispatchEvent(new Event('resize'));
             document.getElementById('profile-rank').innerHTML = localStorage.getItem('local_rank') || "Error" // set rank to last rank used  
-
+            document.querySelectorAll(".wgo-tsumego-control").forEach((element) => {
+                element.style.display = "none"; // Properly hides the elements
+            });
 
         });
     });

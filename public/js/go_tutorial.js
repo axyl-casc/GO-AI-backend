@@ -64,7 +64,7 @@ function startInteractiveTutorial(topic, boardsize) {
             learnboard.innerHTML = ""; // Clear the existing board for the player
 
             // Initialize WGo.BasicPlayer for the 9x9 SGF demo
-            var player = new WGo.BasicPlayer(learnboard, {
+            let player = new WGo.BasicPlayer(learnboard, {
                 sgfFile: "./SGF/demo_9x9.sgf", // Path to your SGF file
                 board: {
                     width: 600, // Adjust board size (optional)
@@ -77,8 +77,8 @@ function startInteractiveTutorial(topic, boardsize) {
                 enableKeys: true,  // Enable keyboard arrow interaction
             });
 
-            createButtonContainer("learninfo");
-            lessoninfo.innerHTML += "<br>Explore the loaded 9x9 SGF demo.<br>(Scroll to view next move, or right/left arrow key)";
+            createButtonContainer(".wgo-player-control", player);
+            lessoninfo.innerHTML = "<br>Explore the loaded 9x9 SGF demo.<br>(Scroll to view next move, or right/left arrow key)";
             break;
 
         default:
@@ -86,38 +86,28 @@ function startInteractiveTutorial(topic, boardsize) {
     }
 }
 
+function createButtonContainer(containerID, player) {
+    const container = document.querySelector(containerID);
 
-function createButtonContainer(containerID) {
-    const container = document.getElementById(containerID);
-  
     // Previous Button
-    const prevButton = document.createElement("button");
-    prevButton.className = "px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300";
+    let prevButton = document.createElement("button");
+    prevButton.className = "px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 m-2";
     prevButton.textContent = "← Previous";
     prevButton.onclick = () => {
-      handlePrevious(); // Directly trigger the action for the left arrow key
+        player.previous();
+        console.log("Previous move shown");
     };
   
     // Next Button
-    const nextButton = document.createElement("button");
-    nextButton.className = "px-4 py-2 bg-green-500 text-white font-semibold rounded shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300";
+    let nextButton = document.createElement("button");
+    nextButton.className = "px-4 py-2 bg-green-500 text-white font-semibold rounded shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 m-2";
     nextButton.textContent = "Next →";
     nextButton.onclick = () => {
-      handleNext(); // Directly trigger the action for the right arrow key
+        player.next();
+        console.log("Next move shown");
     };
   
     // Append buttons to the container
     container.appendChild(prevButton);
     container.appendChild(nextButton);
-  }
-  
-  // Define the actions for Previous and Next
-  function handlePrevious() {
-    console.log("Previous action triggered (ArrowLeft)");
-    // Add your desired functionality here
-  }
-  
-  function handleNext() {
-    console.log("Next action triggered (ArrowRight)");
-    // Add your desired functionality here
-  }
+}
