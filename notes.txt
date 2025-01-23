@@ -29,3 +29,4 @@ todo
 --------------------------------------------
 fix tsumego board sizing 
 add lessons or lesson structure
+modularize lessons to be easier - javascript side

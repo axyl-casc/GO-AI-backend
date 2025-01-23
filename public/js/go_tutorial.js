@@ -1,3 +1,47 @@
+
+
+
+
+//// WIP DOES NOT WORK
+function populateLessons(lessonsData) {
+    // Sort lessons by level first, then by rank
+    lessonsData.sort((a, b) => a.level - b.level || a.rank - b.rank);
+
+    // Generate and populate the lessons
+    const lessonsContainer = document.getElementById("lessons");
+    lessonsContainer.innerHTML = ''; // Clear existing content
+
+    lessonsData.forEach((lesson, index) => {
+        const lessonHTML = `
+            <div class="lesson-item border rounded-lg bg-white shadow" data-rank="${lesson.rank}" data-level="${lesson.level}">
+                <div class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
+                    Lesson ${index + 1}: ${lesson.title}
+                </div>
+                <div class="lesson-content hidden px-4 py-2 text-gray-700">
+                    ${lesson.content}
+                </div>
+            </div>
+        `;
+        lessonsContainer.innerHTML += lessonHTML;
+    });
+}
+
+// Example usage
+const lessonsData = [
+    { rank: 50, level: 0, title: "About this Website", content: "Welcome to our Go learning platform! This website..." },
+    { rank: 36, level: 0, title: "Understanding Liberties", content: "Understand the concept of liberties, a critical aspect of Go strategy." },
+    { rank: 34, level: 0, title: "Capture a Stone", content: "Here we will learn how to capture an opponent's stone and understand the concept of atari." },
+    { rank: 32, level: 5, title: "A 9x9 Game", content: "Review a 9x9 game and discuss the strategies and tactics used by both players." },
+    { rank: 30, level: 5, title: "Shape - Good or bad?", content: "Go over the basics of shape and how it can be used to your advantage." }
+];
+
+document.addEventListener("DOMContentLoaded", () => {
+    populateLessons(lessonsData);
+});
+
+
+
+
 function startInteractiveTutorial(topic, boardsize) {
     // Clear the board container
     const learnboard = document.getElementById("learnboard");

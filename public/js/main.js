@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if(targetTab == "profile") {
                 document.getElementById('profile-rank').textContent = getDisplayRank()
+                document.getElementById('profile-level').textContent = getLevel()
                 document.getElementById('profile-games-played').textContent = getGamesPlayed();
                 document.getElementById('profile-wins').textContent = getPlayerWins();
                 document.getElementById('profile-puzzles-done').textContent = getPuzzlesDone();
@@ -95,32 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     rankSelector.addEventListener("change", () => {
         startGameButton.classList.remove('hidden');
-    })
-
-    endGameButton.addEventListener('click', async () => {
-        incrementGamesPlayed();
-        game_id = "0"
-        let score = document.querySelector("#scorespan").textContent
-        if (score[0] == "B" && move_count != 0) {
-            showToast("You won!")
-            incrementPlayerWins();
-            adjustRank(1) // increase rank by 1 on win
-            incrementExperience(boardsize)
-        } else if (move_count != 0) {
-            incrementExperience(Math.floor(boardsize / 2))
-            showToast("You lost!")
-            setHasLost(true);
-            adjustRank(-1) // decrease rank by 1 on loss
-            if(convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")) {
-                adjustRank(-1)
-            }
-        }
-
-         document.getElementById("rankspan").innerHTML = getDisplayRank()
-        document.getElementById("movecountspan").innerHTML = "..."
-        move_count = 0
-        document.querySelector('[data-tab="play"]').click();
-
     })
 
     // Start Game
@@ -313,23 +288,48 @@ document.addEventListener('DOMContentLoaded', () => {
         startGameButton.classList.add('hidden');
         rankSelector.classList.add('hidden');
     });
+    endGameButton.addEventListener('click', async () => {
+        incrementGamesPlayed();
+        game_id = "0"
+        let score = document.querySelector("#scorespan").textContent
+        if (score[0] == "B" && move_count != 0) {
+            showToast("You won!")
+            incrementPlayerWins();
+            adjustRank(1) // increase rank by 1 on win
+            incrementExperience(Math.floor(move_count / 2))
+        } else if (move_count != 0) {
+            incrementExperience(Math.floor(move_count / 4))
+            showToast("You lost!")
+            setHasLost(true);
+            adjustRank(-1) // decrease rank by 1 on loss
+            if(convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")) {
+                adjustRank(-1)
+            }
+        }
 
+         document.getElementById("rankspan").innerHTML = getDisplayRank()
+        document.getElementById("movecountspan").innerHTML = "..."
+        move_count = 0
+        document.querySelector('[data-tab="play"]').click();
+
+    })
 
     // Update lessons visibility based on rank
     function updateLessonsVisibility() {
         const currentRank = getRank();
-        const currentLevel = convertKyuDanToLevel(currentRank);
+        const currentElo = convertKyuDanToLevel(currentRank);
 
-        console.log("Current Rank:", currentRank, "Current Level:", currentLevel);
+        const currentLevel = getLevel()
 
         document.querySelectorAll('.lesson-item').forEach(lesson => {
             const lessonRank = lesson.getAttribute('data-rank');
-            const lessonLevel = convertKyuDanToLevel(lessonRank);
+            const lessonElo = convertKyuDanToLevel(lessonRank);
+            const lessonLevel = parseInt(lesson.getAttribute('data-level'));
 
-            console.log(`Lesson Rank: ${lessonRank}, Level: ${lessonLevel}`);
+            console.log(`Lesson Rank: ${lessonRank}, Level: ${lessonElo}`);
 
             // Show the lesson if current rank level is greater than or equal to the lesson's required level
-            if (currentLevel >= lessonLevel) {
+            if (currentElo >= lessonElo && currentLevel >= lessonLevel) {
                 console.log(`Unlocking lesson: ${lessonRank}`);
                 lesson.classList.remove('hidden');
             } else {

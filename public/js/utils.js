@@ -4,9 +4,6 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
 }
 
-
-
-
 function showToast(text) {
     const toast = document.querySelector('#toast');
     const toastContainer = document.querySelector('#toast-container');
@@ -30,9 +27,34 @@ function showToast(text) {
         setTimeout(() => {
             toastContainer.classList.add('hidden');
         }, 500);
-    }, 3000);
+    }, 1000);
 }
 
+function showToastAux(text) {
+    const toastAux = document.querySelector('#toast-aux');
+    const toastContainerAux = document.querySelector('#toast-container-aux');
+
+    if (!toastAux || !toastContainerAux) {
+        console.log("utils.js : Toast elements not found in the DOM - AUX");
+        return;
+    }
+
+    toastAux.textContent = text;
+
+    // Show the toast
+    toastContainerAux.classList.remove('hidden');
+    toastAux.classList.remove('opacity-0');
+    toastAux.classList.add('opacity-100');
+
+    // Hide the toast after 3 seconds
+    setTimeout(() => {
+        toastAux.classList.remove('opacity-100');
+        toastAux.classList.add('opacity-0');
+        setTimeout(() => {
+            toastContainerAux.classList.add('hidden');
+        }, 500);
+    }, 1000);
+}
 
 function resetStats() {
     if (confirm("Are you sure you want to reset all statistics? This action cannot be undone.")) {
@@ -42,7 +64,8 @@ function resetStats() {
         localStorage.removeItem("gamesPlayed");
         localStorage.removeItem("hasLost");
         localStorage.removeItem("local_rank");
-        localStorage.removeItem("experience")
+        localStorage.removeItem("experience");
+        localStorage.removeItem("level");
         alert("Statistics have been reset.");
         location.reload(); // Reloads the current page
 
@@ -67,6 +90,7 @@ function getHasLost() {
     // Return the boolean value
     return hasLost;
 }
+
 function setHasLost(value) {
     if (typeof value !== "boolean") {
         throw new Error("Value must be a boolean.");
@@ -102,6 +126,30 @@ function incrementGamesPlayed() {
     localStorage.setItem("gamesPlayed", JSON.stringify(newGamesPlayed));
 
     return newGamesPlayed;
+}
+function getLevel() {
+    if (localStorage.getItem("level") === null) {
+        localStorage.setItem("level", JSON.stringify(1));
+        return 0;
+    }
+
+    const level = JSON.parse(localStorage.getItem("level"));
+    
+    return level;
+}
+
+// For incrementing the number of games played
+function incrementLevel() {
+    // Get the current number of games played
+    const currentLevel = getLevel();
+
+    // Increment the value
+    const newLevel = currentLevel + 1;
+
+    // Store the updated value back in local storage
+    localStorage.setItem("level", JSON.stringify(newLevel));
+
+    return newLevel;
 }
 
 
@@ -147,9 +195,31 @@ function incrementExperience(delta) {
     const currentExperience = getExperience();
     const newExperience = currentExperience + delta;
     localStorage.setItem("experience", JSON.stringify(newExperience));
+    if(newExperience > 10 * getLevel() + 5){
+        localStorage.setItem("experience", newExperience - (10 * getLevel() + 5)); // reset experience
+        incrementLevel();
+        showToastAux(`Leveled up from ${getLevel() - 1} to ${getLevel()}!`)
+    }else{
+        showToastAux(`You gained ${delta} experience!`)
+    }
+    
     return newExperience;
 }
+// For managing puzzles done
+function getPuzzlesDone() {
+    if (localStorage.getItem("puzzlesDone") === null) {
+        localStorage.setItem("puzzlesDone", JSON.stringify(0));
+        return 0;
+    }
+    return JSON.parse(localStorage.getItem("puzzlesDone"));
+}
 
+function incrementPuzzlesDone() {
+    const currentPuzzlesDone = getPuzzlesDone();
+    const newPuzzlesDone = currentPuzzlesDone + 1;
+    localStorage.setItem("puzzlesDone", JSON.stringify(newPuzzlesDone));
+    return newPuzzlesDone;
+}
 // For managing correctly solved puzzles
 function getPuzzlesCorrect() {
     if (localStorage.getItem("puzzlesCorrect") === null) {

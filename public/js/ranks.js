@@ -19,7 +19,13 @@ function getDisplayRank(){
     if(convertKyuDanToLevel(getRank()) > convertKyuDanToLevel("20k")) {
         return getRank()
     }
-    return "New Adventurer"
+
+    if(getLevel() >= 10){
+        return "Experienced Adventurer"
+    }else{
+        return "New Adventurer"
+    }
+
 }
 
 function convertKyuDanToLevel(rank) {

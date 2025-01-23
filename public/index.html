@@ -39,7 +39,13 @@
 
         </div>
     </div>
+    <!-- Toast Container -->
+    <div id="toast-container-aux" class="fixed top-1/3 right-20 hidden z-50">
+        <div id="toast-aux"
+            class="bg-blue-600 text-white px-6 py-4 rounded-lg shadow-lg opacity-0 transition-opacity duration-500 text-lg max-w-lg">
 
+        </div>
+    </div>
     <!-- Header -->
     <header class="sticky fixed top-0 left-0 right-0 bg-badukBlack shadow-md z-50">
         <nav class="flex border-b border-gray-300">
@@ -156,7 +162,7 @@
                 <div class="p-4" id="learnboard"></div>
                 <div class="p-2" id="learninfo"></div>
                 <div id="lessons" class="space-y-4">
-                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="50k">
+                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="50k" data-level="0">
                         <div class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
                             Lesson 0: About this Website
                         </div>
@@ -184,7 +190,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="50k">
+                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="50k" data-level="0">
                         <div
                             class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
                             Lesson 1: Introduction to Go
@@ -196,7 +202,7 @@
                                 onclick="startInteractiveTutorial('intro', 5)">Start Tutorial</button>
                         </div>
                     </div>
-                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="36k">
+                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="36k" data-level="0">
                         <div
                             class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
                             Lesson 2: Understanding Liberties
@@ -208,7 +214,7 @@
                                 onclick="startInteractiveTutorial('liberties', 5)">Practice Liberties</button>
                         </div>
                     </div>
-                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="34k">
+                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="34k" data-level="0">
                         <div
                             class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
                             Lesson 3: Capture a Stone
@@ -220,7 +226,7 @@
                                 onclick="startInteractiveTutorial('capture', 5)">Try</button>
                         </div>
                     </div>
-                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="32k">
+                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="32k" data-level="5">
                         <div
                             class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
                             Lesson 4: A 9x9 Game
@@ -232,7 +238,7 @@
                                 onclick="startInteractiveTutorial('9x9demo', 9)">Play Demo</button>
                         </div>
                     </div>
-                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="30k">
+                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="30k" data-level="5">
                         <div
                             class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
                             Lesson 5: Shape - Good or bad?
@@ -250,11 +256,12 @@
             <!-- Profile Tab -->
             <div id="profile" class="tab-content hidden">
                 <h1 class="text-2xl font-bold mb-6 text-badukBlack">Profile</h1>
-                <p>Rank: <span id="profile-rank">Unranked</span></p>
+                <p>Adventure Level: <span id="profile-level">0</span></p>
                 <p>Games Played: <span id="profile-games-played">0</span></p>
                 <p>Wins: <span id="profile-wins">0</span></p>
                 <p>Puzzles Done: <span id="profile-puzzles-done">0</span></p>
                 <p>Puzzles Correct: <span id="profile-puzzles-correct">0</span></p>
+                <p>Rank: <span id="profile-rank">Unranked</span></p>
                 <br><button
                 class="btn mt-2 px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg shadow"
                 onclick="resetStats()">Reset Profile</button>
