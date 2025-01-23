@@ -42,6 +42,7 @@ function resetStats() {
         localStorage.removeItem("gamesPlayed");
         localStorage.removeItem("hasLost");
         localStorage.removeItem("local_rank");
+        localStorage.removeItem("experience")
         alert("Statistics have been reset.");
         location.reload(); // Reloads the current page
 
@@ -119,21 +120,34 @@ function incrementPlayerWins() {
     localStorage.setItem("playerWins", JSON.stringify(newWins));
     return newWins;
 }
-
-// For managing puzzles done
-function getPuzzlesDone() {
-    if (localStorage.getItem("puzzlesDone") === null) {
-        localStorage.setItem("puzzlesDone", JSON.stringify(0));
+// For checking the player's win status
+function getPlayerWins() {
+    if (localStorage.getItem("playerWins") === null) {
+        localStorage.setItem("playerWins", JSON.stringify(0));
         return 0;
     }
-    return JSON.parse(localStorage.getItem("puzzlesDone"));
+    return JSON.parse(localStorage.getItem("playerWins"));
 }
 
-function incrementPuzzlesDone() {
-    const currentPuzzlesDone = getPuzzlesDone();
-    const newPuzzlesDone = currentPuzzlesDone + 1;
-    localStorage.setItem("puzzlesDone", JSON.stringify(newPuzzlesDone));
-    return newPuzzlesDone;
+function incrementPlayerWins() {
+    const currentWins = getPlayerWins();
+    const newWins = currentWins + 1;
+    localStorage.setItem("playerWins", JSON.stringify(newWins));
+    return newWins;
+}
+function getExperience() {
+    if (localStorage.getItem("experience") === null) {
+        localStorage.setItem("experience", JSON.stringify(0));
+        return 0;
+    }
+    return JSON.parse(localStorage.getItem("experience"));
+}
+
+function incrementExperience(delta) {
+    const currentExperience = getExperience();
+    const newExperience = currentExperience + delta;
+    localStorage.setItem("experience", JSON.stringify(newExperience));
+    return newExperience;
 }
 
 // For managing correctly solved puzzles

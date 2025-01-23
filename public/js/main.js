@@ -105,7 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast("You won!")
             incrementPlayerWins();
             adjustRank(1) // increase rank by 1 on win
+            incrementExperience(boardsize)
         } else if (move_count != 0) {
+            incrementExperience(Math.floor(boardsize / 2))
             showToast("You lost!")
             setHasLost(true);
             adjustRank(-1) // decrease rank by 1 on loss

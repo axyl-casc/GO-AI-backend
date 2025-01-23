@@ -80,7 +80,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if(correct){
+            incrementExperience(2);
             incrementPuzzlesCorrect();
+        }else{
+            incrementExperience(1)
         }
 
         console.log(`Correct flag is set to: ${correct}`);
