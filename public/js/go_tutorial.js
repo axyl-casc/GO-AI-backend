@@ -3,29 +3,44 @@ function startInteractiveTutorial(topic, boardsize) {
     const learnboard = document.getElementById("learnboard");
     learnboard.innerHTML = "";
 
-    // Create the board
+    boardsize = parseInt(boardsize); // Ensure the board size is an integer
+
+    // Initialize the game logic
+    const game = new WGo.Game(boardsize);
+
+    // Create the board and link it to the game
     const board = new WGo.Board(learnboard, {
-        width: 400,
+        width: 500,
         size: boardsize,
     });
+    console.log(`Boardsize: ${boardsize}`); // Expected: 5
+    console.log(`Boardsize: ${game.size}`); // Expected: 5
 
-    // Initialize the game state
-    const gameState = new WGo.Position(boardsize); // Dynamic size based on the boardsize argument
-    let turn = WGo.B; // Black starts
+    console.log(game.isOnBoard(2, 2)); // Expected: true for a 5x5 board
 
-    // Add click event listener for interactive stone placement
-    board.addEventListener("click", function (x, y) {
-        if (gameState.get(x, y) === 0) { // Check if the position is empty
-            board.addObject({ x, y, c: turn }); // Place the stone
-            gameState.set(x, y, turn); // Update game state
-            turn = turn === WGo.B ? WGo.W : WGo.B; // Toggle the turn
-        } else {
-            alert("This position is already occupied!");
+
+    // Handle clicks on the board
+    board.addEventListener("click", (x, y) => {
+        console.log(`Clicked coordinates: x=${x}, y=${y}`); // Debugging to verify coordinates
+
+        const old_turn = game.turn;
+        const result = game.play(x, y, game.turn); // Validates and checks captures
+        if (result === 1 || result === 2 || result === 3 || result === 4) {
+            console.log("Invalid move:", result); // 1 = Out of bounds, 2 = Occupied, 3 = Suicide
+            return;
         }
+        board.addObject({ x: x, y: y, c: old_turn});
+        result.forEach(captured => board.removeObjectsAt(captured.x, captured.y));
+
     });
+
+    // Render the initial state of the board
+    board.update(game.getPosition());
 
     const lessoninfo = document.getElementById("learninfo");
     lessoninfo.innerHTML = "";
+    let stoneX = 1, stoneY = 1; // Coordinates of the black stone
+    let liberties = [];
 
     // Handle tutorial topics
     switch (topic) {
@@ -70,8 +85,8 @@ function startInteractiveTutorial(topic, boardsize) {
                     break;
 
         case "liberties":
-            const stoneX = 1, stoneY = 1; // Coordinates of the black stone
             board.addObject({ x: stoneX, y: stoneY, c: WGo.B }); // Add black stone
+            game.play(x,y,WGo.B); // Play the black stone
 
             // Define adjacent coordinates and corresponding labels
             const liberties = [
@@ -94,7 +109,41 @@ function startInteractiveTutorial(topic, boardsize) {
 
             lessoninfo.innerHTML = "Count liberties of the black stone.";
             break;
+        case "capture":
+            const centerX = Math.floor(boardsize / 2); // Center X coordinate
+            const centerY = Math.floor(boardsize / 2); // Center Y coordinate
+        
+            // Add a white stone in the middle
+            board.addObject({ x: centerX, y: centerY, c: WGo.W }); // White stone
+            game.play(centerX, centerY, WGo.W); // Play the white stone
+        
+            // Define the surrounding positions
+            const surroundingStones = [
+                { x: centerX - 1, y: centerY },     // Left
+                { x: centerX + 1, y: centerY },     // Right
+                { x: centerX, y: centerY - 1 },     // Above
 
+            ];
+        
+            // Place black stones around the white stone
+            surroundingStones.forEach(stone => {
+                if (stone.x >= 0 && stone.x < boardsize && stone.y >= 0 && stone.y < boardsize) {
+                    board.addObject({
+                        x: stone.x,
+                        y: stone.y,
+                        c: WGo.B // Black stone
+                    });
+                    game.play(stone.x, stone.y, WGo.B); // Play the black stone
+                }
+            });
+        
+            // Add some instructional text
+            lessoninfo.innerHTML = `
+                <p><strong>Capture the white stone!</strong></p>
+                <p>Place another black stone to capture the white stone by surrounding it completely.</p>
+            `;
+            break;
+        
         case "9x9demo":
             // Replace the interactive board with the SGF player
             learnboard.innerHTML = ""; // Clear the existing board for the player
@@ -152,6 +201,7 @@ function startInteractiveTutorial(topic, boardsize) {
         default:
             lessoninfo.innerHTML = "Topic not found!";
     }
+    game.turn = WGo.B; // Set the initial turn to black
 }
 
 function createButtonContainer(containerID, player) {

@@ -211,7 +211,19 @@
                     <div class="lesson-item border rounded-lg bg-white shadow" data-rank="34k">
                         <div
                             class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
-                            Lesson 3: A 9x9 Game
+                            Lesson 3: Capture a Stone
+                        </div>
+                        <div class="lesson-content hidden px-4 py-2 text-gray-700">
+                            Here we will learn how to capture an opponent's stone and understand the concept of atari.
+                            <br><button
+                                class="btn mt-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow"
+                                onclick="startInteractiveTutorial('capture', 5)">Try</button>
+                        </div>
+                    </div>
+                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="32k">
+                        <div
+                            class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
+                            Lesson 4: A 9x9 Game
                         </div>
                         <div class="lesson-content hidden px-4 py-2 text-gray-700">
                             Here we will review a 9x9 game and discuss the strategies and tactics used by both players.
@@ -220,10 +232,10 @@
                                 onclick="startInteractiveTutorial('9x9demo', 9)">Play Demo</button>
                         </div>
                     </div>
-                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="32k">
+                    <div class="lesson-item border rounded-lg bg-white shadow" data-rank="30k">
                         <div
                             class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
-                            Lesson 4: Shape - Good or bad?
+                            Lesson 5: Shape - Good or bad?
                         </div>
                         <div class="lesson-content hidden px-4 py-2 text-gray-700">
                             Here we will go over the basics of shape and how it can be used to your advantage.
@@ -243,6 +255,9 @@
                 <p>Wins: <span id="profile-wins">0</span></p>
                 <p>Puzzles Done: <span id="profile-puzzles-done">0</span></p>
                 <p>Puzzles Correct: <span id="profile-puzzles-correct">0</span></p>
+                <br><button
+                class="btn mt-2 px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg shadow"
+                onclick="resetStats()">Reset Profile</button>
             </div>
         </div>
     </main>

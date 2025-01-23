@@ -34,6 +34,23 @@ function showToast(text) {
 }
 
 
+function resetStats() {
+    if (confirm("Are you sure you want to reset all statistics? This action cannot be undone.")) {
+        localStorage.removeItem("playerWins");
+        localStorage.removeItem("puzzlesDone");
+        localStorage.removeItem("puzzlesCorrect");
+        localStorage.removeItem("gamesPlayed");
+        localStorage.removeItem("hasLost");
+        localStorage.removeItem("local_rank");
+        alert("Statistics have been reset.");
+        location.reload(); // Reloads the current page
+
+    } else {
+        alert("Reset action canceled.");
+    }
+}
+
+
 // for checking if the user has lost a game yet
 function getHasLost() {
     // Check if "hasLost" exists in local storage
