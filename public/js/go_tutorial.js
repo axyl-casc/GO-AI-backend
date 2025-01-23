@@ -36,7 +36,7 @@ const lessonsData = [
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
-    populateLessons(lessonsData);
+    //populateLessons(lessonsData);
 });
 
 
