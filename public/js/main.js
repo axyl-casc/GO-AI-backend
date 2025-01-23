@@ -70,11 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if(targetTab == "profile") {
-                document.getElementById('profile-rank').textContent = getRank();
-document.getElementById('profile-games-played').textContent = getGamesPlayed();
-document.getElementById('profile-wins').textContent = getPlayerWins();
-document.getElementById('profile-puzzles-done').textContent = getPuzzlesDone();
-document.getElementById('profile-puzzles-correct').textContent = getPuzzlesCorrect();
+                document.getElementById('profile-rank').textContent = getDisplayRank()
+                document.getElementById('profile-games-played').textContent = getGamesPlayed();
+                document.getElementById('profile-wins').textContent = getPlayerWins();
+                document.getElementById('profile-puzzles-done').textContent = getPuzzlesDone();
+                document.getElementById('profile-puzzles-correct').textContent = getPuzzlesCorrect();
             }
 
         });
@@ -103,14 +103,18 @@ document.getElementById('profile-puzzles-correct').textContent = getPuzzlesCorre
         let score = document.querySelector("#scorespan").textContent
         if (score[0] == "B" && move_count != 0) {
             showToast("You won!")
-            adjustRank(1) // increase rank by 1 on win
             incrementPlayerWins();
+            adjustRank(1) // increase rank by 1 on win
         } else if (move_count != 0) {
             showToast("You lost!")
             setHasLost(true);
             adjustRank(-1) // decrease rank by 1 on loss
+            if(convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")) {
+                adjustRank(-1)
+            }
         }
-        document.getElementById("rankspan").innerHTML = getRank()
+
+         document.getElementById("rankspan").innerHTML = getDisplayRank()
         document.getElementById("movecountspan").innerHTML = "..."
         move_count = 0
         document.querySelector('[data-tab="play"]').click();
@@ -124,11 +128,11 @@ document.getElementById('profile-puzzles-correct').textContent = getPuzzlesCorre
     rungame()
 
     async function rungame() {
-        document.getElementById("rankspan").innerHTML = getRank()
+        document.getElementById("rankspan").innerHTML = getDisplayRank()
         boardsize = parseInt(document.getElementById('boardSize').value, 10)
         let rank = document.getElementById('playerRank').value
         rank = getRank()
-        if (isNaN(boardsize) || rank.endsWith("k") == false) {
+        if (isNaN(boardsize)) {
             console.log("Auto game started...")
 
             // 7x7

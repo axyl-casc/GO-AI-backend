@@ -15,7 +15,12 @@ const ALL_RANKS = (() => {
 })();
 
 
-
+function getDisplayRank(){
+    if(convertKyuDanToLevel(getRank()) > convertKyuDanToLevel("20k")) {
+        return getRank()
+    }
+    return "New Adventurer"
+}
 
 function convertKyuDanToLevel(rank) {
     rank = String(rank);
