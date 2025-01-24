@@ -272,12 +272,38 @@
             </div>
 
             <div id="shop" class="tab-content hidden">
-                <h1 class="text-2xl font-bold mb-6 text-badukBlack">Shop</h1>
+                <h1 id="shoptitle" class="text-2xl font-bold mb-6 text-badukBlack">Shop</h1>
+            
+                <!-- Currency Display -->
                 <div id="currency" class="mb-4 text-xl font-semibold text-badukBlack"></div>
+            
+                <!-- Category Selector -->
+                <div id="category-selector" class="mb-6">
+                    <ul class="flex flex-wrap gap-4">
+                        <li class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
+                            <span data-category="featured">Featured</span>
+                        </li>
+                        <li class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
+                            <span data-category="companions">Companions</span>
+                        </li>
+                        <li class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
+                            <span data-category="stones">Stones</span>
+                        </li>
+                        <li class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
+                            <span data-category="boards">Boards</span>
+                        </li>
+                        <li class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
+                            <span data-category="themes">Themes</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Shop Items -->
                 <div id="shop-items" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Cards will be dynamically injected here -->
                 </div>
             </div>
+            
         </div>
     </main>
 

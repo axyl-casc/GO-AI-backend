@@ -68,6 +68,7 @@ function resetStats() {
         localStorage.removeItem("experience");
         localStorage.removeItem("level");
         localStorage.removeItem("currency");
+        clearInventory();
         alert("Statistics have been reset.");
         location.reload(); // Reloads the current page
 
@@ -259,6 +260,53 @@ function incrementPuzzlesCorrect() {
     return newPuzzlesCorrect;
 }
 
+function getInventory() {
+    // Initialize inventory if it doesn't exist
+    if (localStorage.getItem("inventory") === null) {
+        const initialInventory = {};
+        localStorage.setItem("inventory", JSON.stringify(initialInventory));
+        return initialInventory;
+    }
+    return JSON.parse(localStorage.getItem("inventory"));
+}
+
+function addToInventory(itemKey, quantity = 1) {
+    // Get the current inventory
+    const inventory = getInventory();
+
+    // Update the specific item in the inventory
+    if (inventory[itemKey] === undefined) {
+        inventory[itemKey] = quantity; // Initialize if not present
+    } else {
+        inventory[itemKey] += quantity; // Increment existing item
+    }
+
+    // Save back to local storage
+    localStorage.setItem("inventory", JSON.stringify(inventory));
+    return inventory[itemKey];
+}
+
+function removeFromInventory(itemKey, quantity = 1) {
+    const inventory = getInventory();
+
+    // Check if the item exists and has enough quantity to remove
+    if (inventory[itemKey] !== undefined) {
+        inventory[itemKey] = Math.max(0, inventory[itemKey] - quantity); // Prevent negative values
+        if (inventory[itemKey] === 0) {
+            delete inventory[itemKey]; // Optional: Remove item when quantity reaches 0
+        }
+    }
+
+    // Save back to local storage
+    localStorage.setItem("inventory", JSON.stringify(inventory));
+    return inventory[itemKey] || 0;
+}
+
+function clearInventory() {
+    const initialInventory = {};
+    localStorage.setItem("inventory", JSON.stringify(initialInventory));
+    return initialInventory;
+}
 
 function properCase(str) {
     return str
