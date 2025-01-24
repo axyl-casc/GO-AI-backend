@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('profile-wins').textContent = getPlayerWins();
                 document.getElementById('profile-puzzles-done').textContent = getPuzzlesDone();
                 document.getElementById('profile-puzzles-correct').textContent = getPuzzlesCorrect();
+                document.getElementById('profile-currency').textContent = getCurrency();
             }
 
         });
