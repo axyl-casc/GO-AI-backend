@@ -150,7 +150,7 @@ function incrementLevel() {
     // Store the updated value back in local storage
     localStorage.setItem("level", JSON.stringify(newLevel));
 
-    incrementCurrency(newLevel * 2)
+    adjustCurrency(newLevel * 2)
 
     return newLevel;
 }

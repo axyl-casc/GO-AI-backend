@@ -2,7 +2,6 @@ const { SqlConnection, TsumegoConnection } = require('./sql_connection');
 const { trainingGame } = require('./train_database');
 const { generateTsumego } = require('./tsumego_gen.js');
 const { PlayerAI } = require('./playerAI');
-const { parseCommand } = require('./GoAIPlay')
 
 const { convertKyuDanToLevel, convertLevelToKyuDan } = require('./rank_conversion');
 const path = require('path');
@@ -16,7 +15,7 @@ const tsumego_sql = new TsumegoConnection("./tsumego_sets.db")
 const aiInstances = {};
 
 
-const AI_game_delay_seconds = 10
+const AI_game_delay_seconds = 5
 
 // seconds per week = 604800
 // seconds per day = 86400
@@ -231,21 +230,27 @@ app.get('/get-tsumego', async (req, res) => {
     }
 });
 
-// for training games in the database
 async function task() {
     try {
-        console.log(`Training game started at ${new Date().toISOString()}`);
-        await trainingGame(sql, 9); // Run training game
-        await trainingGame(sql, 13); // Run training game
-        await trainingGame(sql, 19); // Run training game
-        console.log(`Training game completed at ${new Date().toISOString()}`);
+      console.log(`Training game started at ${new Date().toISOString()}`);
+  
+      // Kick off all tasks at the same time.
+      // Promise.all waits until they all complete (or fail on any error).
+      await Promise.all([
+        trainingGame(sql, 9),
+        trainingGame(sql, 13),
+        trainingGame(sql, 19),
+      ]);
+  
+      console.log(`Training game completed at ${new Date().toISOString()}`);
     } catch (error) {
-        console.error(`Error during training game: ${error.message}`);
+      console.error(`Error during training game: ${error.message}`);
     } finally {
-        // Schedule the next execution 1 minute after the current one completes
-        setTimeout(task, AI_game_delay_seconds * 1000);
+      // Schedule the next execution after these tasks complete
+      setTimeout(task, AI_game_delay_seconds * 1000);
     }
-}
+  }
+  
 
 async function cleanup() {
     try {
