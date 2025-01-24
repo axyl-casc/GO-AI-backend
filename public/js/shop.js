@@ -1,23 +1,30 @@
-document.addEventListener("DOMContentLoaded", () => {
+function initshop(){
     // JSON data for shop items with categories as arrays
     const shopItems = [
         {
             title: "Go Board",
-            image: "path/to/go-board.jpg",
+            image: "img/image.png",
             description: "High-quality wooden Go board with grid markings.",
             price: 50,
             category: ["boards", "featured"],
         },
         {
             title: "Shell Stones",
-            image: "path/to/go-stones.jpg",
-            description: "Set of polished black and white Go stones.",
+            image: "img/image.png",
+            description: "Set of polished white Go stones.",
+            price: 30,
+            category: ["stones", "featured"],
+        },
+        {
+            title: "Slate Stones",
+            image: "img/image.png",
+            description: "Set of polished black Go stones.",
             price: 30,
             category: ["stones", "featured"],
         },
         {
             title: "Beginner's Guide to Go",
-            image: "path/to/go-guide.jpg",
+            image: "img/image.png",
             description: "A comprehensive guide for beginners to learn Go.",
             price: 15,
             category: ["featured"],
@@ -84,4 +91,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Default to the "featured" category
     renderItems("featured");
-});
+}

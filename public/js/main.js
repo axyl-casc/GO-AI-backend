@@ -79,6 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('profile-currency').textContent = getCurrency();
             }
 
+            if(targetTab == "shop"){
+                initshop();            }
+
         });
     });
 
