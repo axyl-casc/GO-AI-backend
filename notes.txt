@@ -30,3 +30,13 @@ todo
 fix tsumego board sizing 
 add lessons or lesson structure
 modularize lessons to be easier - javascript side
+
+Currency, save to sgf, opening popup
+
+Timeout value for each tsumego so non repating
+
+opening popup - ask for initial rank, explain basic rules
+
+
+make a different server for database handling, and a different server for AI running
+

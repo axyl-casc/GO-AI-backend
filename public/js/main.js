@@ -297,10 +297,12 @@ document.addEventListener('DOMContentLoaded', () => {
             incrementPlayerWins();
             adjustRank(1) // increase rank by 1 on win
             incrementExperience(Math.floor(move_count / 2))
+            adjustCurrency(5)
         } else if (move_count != 0) {
             incrementExperience(Math.floor(move_count / 4))
             showToast("You lost!")
             setHasLost(true);
+            adjustCurrency(2)
             adjustRank(-1) // decrease rank by 1 on loss
             if(convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")) {
                 adjustRank(-1)

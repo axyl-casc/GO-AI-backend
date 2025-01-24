@@ -66,6 +66,7 @@ function resetStats() {
         localStorage.removeItem("local_rank");
         localStorage.removeItem("experience");
         localStorage.removeItem("level");
+        localStorage.removeItem("currency");
         alert("Statistics have been reset.");
         location.reload(); // Reloads the current page
 
@@ -149,6 +150,8 @@ function incrementLevel() {
     // Store the updated value back in local storage
     localStorage.setItem("level", JSON.stringify(newLevel));
 
+    incrementCurrency(newLevel * 2)
+
     return newLevel;
 }
 
@@ -195,16 +198,35 @@ function incrementExperience(delta) {
     const currentExperience = getExperience();
     const newExperience = currentExperience + delta;
     localStorage.setItem("experience", JSON.stringify(newExperience));
-    if(newExperience > 10 * getLevel() + 5){
-        localStorage.setItem("experience", newExperience - (10 * getLevel() + 5)); // reset experience
+    // check if level up using x^2 + 5 formula
+    if(newExperience > getLevel() * getLevel() + 5){
+        localStorage.setItem("experience", newExperience - (getLevel() * getLevel() + 5)); // reset experience
         incrementLevel();
         showToastAux(`Leveled up from ${getLevel() - 1} to ${getLevel()}!`)
     }else{
         showToastAux(`You gained ${delta} experience!`)
     }
-    
     return newExperience;
 }
+
+
+function getCurrency() {
+    if (localStorage.getItem("currency") === null) {
+        localStorage.setItem("currency", JSON.stringify(0));
+        return 0;
+    }
+    return JSON.parse(localStorage.getItem("currency"));
+}
+
+function adjustCurrency(delta) {
+    const currentCurrency = getCurrency();
+    const newCurrency = currentCurrency + delta;
+    localStorage.setItem("currency", JSON.stringify(newCurrency));
+
+    return newCurrency;
+}
+
+
 // For managing puzzles done
 function getPuzzlesDone() {
     if (localStorage.getItem("puzzlesDone") === null) {
