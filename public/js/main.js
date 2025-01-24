@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            if(targetTab == "profile") {
+            if (targetTab == "profile") {
                 document.getElementById('profile-rank').textContent = getDisplayRank()
                 document.getElementById('profile-level').textContent = getLevel()
                 document.getElementById('profile-games-played').textContent = getGamesPlayed();
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("New Game")
 
         // clamp rank
-        const MAXRANK = "3d"
+        const MAXRANK = "9d"
         if (convertKyuDanToLevel(getRank()) > convertKyuDanToLevel(MAXRANK)) {
             rank = MAXRANK
         }
@@ -176,9 +176,108 @@ document.addEventListener('DOMContentLoaded', () => {
         // Set initial size
         resizeBoard();
         const game = new WGo.Game(boardsize); // Manages game state and rules
-        game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${rank}`);
+        let game_type = "normal"
+        let handicap_stones = 0
+
+        if (getRandomInt(1, 10) == 2) {
+            game_type = "chinese" // 10% chance of playing chinese gamemode
+        }
+
+        if (game_type == 'normal') {
+            if(getRandomInt(1, 5) == 2 && getLevel() > 10 && boardsize >= 13) {
+                game_type = "handicap" // 25% chance of playing handicap game
+                handicap_stones = getRandomInt(2, 5);
+            }
+        }
+
+        if(game_type != "normal"){
+            if(getLevel() < 5 || boardsize < 13 || convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("25k")) {
+                game_type = "normal" // make all games lower than level 5 normal
+            }
+        }
+
+        showToast(`Game type: ${properCase(game_type)}`)
+
+        // Place handicap stones for black (WGo.B)
+        if (game_type == "handicap") {
+            const starDistance = boardsize >= 13 ? 3 : 2; // 4th line for boards >= 13x13, 3rd line for smaller boards
+
+            // Define star points in the traditional handicap placement order
+            const starPoints = [
+                { x: starDistance, y: starDistance }, // Top left
+                { x: boardsize - starDistance - 1, y: boardsize - starDistance - 1 }, // Bottom right
+                { x: boardsize - starDistance - 1, y: starDistance }, // Top right
+                { x: starDistance, y: boardsize - starDistance - 1 }, // Bottom left
+                { x: Math.floor(boardsize / 2), y: Math.floor(boardsize / 2) }, // Center
+            ];
+
+            // Ensure handicap_stones does not exceed 5
+            const stonesToPlace = Math.min(handicap_stones, 5);
+
+            // Place the required number of handicap stones
+            for (let i = 0; i < stonesToPlace; i++) {
+                const point = starPoints[i];
+
+                // Place the stone in the game logic
+                game.play(point.x, point.y, WGo.B);
+
+                // Display the stone on the board
+                board.addObject({
+                    x: point.x,
+                    y: point.y,
+                    c: WGo.B,
+                });
+            }
+
+            // Redraw the board to ensure all objects are displayed
+            board.redraw();
+        }
+
+        // Place alternating black (B) and white (W) stones on opposite corners
+        if (game_type == "chinese") {
+            const starDistance = boardsize >= 13 ? 3 : 2; // 4th line for boards >= 13x13, 3rd line for smaller boards
+
+            // Define star points
+            const starPoints = [
+                { x: starDistance, y: starDistance, color: WGo.B }, // Top left, black
+                { x: boardsize - starDistance - 1, y: starDistance, color: WGo.W }, // Top right, white
+                { x: starDistance, y: boardsize - starDistance - 1, color: WGo.W }, // Bottom left, white
+                { x: boardsize - starDistance - 1, y: boardsize - starDistance - 1, color: WGo.B }, // Bottom right, black
+            ];
+
+            // Add stones to the game logic and display them on the board
+            for (let point of starPoints) {
+                // Place the stone in the game logic
+                game.play(point.x, point.y, point.color);
+
+                // Display the stone on the board
+                board.addObject({
+                    x: point.x,
+                    y: point.y,
+                    c: point.color,
+                });
+            }
+
+            // Redraw the board to ensure all objects are displayed
+            board.redraw();
+        }
+
+        // end of settings gametype
+
+        let requested_rank = getRank()
+        if(game_type == "handicap") {
+            requested_rank = convertLevelToKyuDan(convertKyuDanToLevel(getRank()) + handicap_stones)
+        }
+
+        game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}`);
         game_id = game_id.gameId
         console.log(game_id);
+
+        if(game_type == "handicap") {
+            move_count++;
+            await handleAIMove('pass', board);
+        }
+
 
         // Restrict to one color (e.g., black)
         const stoneColor = WGo.B; // WGo.B for Black, WGo.W for White
@@ -305,12 +404,12 @@ document.addEventListener('DOMContentLoaded', () => {
             setHasLost(true);
             adjustCurrency(2)
             adjustRank(-1) // decrease rank by 1 on loss
-            if(convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")) {
+            if (convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")) {
                 adjustRank(-1)
             }
         }
 
-         document.getElementById("rankspan").innerHTML = getDisplayRank()
+        document.getElementById("rankspan").innerHTML = getDisplayRank()
         document.getElementById("movecountspan").innerHTML = "..."
         move_count = 0
         document.querySelector('[data-tab="play"]').click();

@@ -1,8 +1,9 @@
 function getRandomInt(min, max) {
     const minCeiled = Math.ceil(min);
     const maxFloored = Math.floor(max);
-    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
+    return Math.floor(Math.random() * (maxFloored - minCeiled + 1)) + minCeiled; // The maximum is inclusive and the minimum is inclusive
 }
+
 
 function showToast(text) {
     const toast = document.querySelector('#toast');
@@ -27,7 +28,7 @@ function showToast(text) {
         setTimeout(() => {
             toastContainer.classList.add('hidden');
         }, 500);
-    }, 1000);
+    }, 2000);
 }
 
 function showToastAux(text) {
@@ -53,7 +54,7 @@ function showToastAux(text) {
         setTimeout(() => {
             toastContainerAux.classList.add('hidden');
         }, 500);
-    }, 1000);
+    }, 1500);
 }
 
 function resetStats() {
@@ -256,4 +257,11 @@ function incrementPuzzlesCorrect() {
     const newPuzzlesCorrect = currentPuzzlesCorrect + 1;
     localStorage.setItem("puzzlesCorrect", JSON.stringify(newPuzzlesCorrect));
     return newPuzzlesCorrect;
+}
+
+
+function properCase(str) {
+    return str
+        .toLowerCase()
+        .replace(/\b\w/g, (char) => char.toUpperCase());
 }

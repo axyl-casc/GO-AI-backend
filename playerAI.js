@@ -24,7 +24,7 @@ class PlayerAI {
     /**
      * Initializes the AI with game settings.
      */
-    async create(sql, komi, boardsize, handicap, target_level, ai_color) {
+    async create(sql, komi, boardsize, handicap, target_level, ai_color, type) {
         let ai_between = await sql.getBetween(boardsize, target_level)
         console.log(ai_between)
         this.ai_count = ai_between.length
@@ -41,11 +41,67 @@ class PlayerAI {
             let [exe, args] = parseCommand(i)
             this.instances.push(new GoAIInstance(exe, args))
         }
+        if (type == "handicap") {
+            komi = 0.5
+            for (let i of this.instances) {
+                const starDistance = boardsize >= 13 ? 3 : 2; // 4th line for boards >= 13x13, 3rd line for smaller boards
+            
+                // Define star points in the traditional handicap placement order
+                const starPoints = [
+                    { x: starDistance, y: boardsize - starDistance - 1 }, // Top left
+                    { x: boardsize - starDistance, y: starDistance }, // Bottom right
+                    { x: boardsize - starDistance, y: boardsize - starDistance - 1 }, // Top right
+                    { x: starDistance, y: starDistance }, // Bottom left
+                    { x: Math.floor(boardsize / 2) + 1, y: Math.floor(boardsize / 2) }, // Center
+                ];
+            
+                // Ensure handicap_stones does not exceed 5
+                const stonesToPlace = Math.min(handicap, 5);
+            
+                // Place the required number of handicap stones
+                for (let j = 0; j < stonesToPlace; j++) {
+                    const point = starPoints[j];
+            
+                    // Convert coordinates to Go notation
+                    const letter = String.fromCharCode(65 + point.x); // Convert x to letter (A, B, ...)
+                    const number = boardsize - point.y; // Convert y to Go coordinates (1, 2, ...)
+            
+                    // Send the command to place the stone
+                    await i.sendCommand(`play B ${letter}${number}`);
+                }
+            }
 
+        }
         for (let ai of this.instances) {
             ai.sendCommand(`komi ${komi}`)
             ai.sendCommand(`boardsize ${boardsize}`)
         }
+
+        
+        // Place alternating black (B) and white (W) stones on opposite corners
+        if (type == "chinese") {
+            for (let i of this.instances) {
+                const starDistance = boardsize >= 13 ? 3 : 2; // 4th line for boards >= 13x13, 3rd line for smaller boards
+
+                // Define star points
+                const starPoints = [
+                    { x: starDistance, y: starDistance, color: "W" }, // Top left, black
+                    { x: boardsize - starDistance, y: starDistance, color: "B" }, // Top right, white
+                    { x: starDistance, y: boardsize - starDistance - 1, color: "B" }, // Bottom left, white
+                    { x: boardsize - starDistance, y: boardsize - starDistance - 1, color: "W" }, // Bottom right, black
+                ];
+
+                // Place stones on the star points
+                for (let point of starPoints) {
+                    const letter = String.fromCharCode(65 + point.x); // Convert x to letter (A, B, ...)
+                    const number = boardsize - point.y; // Convert y to Go coordinates (1, 2, ...)
+                    await i.sendCommand(`play ${point.color} ${letter}${number}`);
+                }
+            }
+        }
+
+
+
     }
 
     async terminate() {
@@ -90,6 +146,7 @@ class PlayerAI {
             }
         }
 
+        // print AI view
         //let test = await this.instances[0].sendCommand(`showboard`);
         //console.log(test);
         response = cleanMove(response[0])

@@ -59,6 +59,9 @@
             <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="learn">
                 Learn
             </button>
+            <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="shop">
+                Shop
+            </button>
             <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="profile">
                 Profile
             </button>
@@ -267,6 +270,14 @@
                 class="btn mt-2 px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg shadow"
                 onclick="resetStats()">Reset Profile</button>
             </div>
+
+            <div id="shop" class="tab-content hidden">
+                <h1 class="text-2xl font-bold mb-6 text-badukBlack">Shop</h1>
+                <div id="currency" class="mb-4 text-xl font-semibold text-badukBlack"></div>
+                <div id="shop-items" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards will be dynamically injected here -->
+                </div>
+            </div>
         </div>
     </main>
 
@@ -290,6 +301,7 @@
     <script src="js/ranks.js"></script>
     <script src="js/tsumego.js"></script>
     <script src="js/go_tutorial.js"></script>
+    <script src="js/shop.js"></script>
     <script src="js/main.js"></script>
 
     <script>
