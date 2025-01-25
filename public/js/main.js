@@ -79,8 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('profile-currency').textContent = getCurrency();
             }
 
-            if(targetTab == "shop"){
-                initshop();            }
+            if (targetTab == "shop") {
+                initshop();
+            }
 
         });
     });
@@ -187,19 +188,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (game_type == 'normal') {
-            if(getRandomInt(1, 5) == 2 && getLevel() > 10 && boardsize >= 13) {
+            if (getRandomInt(1, 5) == 2 && getLevel() > 10 && boardsize >= 13) {
                 game_type = "handicap" // 25% chance of playing handicap game
                 handicap_stones = getRandomInt(2, 5);
             }
         }
 
-        if(game_type != "normal"){
-            if(getLevel() < 5 || boardsize < 13 || convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("25k")) {
+        if (game_type != "normal") {
+            if (getLevel() < 5 || boardsize < 13 || convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("25k")) {
                 game_type = "normal" // make all games lower than level 5 normal
             }
         }
 
-        showToast(`Game type: ${properCase(game_type)}`)
+        //showToast(`Game type: ${properCase(game_type)}`)
 
         // Place handicap stones for black (WGo.B)
         if (game_type == "handicap") {
@@ -268,15 +269,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // end of settings gametype
 
         let requested_rank = getRank()
-        if(game_type == "handicap") {
+        let requested_komi = 6.5
+        if (game_type == "handicap") {
+            requested_komi = 0.5
             requested_rank = convertLevelToKyuDan(convertKyuDanToLevel(getRank()) + handicap_stones)
         }
 
-        game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}`);
+        if (convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("40k")) {
+            requested_komi = 0.5
+        }
+
+        game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}`);
         game_id = game_id.gameId
         console.log(game_id);
 
-        if(game_type == "handicap") {
+        if (game_type == "handicap") {
             move_count++;
             await handleAIMove('pass', board);
         }
@@ -322,6 +329,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (move_count > boardsize * boardsize / 3) {
                 endGameButton.classList.remove('hidden');
             }
+            
+
         });
 
         // Function to handle AI's move
