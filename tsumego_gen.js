@@ -8,8 +8,8 @@ const path = require('path');
  * @returns {*} - A random element from the array.
  */
 async function getRandomElement(array) {
-    const randomIndex = Math.floor(Math.random() * array.length);
-    return array[randomIndex];
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
 }
 
 async function insertTEAfterCorrect(input) {
@@ -83,37 +83,37 @@ async function parseSGFAndAddVW(sgf) {
  */
 async function generateTsumego(difficulty, type, tsumego_sql) {
   try {
-      // Directory containing the Tsumego puzzles
-      const puzzlesDir = path.join(__dirname, 'puzzles');
+    // Directory containing the Tsumego puzzles
+    const puzzlesDir = path.join(__dirname, 'puzzles');
 
-      // Read all files in the puzzles directory
-      const files = await fs.readdir(puzzlesDir);
+    // Read all files in the puzzles directory
+    const files = await fs.readdir(puzzlesDir);
 
-      if (files.length === 0) {
-          console.warn('No Tsumego puzzles found in the directory.');
-          return null;
-      }
-
-      // Convert difficulty to ELO level
-      const elo = await convertKyuDanToLevel(difficulty);
-      console.log(`Requested difficulty: ${difficulty} -> ELO: ${elo}`);
-      const puzzle = await tsumego_sql.getRandomPuzzle(elo);
-
-      if (!puzzle || !puzzle.filename) {
-          console.error('No valid puzzle returned from the database.');
-          return null;
-      }
-
-      // Read and parse the selected file
-      const filePath = path.join(puzzlesDir, puzzle.filename);
-      const contents = await fs.readFile(filePath, 'utf-8'); // Use promises API for reading files
-      const parsedContents = await parseSGFAndAddVW(contents);
-
-      console.log('Returning puzzle:', puzzle);
-      return {sgf:parsedContents, id:puzzle.id};
-  } catch (err) {
-      console.error('Error generating Tsumego puzzle:', err);
+    if (files.length === 0) {
+      console.warn('No Tsumego puzzles found in the directory.');
       return null;
+    }
+
+    // Convert difficulty to ELO level
+    const elo = await convertKyuDanToLevel(difficulty);
+    console.log(`Requested difficulty: ${difficulty} -> ELO: ${elo}`);
+    const puzzle = await tsumego_sql.getRandomPuzzle(elo);
+
+    if (!puzzle || !puzzle.filename) {
+      console.error('No valid puzzle returned from the database.');
+      return null;
+    }
+
+    // Read and parse the selected file
+    const filePath = path.join(puzzlesDir, puzzle.filename);
+    const contents = await fs.readFile(filePath, 'utf-8'); // Use promises API for reading files
+    const parsedContents = await parseSGFAndAddVW(contents);
+
+    console.log('Returning puzzle:', puzzle);
+    return { sgf: parsedContents, id: puzzle.id };
+  } catch (err) {
+    console.error('Error generating Tsumego puzzle:', err);
+    return null;
   }
 }
 module.exports = { generateTsumego };

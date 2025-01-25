@@ -76,7 +76,7 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
 
 
             //if (turn_counter % 5 == 0) {
-             //   print_board(game);
+            //   print_board(game);
             //}
 
             // Check if the move is "resign" or "pass"

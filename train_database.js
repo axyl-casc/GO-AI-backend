@@ -38,7 +38,7 @@ async function trainingGame(sql, boardsize) {
     } catch (error) {
         console.error("Error during game execution:", error);
     }
-    
+
 }
 
 module.exports = {

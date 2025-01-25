@@ -166,27 +166,40 @@
                 <div class="p-2" id="learninfo"></div>
                 <div id="lessons" class="space-y-4">
                     <div class="lesson-item border rounded-lg bg-white shadow" data-rank="50k" data-level="0">
-                        <div class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
+                        <div
+                            class="lesson-title px-4 py-2 cursor-pointer bg-gray-200 hover:bg-gray-300 font-semibold text-gray-800">
                             Lesson 0: About this Website
                         </div>
                         <div class="lesson-content hidden px-4 py-2 text-gray-700">
                             <p class="mb-4">
-                                Welcome to our Go learning platform! This website is designed to guide new players through their journey of discovering and mastering the game of Go.
+                                Welcome to our Go learning platform! This website is designed to guide new players
+                                through their journey of discovering and mastering the game of Go.
                             </p>
                             <p class="mb-4">
-                                The most important advice for beginners is simple: play many games. By playing frequently, you will naturally uncover strategies, improve your instincts, and develop a deep appreciation for the game. There’s no substitute for hands-on experience.
+                                The most important advice for beginners is simple: play many games. By playing
+                                frequently, you will naturally uncover strategies, improve your instincts, and develop a
+                                deep appreciation for the game. There’s no substitute for hands-on experience.
                             </p>
                             <p class="mb-4">
-                                After building confidence through playing, feel free to explore other resources, such as puzzles and lessons. These materials are tailored to help you understand essential concepts like eyes, life and death, and efficient stone placement.
+                                After building confidence through playing, feel free to explore other resources, such as
+                                puzzles and lessons. These materials are tailored to help you understand essential
+                                concepts like eyes, life and death, and efficient stone placement.
                             </p>
                             <p class="mb-4">
-                                To ensure a smooth start, we recommend beginning with smaller board sizes, such as 9x9 or 13x13. These compact boards help you focus on the fundamentals before transitioning to the standard 19x19 board.
+                                To ensure a smooth start, we recommend beginning with smaller board sizes, such as 9x9
+                                or 13x13. These compact boards help you focus on the fundamentals before transitioning
+                                to the standard 19x19 board.
                             </p>
                             <p class="mb-4">
-                                This website is powered by an AI backend developed specifically for teaching Go. You can explore the source code and contribute to the project on our <a href="https://github.com/axyl-casc/GO-AI-backend" target="_blank" class="text-blue-600 hover:underline">GitHub repository</a>.
+                                This website is powered by an AI backend developed specifically for teaching Go. You can
+                                explore the source code and contribute to the project on our <a
+                                    href="https://github.com/axyl-casc/GO-AI-backend" target="_blank"
+                                    class="text-blue-600 hover:underline">GitHub repository</a>.
                             </p>
                             <p>
-                                Remember, the key to improving in Go is consistent practice and an open mindset. Dive in, enjoy the process, and let your curiosity guide you as you explore this timeless and strategic game.
+                                Remember, the key to improving in Go is consistent practice and an open mindset. Dive
+                                in, enjoy the process, and let your curiosity guide you as you explore this timeless and
+                                strategic game.
                             </p>
                             <p>
                                 Good luck, and most importantly, have fun!
@@ -266,33 +279,37 @@
                 <p>Puzzles Correct: <span id="profile-puzzles-correct">0</span></p>
                 <p>Currency: <span id="profile-currency">0</span></p>
                 <p>Rank: <span id="profile-rank">Unranked</span></p>
-                <br><button
-                class="btn mt-2 px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg shadow"
-                onclick="resetStats()">Reset Profile</button>
+                <br><button class="btn mt-2 px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg shadow"
+                    onclick="resetStats()">Reset Profile</button>
             </div>
 
             <div id="shop" class="tab-content hidden">
                 <h1 id="shoptitle" class="text-2xl font-bold mb-6 text-badukBlack">Shop</h1>
-            
+
                 <!-- Currency Display -->
                 <div id="currency" class="mb-4 text-xl font-semibold text-badukBlack"></div>
-            
+
                 <!-- Category Selector -->
                 <div id="category-selector" class="mb-6">
                     <ul class="flex flex-wrap gap-4">
-                        <li class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
+                        <li
+                            class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
                             <span data-category="featured">Featured</span>
                         </li>
-                        <li class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
+                        <li
+                            class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
                             <span data-category="companions">Companions</span>
                         </li>
-                        <li class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
+                        <li
+                            class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
                             <span data-category="stones">Stones</span>
                         </li>
-                        <li class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
+                        <li
+                            class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
                             <span data-category="boards">Boards</span>
                         </li>
-                        <li class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
+                        <li
+                            class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
                             <span data-category="themes">Themes</span>
                         </li>
                     </ul>
@@ -303,7 +320,7 @@
                     <!-- Cards will be dynamically injected here -->
                 </div>
             </div>
-            
+
         </div>
     </main>
 
@@ -371,9 +388,6 @@
                 /* Scale down for high-DPI screens */
             }
         }
-
-
-
     </style>
 
 </body>

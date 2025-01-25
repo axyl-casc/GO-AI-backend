@@ -37,6 +37,6 @@ Timeout value for each tsumego so non repating
 
 opening popup - ask for initial rank, explain basic rules
 
-
 make a different server for database handling, and a different server for AI running
 
+add a marker on atari stones to help newer players understand it

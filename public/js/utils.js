@@ -89,7 +89,7 @@ function getHasLost() {
 
     // Retrieve the value of "hasLost" and parse it
     const hasLost = JSON.parse(localStorage.getItem("hasLost"));
-    
+
     // Return the boolean value
     return hasLost;
 }
@@ -112,7 +112,7 @@ function getGamesPlayed() {
 
     // Retrieve and parse the value of "gamesPlayed"
     const gamesPlayed = JSON.parse(localStorage.getItem("gamesPlayed"));
-    
+
     // Return the number of games played
     return gamesPlayed;
 }
@@ -137,7 +137,7 @@ function getLevel() {
     }
 
     const level = JSON.parse(localStorage.getItem("level"));
-    
+
     return level;
 }
 
@@ -201,11 +201,11 @@ function incrementExperience(delta) {
     const newExperience = currentExperience + delta;
     localStorage.setItem("experience", JSON.stringify(newExperience));
     // check if level up using x^2 + 5 formula
-    if(newExperience > getLevel() * getLevel() + 5){
+    if (newExperience > getLevel() * getLevel() + 5) {
         localStorage.setItem("experience", newExperience - (getLevel() * getLevel() + 5)); // reset experience
         incrementLevel();
         showToastAux(`Leveled up from ${getLevel() - 1} to ${getLevel()}!`)
-    }else{
+    } else {
         showToastAux(`You gained ${delta} experience!`)
     }
     return newExperience;

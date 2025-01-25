@@ -15,7 +15,7 @@ const tsumego_sql = new TsumegoConnection("./tsumego_sets.db")
 const aiInstances = {};
 
 
-const AI_game_delay_seconds = 30
+const AI_game_delay_seconds = 3
 
 // seconds per week = 604800
 // seconds per day = 86400
@@ -232,25 +232,25 @@ app.get('/get-tsumego', async (req, res) => {
 
 async function task() {
     try {
-      console.log(`Training game started at ${new Date().toISOString()}`);
-  
-      // Kick off all tasks at the same time.
-      // Promise.all waits until they all complete (or fail on any error).
-      await Promise.all([
-        trainingGame(sql, 9),
-        trainingGame(sql, 13),
-        trainingGame(sql, 19),
-      ]);
-  
-      console.log(`Training game completed at ${new Date().toISOString()}`);
+        console.log(`Training game started at ${new Date().toISOString()}`);
+
+        // Kick off all tasks at the same time.
+        // Promise.all waits until they all complete (or fail on any error).
+        await Promise.all([
+            trainingGame(sql, 9),
+            trainingGame(sql, 13),
+            trainingGame(sql, 19),
+        ]);
+
+        console.log(`Training game completed at ${new Date().toISOString()}`);
     } catch (error) {
-      console.error(`Error during training game: ${error.message}`);
+        console.error(`Error during training game: ${error.message}`);
     } finally {
-      // Schedule the next execution after these tasks complete
-      setTimeout(task, AI_game_delay_seconds * 1000);
+        // Schedule the next execution after these tasks complete
+        setTimeout(task, AI_game_delay_seconds * 1000);
     }
-  }
-  
+}
+
 
 async function cleanup() {
     try {

@@ -62,7 +62,7 @@ async function new_tsumego() {
     }
 
 
-    
+
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -79,10 +79,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             correct = text.includes("correct") && !text.includes("incorrect");
         }
 
-        if(correct){
+        if (correct) {
             incrementExperience(2);
             incrementPuzzlesCorrect();
-        }else{
+        } else {
             incrementExperience(1)
         }
 
@@ -92,20 +92,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         const localRank = localStorage.getItem('local_rank');
 
         // only adjust the tsumego ranks if you have lost at least once
-        if(getHasLost() && getGamesPlayed() > 5){
-        // Send data to the local tsumego-complete endpoint
-        fetch(`${window.location.href}tsumego-complete?is_correct=${correct}&puzzle_id=${current_puzzle_id}&user_rank=${localRank}`, {
-            method: 'GET'
-        })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Tsumego completion data sent successfully');
-                } else {
-                    console.error('Error sending tsumego completion data');
-                }
+        if (getHasLost() && getGamesPlayed() > 5) {
+            // Send data to the local tsumego-complete endpoint
+            fetch(`${window.location.href}tsumego-complete?is_correct=${correct}&puzzle_id=${current_puzzle_id}&user_rank=${localRank}`, {
+                method: 'GET'
             })
-            .catch(error => console.error('Fetch error:', error));
-        }else{
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Tsumego completion data sent successfully');
+                    } else {
+                        console.error('Error sending tsumego completion data');
+                    }
+                })
+                .catch(error => console.error('Fetch error:', error));
+        } else {
             console.log("You have not lost yet, so we will not adjust your rank");
         }
 

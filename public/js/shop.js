@@ -1,4 +1,4 @@
-function initshop(){
+function initshop() {
     // JSON data for shop items with categories as arrays
     const shopItems = [
         {
@@ -63,9 +63,8 @@ function initshop(){
                 <p class="text-gray-700 mb-4 text-center">${item.description}</p>
                 <span class="text-lg font-semibold mb-4">$${item.price}</span>
                 <button 
-                    class="px-4 py-2 rounded ${
-                        canAfford ? "bg-blue-500 text-white hover:bg-blue-600" : "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    } transition"
+                    class="px-4 py-2 rounded ${canAfford ? "bg-blue-500 text-white hover:bg-blue-600" : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                } transition"
                     ${canAfford ? "" : "disabled"}
                 >
                     ${canAfford ? "Buy Now" : "Can't Afford"}
@@ -82,9 +81,9 @@ function initshop(){
         if (category) {
             renderItems(category);
         }
-        try{
+        try {
             document.getElementById("shoptitle").textContent = "Shop - " + properCase(category)
-        }catch(e){
+        } catch (e) {
             console.log(e)
         }
     });

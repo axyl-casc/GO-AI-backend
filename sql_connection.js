@@ -238,7 +238,7 @@ class SqlConnection {
         WHERE path="${path}";
       `;
       await this._send(resetSql, true);
-  }
+    }
 
     // Return updated level for verification or debugging
     return current_level;

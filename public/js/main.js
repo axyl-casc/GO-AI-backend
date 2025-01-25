@@ -329,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (move_count > boardsize * boardsize / 3) {
                 endGameButton.classList.remove('hidden');
             }
-            
+
 
         });
 

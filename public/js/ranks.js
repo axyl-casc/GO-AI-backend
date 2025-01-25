@@ -15,14 +15,14 @@ const ALL_RANKS = (() => {
 })();
 
 
-function getDisplayRank(){
-    if(convertKyuDanToLevel(getRank()) > convertKyuDanToLevel("20k")) {
+function getDisplayRank() {
+    if (convertKyuDanToLevel(getRank()) > convertKyuDanToLevel("20k")) {
         return getRank()
     }
 
-    if(getLevel() >= 10){
+    if (getLevel() >= 10) {
         return "Experienced Adventurer"
-    }else{
+    } else {
         return "New Adventurer"
     }
 

@@ -73,7 +73,7 @@ function startInteractiveTutorial(topic, boardsize) {
             console.log("Invalid move:", result); // 1 = Out of bounds, 2 = Occupied, 3 = Suicide
             return;
         }
-        board.addObject({ x: x, y: y, c: old_turn});
+        board.addObject({ x: x, y: y, c: old_turn });
         result.forEach(captured => board.removeObjectsAt(captured.x, captured.y));
 
     });
@@ -126,11 +126,11 @@ function startInteractiveTutorial(topic, boardsize) {
                 Dive into the world of Go, and discover a game that has captivated minds for millennia. Start by placing your first stone!
             </p>
         `;
-                    break;
+            break;
 
         case "liberties":
             board.addObject({ x: stoneX, y: stoneY, c: WGo.B }); // Add black stone
-            game.play(x,y,WGo.B); // Play the black stone
+            game.play(x, y, WGo.B); // Play the black stone
 
             // Define adjacent coordinates and corresponding labels
             const liberties = [
@@ -156,11 +156,11 @@ function startInteractiveTutorial(topic, boardsize) {
         case "capture":
             const centerX = Math.floor(boardsize / 2); // Center X coordinate
             const centerY = Math.floor(boardsize / 2); // Center Y coordinate
-        
+
             // Add a white stone in the middle
             board.addObject({ x: centerX, y: centerY, c: WGo.W }); // White stone
             game.play(centerX, centerY, WGo.W); // Play the white stone
-        
+
             // Define the surrounding positions
             const surroundingStones = [
                 { x: centerX - 1, y: centerY },     // Left
@@ -168,7 +168,7 @@ function startInteractiveTutorial(topic, boardsize) {
                 { x: centerX, y: centerY - 1 },     // Above
 
             ];
-        
+
             // Place black stones around the white stone
             surroundingStones.forEach(stone => {
                 if (stone.x >= 0 && stone.x < boardsize && stone.y >= 0 && stone.y < boardsize) {
@@ -180,14 +180,14 @@ function startInteractiveTutorial(topic, boardsize) {
                     game.play(stone.x, stone.y, WGo.B); // Play the black stone
                 }
             });
-        
+
             // Add some instructional text
             lessoninfo.innerHTML = `
                 <p><strong>Capture the white stone!</strong></p>
                 <p>Place another black stone to capture the white stone by surrounding it completely.</p>
             `;
             break;
-        
+
         case "9x9demo":
             // Replace the interactive board with the SGF player
             learnboard.innerHTML = ""; // Clear the existing board for the player
@@ -205,7 +205,7 @@ function startInteractiveTutorial(topic, boardsize) {
                 enableWheel: false, // Proper setting to disable mouse wheel scrolling for move navigation
                 enableKeys: true,  // Disable keyboard arrow interaction for navigating moves
             });
-            
+
 
             createButtonContainer(".wgo-player-control", player);
             lessoninfo.innerHTML = "<br>Explore the loaded 9x9 SGF demo.<br>(right/left arrow key)";
@@ -240,8 +240,8 @@ function startInteractiveTutorial(topic, boardsize) {
                 While sometimes an empty triangle might be unavoidable in specific tactical situations, it is generally a shape to be avoided in most positions. Recognizing and avoiding bad shapes like this is an important step in improving your play and developing a sense for good shape in Go.
             </p>
         `;
-        
-            break;     
+
+            break;
         default:
             lessoninfo.innerHTML = "Topic not found!";
     }
@@ -259,7 +259,7 @@ function createButtonContainer(containerID, player) {
         player.previous();
         console.log("Previous move shown");
     };
-  
+
     // Next Button
     let nextButton = document.createElement("button");
     nextButton.className = "px-4 py-2 bg-green-500 text-white font-semibold rounded shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 m-2";
@@ -268,7 +268,7 @@ function createButtonContainer(containerID, player) {
         player.next();
         console.log("Next move shown");
     };
-  
+
     // Append buttons to the container
     container.appendChild(prevButton);
     container.appendChild(nextButton);
