@@ -42,7 +42,13 @@ class PlayerAI {
             let [exe, args] = parseCommand(i)
             this.instances.push(new GoAIInstance(exe, args))
         }
-        const companion_level = convertKyuDanToLevel(target_level) - handicap + companion_delta
+        let companion_level = convertKyuDanToLevel(target_level) - handicap + companion_delta
+        if(companion_level < convertKyuDanToLevel("20k")){
+            companion_level = convertKyuDanToLevel("20k") // min 20k helper
+        }
+
+        console.log(`Requested Level -> ${convertLevelToKyuDan(companion_level)}`)
+
         let analysis_engine_path = await sql.getAnalysisEngine(convertLevelToKyuDan(companion_level), boardsize)
         analysis_engine_path = analysis_engine_path[0].path
         console.log(`Analysis Engine: ${analysis_engine_path}`)
@@ -161,9 +167,7 @@ class PlayerAI {
         //let analysis_moves = await this.analysisEngine.sendCommand(`kata-analyze ${get_opp_color(this.ai_color)} 1`)
         // print AI view
 
-        let analysis_moves = await this.analysisEngine.sendCommand(`genmove ${get_opp_color(this.ai_color)}`)
-        analysis_moves = cleanMove(analysis_moves[0])
-        await this.analysisEngine.sendCommand(`undo`)
+        let analysis_moves = await this.analysisEngine.sendCommand(`kata-search_analyze`)
         //console.log(this.getTopMoves(analysis_moves, 3))
         response = cleanMove(response[0])
         let test = await this.analysisEngine.sendCommand(`showboard`);

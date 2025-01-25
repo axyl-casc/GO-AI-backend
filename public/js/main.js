@@ -93,8 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const endGameButton = document.getElementById('endGame');
     const boardContainer = document.getElementById('boardContainer');
     let board = null;
+    let move_history = []
     let boardsize = parseInt(document.getElementById('boardSize').value, 10);
     const rankSelector = document.getElementById('rankSelector')
+    let has_ai_hint = true;
 
     document.getElementById('boardSize').addEventListener("change", () => {
         rankSelector.classList.remove('hidden');
@@ -148,12 +150,13 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("New Game")
 
         // clamp rank
-        const MAXRANK = "9d"
+        const MAXRANK = "10d"
         if (convertKyuDanToLevel(getRank()) > convertKyuDanToLevel(MAXRANK)) {
             rank = MAXRANK
         }
 
         move_count = 0
+        move_history = []
 
         // Hide selectors and show WGo.js board
         selectors.classList.add('hidden');
@@ -224,6 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Place the stone in the game logic
                 game.play(point.x, point.y, WGo.B);
+                move_history.push({x:point.x, y: point.y, c:WGo.B})
 
                 // Display the stone on the board
                 board.addObject({
@@ -253,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let point of starPoints) {
                 // Place the stone in the game logic
                 game.play(point.x, point.y, point.color);
-
+                move_history.push({x:point.x, y: point.y, c:point.color})
                 // Display the stone on the board
                 board.addObject({
                     x: point.x,
@@ -308,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("Invalid move:", result); // 1 = Out of bounds, 2 = Occupied, 3 = Suicide
                 return;
             }
-
+            move_history.push({x:x, y: y, c:stoneColor})
             // Add the player's stone to the board
             board.addObject({ x: x, y: y, c: stoneColor });
             addMarker(x, y, board, stoneColor); // Update the marker for the player's move
@@ -324,10 +328,29 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector("#movecountspan").textContent = move_count
 
             // Fetch and play AI move
-            await handleAIMove(playerMove, board);
+            const ai_hint = await handleAIMove(playerMove, board);
 
             if (move_count > boardsize * boardsize / 3) {
                 endGameButton.classList.remove('hidden');
+            }
+            clearBoardMarkers(board, game)
+            addMarker(move_history[move_history.length-1].x, move_history[move_history.length-1].y, board, move_history[move_history.length-1].c); // Update the marker for the AI's move
+            if(has_ai_hint){
+                updateAtariMarkers(game, board)
+                console.log(ai_hint)
+                ai_hint.forEach((ai_move) => {
+                    console.log(ai_move.move);
+                    ai_move = ai_move.move
+                    // Convert AI move to coordinates
+                    let ai_x = ai_move[0].charCodeAt(0) - "A".charCodeAt(0) - (ai_move[0] >= "J" ? 1 : 0);
+                    let ai_y = parseInt(ai_move.slice(1)) - 1;
+                    board.addObject({
+                        x: ai_x,
+                        y: ai_y,
+                        type: "CR", // Circle marker
+                        c: "rgba(0, 0, 0.1, 0.3)", // Optional: Customize the marker color (semi-transparent blue)
+                    });
+                });
             }
 
 
@@ -346,6 +369,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(response)
                 const score = response.aiScore[0]
                 const ai_move = response.aiResponse; // Example: "D4"
+                const ai_hint = String(response.hint);
+                const top_moves = getTopMoves(ai_hint)
+                console.log(top_moves)
                 console.log(`AI move: ${ai_move}`);
                 if (ai_move == 'pass') {
                     showToast("AI passed!")
@@ -365,16 +391,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (result instanceof Array) {
                     // Add AI's stone to the board
                     board.addObject({ x: ai_x, y: ai_y, c: AI_COLOR });
-                    addMarker(ai_x, ai_y, board, AI_COLOR); // Update the marker for the AI's move
 
-
+                    move_history.push({x:ai_x, y: ai_y, c:AI_COLOR})
                     // Remove captured stones
                     result.forEach(captured => board.removeObjectsAt(captured.x, captured.y));
-
+                    
                     console.log(`AI placed: ${ai_move}`);
                     move_count++; // Switch turns
                     document.querySelector("#movecountspan").textContent = move_count
                     document.querySelector("#scorespan").textContent = score
+                    return top_moves
                 } else {
                     console.error("AI made an invalid move:", result);
                 }
@@ -521,4 +547,120 @@ function addMarker(x, y, board, color) {
 
     // Update the last marker position
     lastMarkerPosition = { x: x, y: y };
+}
+
+function clearBoardMarkers(board, game) {
+
+    // Clear the board
+    board.removeAllObjects();
+
+    // Get the current position from the game object
+    const position = game.getPosition();
+    const size = position.size;
+
+    // Iterate through the entire board to place stones
+    for (let x = 0; x < size; x++) {
+        for (let y = 0; y < size; y++) {
+            const color = position.get(x, y);
+            if (color) {
+                // Place stones on the board
+                board.addObject({ x: x, y: y, c: color });
+            }
+        }
+    }
+
+    // Redraw the board to reflect the final state
+    board.redraw();
+
+    // Return the game object for further use if needed
+    return game;
+}
+
+
+function updateAtariMarkers(game, board) {
+    const position = game.getPosition();
+    const size = position.size;
+    const capturedPositions = []; // Array to store captured positions
+
+    for (let x = 0; x < size; x++) {
+        for (let y = 0; y < size; y++) {
+            if (position.get(x, y) === 0) {
+                // Save the current board state
+                const savedState = game.getPosition().clone();
+                if (!savedState.capCount) {
+                    // Initialize capCount if not present
+                    savedState.capCount = { black: 0, white: 0 };
+                }
+
+                // Simulate placing a white stone
+                const captured = game.play(x, y, WGo.W);
+                if (captured && captured.length > 0) {
+                    // Store the captured positions
+                    captured.forEach(({ x: cx, y: cy }) => {
+                        capturedPositions.push({ x: cx, y: cy });
+                    });
+                }
+                if(captured){
+                // Restore the saved state
+                game.pushPosition(savedState);
+                }
+
+            }
+        }
+    }
+
+    // Add markers for all captured positions
+    capturedPositions.forEach(({ x, y }) => {
+        board.addObject({
+            x: x,
+            y: y,
+            type: "MA", // X marker for atari
+        });
+    });
+
+    updateAtariMarkersOpposite(game,board)
+}
+
+function updateAtariMarkersOpposite(game, board) {
+    const position = game.getPosition();
+    const size = position.size;
+    const capturedPositions = []; // Array to store captured positions
+
+    for (let x = 0; x < size; x++) {
+        for (let y = 0; y < size; y++) {
+            if (position.get(x, y) === 0) {
+                // Save the current board state
+                const savedState = game.getPosition().clone();
+                if (!savedState.capCount) {
+                    // Initialize capCount if not present
+                    savedState.capCount = { black: 0, white: 0 };
+                }
+
+                // Simulate placing a black stone
+                const captured = game.play(x, y, WGo.B);
+                if (captured && captured.length > 0) {
+                    // Store the captured positions
+                    captured.forEach(({ x: cx, y: cy }) => {
+                        capturedPositions.push({ x: cx, y: cy });
+                    });
+                }
+                if(captured){
+                // Restore the saved state
+                game.pushPosition(savedState);
+                }
+
+            }
+        }
+    }
+
+    // Add markers for all captured positions
+    capturedPositions.forEach(({ x, y }) => {
+        board.addObject({
+            x: x,
+            y: y,
+            type: "MA", // X marker for atari
+        });
+    });
+
+    board.redraw(); // Ensure the board updates
 }

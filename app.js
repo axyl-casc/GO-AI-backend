@@ -1,3 +1,6 @@
+// npm start
+// to run
+
 const { SqlConnection, TsumegoConnection } = require('./sql_connection');
 const { trainingGame } = require('./train_database');
 const { generateTsumego } = require('./tsumego_gen.js');
@@ -15,13 +18,13 @@ const tsumego_sql = new TsumegoConnection("./tsumego_sets.db")
 const aiInstances = {};
 
 
-const AI_game_delay_seconds = 30
+const AI_game_delay_seconds = 10
+const is_train = true
 
 // seconds per week = 604800
 // seconds per day = 86400
 // seconds per hour = 3600
 // seconds per minute = 60
-
 
 const generateAiTable = async (dbConnection, boardSize) => {
     const sql = `SELECT path, level_${boardSize} FROM AI;`;
@@ -332,9 +335,9 @@ app.get("/move", async (req, res) => {
     try {
         console.log("Playing the move B")
         // Send the player's move to the AI
-        let { response, score } = await game.ai.play(move);
+        let { response, score, hint } = await game.ai.play(move);
 
-        res.json({ aiResponse: response, aiScore: score });
+        res.json({ aiResponse: response, aiScore: score, hint: hint });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message });
@@ -342,7 +345,10 @@ app.get("/move", async (req, res) => {
 });
 
 cleanup()
-// task()
+
+if(is_train){
+    task()
+}
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

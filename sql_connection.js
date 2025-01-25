@@ -36,7 +36,7 @@ class SQLiteReader {
   }
 }
 class SqlConnection {
-  constructor(filePath, debug = true) {
+  constructor(filePath, debug = false) {
     const fullPath = path.resolve(filePath);
     this.debug = debug;
     this.reader = new SQLiteReader(fullPath);
