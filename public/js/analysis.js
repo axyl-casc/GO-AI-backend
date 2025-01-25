@@ -24,6 +24,9 @@ function getTopMoves(data) {
     moves.sort((a, b) => b.winrate - a.winrate);
 
     // Get the top half of moves
+    if(moves.length <= 6){
+        return moves
+    }
     const topMoves = moves.slice(0, Math.ceil(moves.length / 2));
 
     // Return the result

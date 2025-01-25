@@ -235,17 +235,22 @@ app.get('/get-tsumego', async (req, res) => {
 
 async function task() {
     try {
-        console.log(`Training game started at ${new Date().toISOString()}`);
 
         // Kick off all tasks at the same time.
         // Promise.all waits until they all complete (or fail on any error).
-        await Promise.all([
-            trainingGame(sql, 9),
-            trainingGame(sql, 13),
-            trainingGame(sql, 19),
-        ]);
+        if(Object.keys(aiInstances).length < 5){
+            console.log(`Training game started at ${new Date().toISOString()}`);
+            await Promise.all([
+                trainingGame(sql, 9),
+                trainingGame(sql, 13),
+                trainingGame(sql, 19),
+            ]);
+    
+            console.log(`Training game completed at ${new Date().toISOString()}`);
+        }else{
+            console.log(`Skipped training...\nLIVE games -> ${Object.keys(aiInstances).length}`)
+        }
 
-        console.log(`Training game completed at ${new Date().toISOString()}`);
     } catch (error) {
         console.error(`Error during training game: ${error.message}`);
     } finally {

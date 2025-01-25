@@ -196,10 +196,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 handicap_stones = getRandomInt(2, 5);
             }
         }
-
+        console.log(`Game type: ${properCase(game_type)}`)
         if (game_type != "normal") {
             if (getLevel() < 5 || boardsize < 13 || convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("25k")) {
                 game_type = "normal" // make all games lower than level 5 normal
+                console.log("Clamped to normal game")
             }
         }
 
@@ -279,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
             requested_rank = convertLevelToKyuDan(convertKyuDanToLevel(getRank()) + handicap_stones)
         }
 
-        if (convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("40k")) {
+        if (convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("30k")) {
             requested_komi = 0.5
         }
 
@@ -307,7 +308,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Play the move and validate using WGo.Game
+            game.repeating = "NONE"
             const result = game.play(x, y, stoneColor); // Validates and checks captures
+            game.repeating = "KO"
             if (result === 1 || result === 2 || result === 3 || result === 4) {
                 console.log("Invalid move:", result); // 1 = Out of bounds, 2 = Occupied, 3 = Suicide
                 return;
