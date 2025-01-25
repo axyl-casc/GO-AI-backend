@@ -36,7 +36,7 @@ class SQLiteReader {
   }
 }
 class SqlConnection {
-  constructor(filePath, debug = false) {
+  constructor(filePath, debug = true) {
     const fullPath = path.resolve(filePath);
     this.debug = debug;
     this.reader = new SQLiteReader(fullPath);
@@ -244,6 +244,18 @@ class SqlConnection {
     return current_level;
   }
 
+  async getAnalysisEngine(kyudan, boardsize) {
+    const level = convertKyuDanToLevel(kyudan);
+    const sql = `
+        SELECT path, level_${boardsize} 
+        FROM AI 
+        WHERE engine = 'katago'
+        ORDER BY ABS(level_${boardsize} - ${level}) 
+        LIMIT 1;
+    `;
+    const result = await this._send(sql);
+    return result;
+}
 
 
   async getNearestLevel(kyudan, boardsize) {

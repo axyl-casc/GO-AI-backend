@@ -19,12 +19,13 @@ class PlayerAI {
         this.ai_count = 0
         this.score_estimate = []
         this.last_move_time = new Date();
+        this.analysisEngine = null;
     }
 
     /**
      * Initializes the AI with game settings.
      */
-    async create(sql, komi, boardsize, handicap, target_level, ai_color, type) {
+    async create(sql, komi, boardsize, handicap, target_level, ai_color, type, companion_delta) {
         let ai_between = await sql.getBetween(boardsize, target_level)
         console.log(ai_between)
         this.ai_count = ai_between.length
@@ -41,6 +42,16 @@ class PlayerAI {
             let [exe, args] = parseCommand(i)
             this.instances.push(new GoAIInstance(exe, args))
         }
+        const companion_level = convertKyuDanToLevel(target_level) - handicap + companion_delta
+        let analysis_engine_path = await sql.getAnalysisEngine(convertLevelToKyuDan(companion_level), boardsize)
+        analysis_engine_path = analysis_engine_path[0].path
+        console.log(`Analysis Engine: ${analysis_engine_path}`)
+        let [exe, args] = parseCommand(analysis_engine_path)
+        this.analysisEngine = new GoAIInstance(exe, args)
+        for (let ai of this.instances) {
+            ai.sendCommand(`boardsize ${boardsize}`)
+        }
+        await this.analysisEngine.sendCommand(`boardsize ${boardsize}`);
         if (type == "handicap") {
             komi = 0.5
             for (let i of this.instances) {
@@ -68,16 +79,17 @@ class PlayerAI {
             
                     // Send the command to place the stone
                     await i.sendCommand(`play B ${letter}${number}`);
+                    await this.analysisEngine.sendCommand(`play B ${letter}${number}`);
                 }
+                
             }
 
         }
         for (let ai of this.instances) {
             ai.sendCommand(`komi ${komi}`)
-            ai.sendCommand(`boardsize ${boardsize}`)
         }
+        await this.analysisEngine.sendCommand(`komi ${komi}`);
 
-        
         // Place alternating black (B) and white (W) stones on opposite corners
         if (type == "chinese") {
             for (let i of this.instances) {
@@ -96,12 +108,10 @@ class PlayerAI {
                     const letter = String.fromCharCode(65 + point.x); // Convert x to letter (A, B, ...)
                     const number = boardsize - point.y; // Convert y to Go coordinates (1, 2, ...)
                     await i.sendCommand(`play ${point.color} ${letter}${number}`);
+                    await this.analysisEngine.sendCommand(`play ${point.color} ${letter}${number}`);
                 }
             }
         }
-
-
-
     }
 
     async terminate() {
@@ -122,6 +132,7 @@ class PlayerAI {
     async play(move) {
         this.last_move_time = new Date()
         let response = ""
+        await this.analysisEngine.sendCommand(`play ${get_opp_color(this.ai_color)} ${move}`);
         if (this.ai_count == 1) {
             response = await this.instances[0].sendCommand(`play ${get_opp_color(this.ai_color)} ${move}`)
             response = await this.instances[0].sendCommand(`genmove ${this.ai_color}`)
@@ -145,14 +156,32 @@ class PlayerAI {
                 this.score_estimate.push(cleanMove(score[0]));
             }
         }
+        await this.analysisEngine.sendCommand(`play ${this.ai_color} ${cleanMove(response[0])}`)
 
+        //let analysis_moves = await this.analysisEngine.sendCommand(`kata-analyze ${get_opp_color(this.ai_color)} 1`)
         // print AI view
-        //let test = await this.instances[0].sendCommand(`showboard`);
-        //console.log(test);
-        response = cleanMove(response[0])
 
-        return { response: response, score: this.score_estimate };
+        let analysis_moves = await this.analysisEngine.sendCommand(`genmove ${get_opp_color(this.ai_color)}`)
+        analysis_moves = cleanMove(analysis_moves[0])
+        await this.analysisEngine.sendCommand(`undo`)
+        //console.log(this.getTopMoves(analysis_moves, 3))
+        response = cleanMove(response[0])
+        let test = await this.analysisEngine.sendCommand(`showboard`);
+        console.log(test);
+        return { response: response, score: this.score_estimate, hint: analysis_moves };
     }
+
+    async getTopMoves(katagoResponse, topN = 5) {
+        const moveInfos = katagoResponse.moveInfos; // Extract moveInfos from the response
+        moveInfos.sort((a, b) => b.winrate - a.winrate); // Sort by winrate descending
+        return moveInfos.slice(0, topN).map(info => ({
+            move: info.move,
+            winrate: info.winrate,
+            scoreLead: info.scoreLead,
+            pv: info.pv
+        }));
+    }
+    
 }
 
 module.exports = { PlayerAI };

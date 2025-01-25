@@ -15,7 +15,7 @@ const tsumego_sql = new TsumegoConnection("./tsumego_sets.db")
 const aiInstances = {};
 
 
-const AI_game_delay_seconds = 3
+const AI_game_delay_seconds = 30
 
 // seconds per week = 604800
 // seconds per day = 86400
@@ -281,9 +281,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Endpoint to create a new game
 app.get("/create-game", async (req, res) => {
-    let { komi = 6.5, handicap = 0, rank = "30k", boardsize = 13, ai_color = "white", type = "normal" } =
+    let { companion_delta = 5, komi = 6.5, handicap = 0, rank = "30k", boardsize = 13, ai_color = "white", type = "normal" } =
         req.query;
 
+    // companion delta is the rank difference between the player
+    // and the AI helper for the player.
+    // ex: 20k player, 20k AI opponent and 15k AI companion 
 
     console.log(req.query)
     // games types
@@ -299,7 +302,7 @@ app.get("/create-game", async (req, res) => {
 
     const pAI = new PlayerAI();
 
-    await pAI.create(sql, komi, boardsize, handicap, rank, ai_color, type);
+    await pAI.create(sql, komi, boardsize, handicap, rank, ai_color, type, companion_delta);
 
     aiInstances[gameId] = {
         ai: pAI,
@@ -339,7 +342,7 @@ app.get("/move", async (req, res) => {
 });
 
 cleanup()
-task()
+// task()
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
