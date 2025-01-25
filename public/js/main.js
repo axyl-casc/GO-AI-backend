@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Set initial size
         resizeBoard();
-        const game = new WGo.Game(boardsize); // Manages game state and rules
+        let game = new WGo.Game(boardsize, "KO"); // Manages game state and rules
         let game_type = "normal"
         let handicap_stones = 0
 
@@ -327,14 +327,31 @@ document.addEventListener('DOMContentLoaded', () => {
             move_count++; // Switch turns
             document.querySelector("#movecountspan").textContent = move_count
 
-            // Fetch and play AI move
-            const ai_hint = await handleAIMove(playerMove, board);
 
             if (move_count > boardsize * boardsize / 3) {
                 endGameButton.classList.remove('hidden');
             }
+            let error_flag = false
+            let result_gamestate = restore_gamestate(game, move_history)
+            error_flag = result_gamestate[1]
+            game = result_gamestate[0]
+            
+            if(error_flag){
+                console.log("Error")
+                move_count--;
+                move_history.pop()
+                restore_gamestate(game, move_history)
+                clearBoardMarkers(board, game)
+                showToast("Cannot play - KO RULE!")
+                return; // exit if invalid move
+            }
             clearBoardMarkers(board, game)
-            addMarker(move_history[move_history.length-1].x, move_history[move_history.length-1].y, board, move_history[move_history.length-1].c); // Update the marker for the AI's move
+            // Fetch and play AI move
+            let ai_hint = null;;
+
+            ai_hint = await handleAIMove(playerMove, board);
+
+
             if(has_ai_hint){
                 updateAtariMarkers(game, board)
                 console.log(ai_hint)
@@ -395,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     move_history.push({x:ai_x, y: ai_y, c:AI_COLOR})
                     // Remove captured stones
                     result.forEach(captured => board.removeObjectsAt(captured.x, captured.y));
-                    
+                    addMarker(ai_x, ai_y, board, AI_COLOR); // Update the marker for the AI's move
                     console.log(`AI placed: ${ai_move}`);
                     move_count++; // Switch turns
                     document.querySelector("#movecountspan").textContent = move_count
@@ -548,7 +565,6 @@ function addMarker(x, y, board, color) {
     // Update the last marker position
     lastMarkerPosition = { x: x, y: y };
 }
-
 function clearBoardMarkers(board, game) {
 
     // Clear the board
@@ -561,7 +577,7 @@ function clearBoardMarkers(board, game) {
     // Iterate through the entire board to place stones
     for (let x = 0; x < size; x++) {
         for (let y = 0; y < size; y++) {
-            const color = position.get(x, y);
+            let color = position.get(x, y);
             if (color) {
                 // Place stones on the board
                 board.addObject({ x: x, y: y, c: color });
@@ -575,6 +591,7 @@ function clearBoardMarkers(board, game) {
     // Return the game object for further use if needed
     return game;
 }
+
 
 
 function updateAtariMarkers(game, board) {
@@ -600,10 +617,9 @@ function updateAtariMarkers(game, board) {
                         capturedPositions.push({ x: cx, y: cy });
                     });
                 }
-                if(captured){
-                // Restore the saved state
+
                 game.pushPosition(savedState);
-                }
+
 
             }
         }
@@ -644,11 +660,7 @@ function updateAtariMarkersOpposite(game, board) {
                         capturedPositions.push({ x: cx, y: cy });
                     });
                 }
-                if(captured){
-                // Restore the saved state
                 game.pushPosition(savedState);
-                }
-
             }
         }
     }
@@ -663,4 +675,31 @@ function updateAtariMarkersOpposite(game, board) {
     });
 
     board.redraw(); // Ensure the board updates
+}
+
+function restore_gamestate(game, move_history) {
+    // Initialize a new WGo.Game instance
+    game = new WGo.Game(game.size); // Replace 19 with your board size if different
+    let err_flag = false
+    
+    // Iterate over the move history and play each move
+    move_history.forEach(move => {
+        const result = game.play(move.x, move.y, move.c);
+
+        // Handle any errors during play
+        if (result === 1) {
+            console.error(`Invalid move: Coordinates (${move.x}, ${move.y}) are not on the board.`);
+        } else if (result === 2) {
+            console.error(`Invalid move: There is already a stone at (${move.x}, ${move.y}).`);
+        } else if (result === 3) {
+            console.error(`Invalid move: Move at (${move.x}, ${move.y}) would be suicide.`);
+        } else if (result === 4) {
+            console.error(`Invalid move: Move at (${move.x}, ${move.y}) repeats a previous position.`);
+            err_flag = true
+            return [game, err_flag];
+        }
+    });
+
+    // Return the restored game instance
+    return [game, err_flag];
 }
