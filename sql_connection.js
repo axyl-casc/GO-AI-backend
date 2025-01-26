@@ -276,6 +276,11 @@ class SqlConnection {
     const randomIndex = Math.floor(Math.random() * paths.length);
     return paths[randomIndex].path;
   }
+  async getAIFromKey(key) {
+    const sql = `SELECT path FROM AI where key=${key};`;
+    const path = await this._send(sql, true);
+    return path;
+  }
 
   close() {
     this.reader.close();

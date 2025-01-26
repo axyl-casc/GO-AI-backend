@@ -25,7 +25,7 @@ class PlayerAI {
     /**
      * Initializes the AI with game settings.
      */
-    async create(sql, komi, boardsize, handicap, target_level, ai_color, type, companion_delta) {
+    async create(sql, komi, boardsize, handicap, target_level, ai_color, type, companion_key) {
         let ai_between = await sql.getBetween(boardsize, target_level)
         console.log(ai_between)
         this.ai_count = ai_between.length
@@ -42,14 +42,8 @@ class PlayerAI {
             let [exe, args] = parseCommand(i)
             this.instances.push(new GoAIInstance(exe, args))
         }
-        let companion_level = convertKyuDanToLevel(target_level) - handicap + companion_delta
-        if(companion_level < convertKyuDanToLevel("20k")){
-            companion_level = convertKyuDanToLevel("20k") // min 20k helper
-        }
 
-        console.log(`Requested Level -> ${convertLevelToKyuDan(companion_level)}`)
-
-        let analysis_engine_path = await sql.getAnalysisEngine(convertLevelToKyuDan(companion_level), boardsize)
+        let analysis_engine_path = await sql.getAIFromKey(companion_key);
         analysis_engine_path = analysis_engine_path[0].path
         console.log(`Analysis Engine: ${analysis_engine_path}`)
         let [exe, args] = parseCommand(analysis_engine_path)

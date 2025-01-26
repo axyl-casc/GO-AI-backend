@@ -288,7 +288,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Endpoint to create a new game
 app.get("/create-game", async (req, res) => {
-    let { companion_delta = 5, komi = 6.5, handicap = 0, rank = "30k", boardsize = 13, ai_color = "white", type = "normal" } =
+    let { companion_key = 38, komi = 6.5, handicap = 0, rank = "30k", boardsize = 13, ai_color = "white", type = "normal" } =
         req.query;
 
     // companion delta is the rank difference between the player
@@ -309,7 +309,7 @@ app.get("/create-game", async (req, res) => {
 
     const pAI = new PlayerAI();
 
-    await pAI.create(sql, komi, boardsize, handicap, rank, ai_color, type, companion_delta);
+    await pAI.create(sql, komi, boardsize, handicap, rank, ai_color, type, companion_key);
 
     aiInstances[gameId] = {
         ai: pAI,

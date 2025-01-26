@@ -284,7 +284,8 @@ document.addEventListener('DOMContentLoaded', () => {
             requested_komi = 0.5
         }
 
-        game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}`);
+        let companion_key = 38; // default for 20k
+        game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion=${companion_key}`);
         game_id = game_id.gameId
         console.log(game_id);
 
@@ -354,25 +355,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             ai_hint = await handleAIMove(playerMove, board);
 
-
-            if(has_ai_hint){
-                updateAtariMarkers(game, board)
-                console.log(ai_hint)
-                ai_hint.forEach((ai_move) => {
-                    console.log(ai_move.move);
-                    ai_move = ai_move.move
-                    // Convert AI move to coordinates
-                    let ai_x = ai_move[0].charCodeAt(0) - "A".charCodeAt(0) - (ai_move[0] >= "J" ? 1 : 0);
-                    let ai_y = parseInt(ai_move.slice(1)) - 1;
-                    board.addObject({
-                        x: ai_x,
-                        y: ai_y,
-                        type: "CR", // Circle marker
-                        c: "rgba(0, 0, 0.1, 0.3)", // Optional: Customize the marker color (semi-transparent blue)
-                    });
-                });
+            if(has_ai_hint && companionToggleButton.classList.contains('bg-blue-500')){
+                show_ai_hints(game,board,ai_hint)
             }
-
 
         });
 
@@ -705,4 +690,22 @@ function restore_gamestate(game, move_history) {
 
     // Return the restored game instance
     return [game, err_flag];
+}
+
+
+function show_ai_hints(game, board, ai_hint){
+    updateAtariMarkers(game, board)
+    ai_hint.forEach((ai_move) => {
+        console.log(ai_move.move);
+        ai_move = ai_move.move
+        // Convert AI move to coordinates
+        let ai_x = ai_move[0].charCodeAt(0) - "A".charCodeAt(0) - (ai_move[0] >= "J" ? 1 : 0);
+        let ai_y = parseInt(ai_move.slice(1)) - 1;
+        board.addObject({
+            x: ai_x,
+            y: ai_y,
+            type: "CR", // Circle marker
+            c: "rgba(0, 0, 0.1, 0.3)", // Optional: Customize the marker color (semi-transparent blue)
+        });
+    });
 }

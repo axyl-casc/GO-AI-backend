@@ -107,6 +107,15 @@
                                 class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 hidden">
                                 New Game
                             </button>
+                            <label class="flex items-center space-x-3">
+                                <span class="text-gray-700 font-medium">Show Companion Moves</span>
+                                <button id="companionToggleButton"
+                                    class="w-10 h-6 flex items-center bg-gray-300 rounded-full p-1 transition-colors duration-300">
+                                    <div
+                                        class="bg-white w-4 h-4 rounded-full transform transition-transform duration-300">
+                                    </div>
+                                </button>
+                            </label>
                             <button id="endGame" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
                                 End Game
                             </button>
@@ -270,18 +279,28 @@
             </div>
 
             <!-- Profile Tab -->
-            <div id="profile" class="tab-content hidden">
-                <h1 class="text-2xl font-bold mb-6 text-badukBlack">Profile</h1>
-                <p>Adventure Level: <span id="profile-level">0</span></p>
-                <p>Games Played: <span id="profile-games-played">0</span></p>
-                <p>Wins: <span id="profile-wins">0</span></p>
-                <p>Puzzles Done: <span id="profile-puzzles-done">0</span></p>
-                <p>Puzzles Correct: <span id="profile-puzzles-correct">0</span></p>
-                <p>Currency: <span id="profile-currency">0</span></p>
-                <p>Rank: <span id="profile-rank">Unranked</span></p>
-                <br><button class="btn mt-2 px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg shadow"
-                    onclick="resetStats()">Reset Profile</button>
+            <div id="profile" class="tab-content hidden flex justify-between">
+                <div id="profile-stats" class="w-1/2 mr-4">
+                    <h1 class="text-2xl font-bold mb-6 text-badukBlack">Profile</h1>
+                    <p>Adventure Level: <span id="profile-level">0</span></p>
+                    <p>Games Played: <span id="profile-games-played">0</span></p>
+                    <p>Wins: <span id="profile-wins">0</span></p>
+                    <p>Puzzles Done: <span id="profile-puzzles-done">0</span></p>
+                    <p>Puzzles Correct: <span id="profile-puzzles-correct">0</span></p>
+                    <p>Currency: <span id="profile-currency">0</span></p>
+                    <p>Rank: <span id="profile-rank">Unranked</span></p>
+                    <br>
+                    <button class="btn mt-2 px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg shadow"
+                        onclick="resetStats()">Reset Profile</button>
+                </div>
+                <div id="profile-inventory" class="w-1/2 ml-4">
+                    <h1 class="text-2xl font-bold mb-6 text-badukBlack">Inventory</h1>
+                <div id="inventory-items" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards will be dynamically injected here -->
+                </div>
+                </div>
             </div>
+
 
             <div id="shop" class="tab-content hidden">
                 <h1 id="shoptitle" class="text-2xl font-bold mb-6 text-badukBlack">Shop</h1>
@@ -298,7 +317,7 @@
                         </li>
                         <li
                             class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
-                            <span data-category="companions">Companions</span>
+                            <span data-category="companion">Companions</span>
                         </li>
                         <li
                             class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
@@ -343,6 +362,7 @@
     <script src="js/utils.js"></script>
     <script src="js/analysis.js"></script>
     <script src="js/ranks.js"></script>
+    <script src="js/companion.js"></script>
     <script src="js/tsumego.js"></script>
     <script src="js/go_tutorial.js"></script>
     <script src="js/shop.js"></script>

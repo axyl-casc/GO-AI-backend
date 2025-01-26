@@ -9,6 +9,14 @@ function initshop() {
             category: ["boards", "featured"],
         },
         {
+            title: "Sai",
+            image: "img/image.png",
+            description: "The SAI himself!",
+            price: 50,
+            ai_key:34,
+            category: ["featured", "companion"],
+        },
+        {
             title: "Shell Stones",
             image: "img/image.png",
             description: "Set of polished white Go stones.",
