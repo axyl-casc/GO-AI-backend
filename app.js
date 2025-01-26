@@ -235,10 +235,9 @@ app.get('/get-tsumego', async (req, res) => {
 
 async function task() {
     try {
-
         // Kick off all tasks at the same time.
         // Promise.all waits until they all complete (or fail on any error).
-        if(Object.keys(aiInstances).length < 5){
+        if(Object.keys(aiInstances).length < 3){
             console.log(`Training game started at ${new Date().toISOString()}`);
             await Promise.all([
                 trainingGame(sql, 9),
