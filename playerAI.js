@@ -42,7 +42,7 @@ class PlayerAI {
             let [exe, args] = parseCommand(i)
             this.instances.push(new GoAIInstance(exe, args))
         }
-
+        console.log(`key -> ${companion_key}`)
         let analysis_engine_path = await sql.getAIFromKey(companion_key);
         analysis_engine_path = analysis_engine_path[0].path
         console.log(`Analysis Engine: ${analysis_engine_path}`)

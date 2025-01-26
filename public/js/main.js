@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('profile-puzzles-done').textContent = getPuzzlesDone();
                 document.getElementById('profile-puzzles-correct').textContent = getPuzzlesCorrect();
                 document.getElementById('profile-currency').textContent = getCurrency();
+                renderInventory();
             }
 
             if (targetTab == "shop") {
@@ -285,7 +286,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let companion_key = 38; // default for 20k
-        game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion=${companion_key}`);
+        console.log(getCompanion())
+        if(getCompanion() == null){
+            console.log("No Companion")
+            document.getElementById("companion-moves").classList.add("hidden")
+            game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}`);
+        }else{
+            console.log("Companion")
+            companion_key = getCompanion().ai_key
+            game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}`);
+        }
+
         game_id = game_id.gameId
         console.log(game_id);
 

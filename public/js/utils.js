@@ -260,10 +260,11 @@ function incrementPuzzlesCorrect() {
     return newPuzzlesCorrect;
 }
 
+// inventory functions
 function getInventory() {
     // Initialize inventory if it doesn't exist
     if (localStorage.getItem("inventory") === null) {
-        const initialInventory = {};
+        const initialInventory = [];
         localStorage.setItem("inventory", JSON.stringify(initialInventory));
         return initialInventory;
     }
@@ -274,42 +275,78 @@ function addToInventory(itemKey, quantity = 1) {
     // Get the current inventory
     const inventory = getInventory();
 
-    // Update the specific item in the inventory
-    if (inventory[itemKey] === undefined) {
-        inventory[itemKey] = quantity; // Initialize if not present
+    // Find the item in ALL_ITEMS
+    const shopItem = ALL_ITEMS.find(item => item.title === itemKey);
+    if (!shopItem) {
+        console.error(`Item "${itemKey}" not found in ALL_ITEMS.`);
+        return;
+    }
+
+    // Check if the item already exists in the inventory
+    const existingItem = inventory.find(item => item.title === itemKey);
+    if (existingItem) {
+        existingItem.quantity += quantity; // Update quantity
     } else {
-        inventory[itemKey] += quantity; // Increment existing item
+        // Add the item to the inventory with the specified quantity
+        inventory.push({ ...shopItem, quantity });
     }
 
     // Save back to local storage
     localStorage.setItem("inventory", JSON.stringify(inventory));
-    return inventory[itemKey];
+    return inventory;
 }
 
 function removeFromInventory(itemKey, quantity = 1) {
     const inventory = getInventory();
 
-    // Check if the item exists and has enough quantity to remove
-    if (inventory[itemKey] !== undefined) {
-        inventory[itemKey] = Math.max(0, inventory[itemKey] - quantity); // Prevent negative values
-        if (inventory[itemKey] === 0) {
-            delete inventory[itemKey]; // Optional: Remove item when quantity reaches 0
-        }
+    // Find the item in the inventory
+    const existingItemIndex = inventory.findIndex(item => item.title === itemKey);
+    if (existingItemIndex === -1) {
+        console.error(`Item "${itemKey}" not found in inventory.`);
+        return;
+    }
+
+    // Update or remove the item
+    const existingItem = inventory[existingItemIndex];
+    existingItem.quantity -= quantity;
+
+    if (existingItem.quantity <= 0) {
+        inventory.splice(existingItemIndex, 1); // Remove item if quantity reaches 0
     }
 
     // Save back to local storage
     localStorage.setItem("inventory", JSON.stringify(inventory));
-    return inventory[itemKey] || 0;
+    return inventory;
 }
 
 function clearInventory() {
-    const initialInventory = {};
+    const initialInventory = [];
     localStorage.setItem("inventory", JSON.stringify(initialInventory));
     return initialInventory;
 }
+
+// Helper function to fetch an inventory item by title
+function findInventoryItemByTitle(title) {
+    const inventory = getInventory();
+    return inventory.find(item => item.title === title);
+}
+
 
 function properCase(str) {
     return str
         .toLowerCase()
         .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function getCompanion() {
+    // Get the user's inventory
+    const inventory = getInventory();
+
+    // Find the equipped companion in the inventory
+    const equippedCompanion = inventory.find(item => 
+        item.category.includes("companion") && item.equipped
+    );
+
+    // Return the equipped companion or null if none is equipped
+    return equippedCompanion || null;
 }
