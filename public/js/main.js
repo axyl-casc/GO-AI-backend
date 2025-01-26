@@ -292,6 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById("companion-moves").classList.add("hidden")
             game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}`);
         }else{
+            document.getElementById("companion-moves").classList.remove("hidden")
             console.log("Companion")
             companion_key = getCompanion().ai_key
             game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}`);
@@ -304,6 +305,24 @@ document.addEventListener('DOMContentLoaded', () => {
             move_count++;
             await handleAIMove('pass', board);
         }
+            // Fetch and play AI move
+        let ai_hint = false;;
+
+        companionToggleButton.addEventListener('click', () => {
+            clearBoardMarkers(board, game)
+            restore_gamestate(game, move_history)
+            const isActive = companionToggleButton.classList.contains('bg-blue-500');
+            companionToggleButton.classList.toggle('bg-blue-500', !isActive);
+            companionToggleButton.classList.toggle('bg-gray-300', isActive);
+        
+            const toggleCircle = companionToggleButton.querySelector('div');
+            toggleCircle.classList.toggle('translate-x-4', !isActive);
+            if(!isActive){
+                show_ai_hints(game,board,ai_hint)
+            }
+
+            addMarker(move_history[move_history.length-1].x, move_history[move_history.length-1].y,board, move_history[move_history.length-1].c)
+        });
 
 
         // Restrict to one color (e.g., black)
@@ -361,8 +380,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return; // exit if invalid move
             }
             clearBoardMarkers(board, game)
-            // Fetch and play AI move
-            let ai_hint = null;;
 
             ai_hint = await handleAIMove(playerMove, board);
 
@@ -524,8 +541,6 @@ document.addEventListener('DOMContentLoaded', () => {
         block: "center",
         inline: "center",
     });
-
-
 
 });
 
@@ -705,6 +720,9 @@ function restore_gamestate(game, move_history) {
 
 
 function show_ai_hints(game, board, ai_hint){
+    if(!ai_hint){
+        return 
+    }
     updateAtariMarkers(game, board)
     ai_hint.forEach((ai_move) => {
         console.log(ai_move.move);
