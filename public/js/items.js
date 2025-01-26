@@ -26,6 +26,15 @@ const ALL_ITEMS = [
         category: ["companion"],
     },
     {
+        title: "A",
+        image: "img/image.png",
+        description: "It a me!",
+        price: 50,
+        shoppable: true,
+        ai_key:63,
+        category: ["companion"],
+    },
+    {
         title: "Shell Stones",
         image: "img/image.png",
         description: "Set of polished white Go stones.",

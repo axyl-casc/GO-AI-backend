@@ -24,9 +24,7 @@ function initshop() {
         shopContainer.innerHTML = "";
     
         // Filter items based on the category
-        const filteredItems = category === "featured"
-            ? shopItems // Show all items for "featured"
-            : shopItems.filter(item => item.category.includes(category));
+        const filteredItems = shopItems.filter(item => item.category.includes(category))
     
         // Generate shop item cards for the filtered items
         filteredItems.forEach(item => {
