@@ -1,0 +1,60 @@
+Following are sample feature of Aya.
+That was posted in Computer-Go Mailing List 2003/12/03.
+
+-------------------------------------------------------------
+
+
+I put some photos of Computer Olympiad in Graz, 23-27 November.
+http://207.218.206.38/~admin82/photo/graz2003/graz2003.html
+
+And my program Aya won 9x9 tournament luckily.
+But in 19x19 result was 4 wins and 6 losses.
+I think deep full board search might work well in small Go board.
+
+Aya search 4-5 plies in 19x19, and 6-7 plies in 9x9.
+Nodes per second is 200-300 nps in 19x19 and 500-600 nps in 9x9
+ (Pentium3M 1.13GHz).
+Evaluation function includes strings capture and some connections search.
+Life and death, eye-shape recognition are static.
+
+Moves are generated from simple stone shape pattern.
+Life and death, eye-shape and connection points from evaluation function
+ are also generated.
+
+The moves around weaker and bigger stones get higher temporary value.
+
+Number of moves limit each 1,2,3,4,5,6,7 depth are 50,20,10,10,10,10,10.
+In first depth(root) and two depth all moves are generated.
+And over 3 depth, Aya generates only nearby last moves and around getting
+ weak stones by last opponent move.
+
+These idea are mainly from Haruka, Japanese strong Go program's
+ explanation.
+There is its PDF (in Japanese)
+http://www.cs.ualberta.ca/~games/go/index.html
+And you can see Mr. Kishimoto's translation.
+http://www.cs.ualberta.ca/~games/go/index.html
+
+Regards,
+Hiroshi Yamashita
+
+_______________________________________________
+
+
+
+
+> Just to be sure, is this speed in nps and not knps?
+
+Sure. It's nps. But in string capture, nps is about 380,000.
+Go's evaluation function is very heavy.
+
+And I'm sorry, I made a mistake in URL.
+
+Haruka's translation is
+http://www.cs.ualberta.ca/~games/go/notes/031103/haruka.ppt
+Japanese original is
+http://www.hiroshima-pu.ac.jp/~sasaki/cgf/journal/vol5/vol5-4.pdf
+
+Regards,
+Hiroshi Yamashita
+

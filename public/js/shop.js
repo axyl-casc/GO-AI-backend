@@ -30,12 +30,12 @@ function initshop() {
         filteredItems.forEach(item => {
             const card = document.createElement("div");
             card.className = "bg-white rounded-lg shadow-lg p-4 flex flex-col items-center";
-    
+        
             // Check if the user can afford the item
             let canAfford = userCurrency >= item.price;
-    
+        
             card.innerHTML = `
-                <img src="${item.image}" alt="${item.title}" class="w-full h-40 object-cover rounded-md mb-4">
+                <img src="${item.image}" alt="${item.title}" class="w-full h-40 object-contain rounded-md mb-4">
                 <h2 class="text-lg font-bold mb-2">${item.title}</h2>
                 <p class="text-gray-700 mb-4 text-center">${item.description}</p>
                 <span class="text-lg font-semibold mb-4">$${item.price}</span>
@@ -48,9 +48,10 @@ function initshop() {
                     ${canAfford ? "Buy Now" : "Can't Afford"}
                 </button>
             `;
-    
+        
             shopContainer.appendChild(card);
         });
+        
     
         // Add event listeners to the "Buy Now" buttons
         const buyButtons = shopContainer.querySelectorAll(".buy-button");

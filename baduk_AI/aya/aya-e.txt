@@ -1,0 +1,122 @@
+--------------------------------------------------------------------------
+               Go Playing Program "Aya" Ver 6.34 English        2008/01/13
+                                                         Hiroshi Yamashita
+                                                          yss@bd.mbn.or.jp
+                                    http://www32.ocn.ne.jp/~yss/index.html
+--------------------------------------------------------------------------
+0. What's new!
+
+2008/01/13 6.34
+Handicap bug modified.
+"Normal" ...  3 sec/move
+"Strong" ... 10 sec/move
+Aya's strength is KGS 8k(AyaBot).
+Monte-Carlo Aya(UEC cup version) is unstable for human play. So I remove.
+
+
+1. Introduction
+
+This is Go playing program "Aya". Strength is maybe Japanese 8 kyu.
+Aya is free software.
+Aya runs under English Windows95/98/NT4.0/2000/XP/Vista and WINE on
+ Linux (Thanks Lim Jaebum).
+
+
+2. via GTP(Go Text Protocol) play
+
+Aya works for GTP Client since Ver 5.28.
+To use Aya for GTP Client,
+
+"Aya --mode gtp"
+
+Default rule set is Japanese rule. If you'd like a Chinese rule,
+
+"Aya --mode gtp --chinese-rule"
+
+Thinking level is the same setting when you run aya with non GTP mode.
+But "+1 ply" option is ignored always.
+If you'd like to play 60 seconds per a move in 9x9, set Level "Strong",
+ and after close Aya, use following option.
+
+"Aya --mode gtp --level max --chinese-rule"
+
+Aya works on Gogui, CgfGoban, and SmartGo(Thanks Anders Kierulf), 
+ doesn't work on gGo.
+
+ CgfGoBan http://www32.ocn.ne.jp/~yss/cgfgoban.html
+
+
+3. What is Aya?
+
+The name of "Aya"(Chinese character) was inspired by "Beautiful end
+ position that was made by collaboration between white and black."
+And Japanese "Aya" means mislead :-)
+
+
+4. Recent Aya's results:
+
+Date       Ver.  CPU        FSB    Tournament
+1996/09/14 1.0   -------    ---MHz FOST 2nd Nihon-Kiin      16/19 3wins 6loss
+1997/08/28 2.02  Pentium    133MHz FOST 3rd ,Nagoya          8/38
+1998/08/29 2.9   -------    ---MHz FOST 4th Nihon-Kiin      19/36
+1999/07/24 3.86  -------    ---MHz CGF1999 , Tsukuba Japan  10/28
+1999/09/04 3.7   PentiumII  233MHz FOST 5th Nihon-Kiin      --/24 pre-league
+1999/11/14 4.17  Celeron    300MHz Ing Cup, Shanghai China   7/16
+2000/06/02 4.22  Celeron x2 374MHz FJK2000, Shonan Japan     2/ 8
+2000/08/22 4.351 Celeron    433MHz MSO      London,UK        3/ 6
+2000/11/06 4.61e Pentium    600MHz?Ing Cup,  Guiyang,China   9/14
+2001/07/23 4.71  Celeron    433MHz 21st Century, York,USA   10/12
+2001/08/26 4.71  Celeron    433MHz CGF meeting               6/ 6
+2002/07/29 4.72a Pentium3M 1.13GHz 21st Century, Edmonton    5/14
+2002/08/25 4.72b Pentium3M 1.13GHz CGF meeting               2/ 9
+2003/08/03 4.77b Pentium3M 1.13GHz Gifu Challenge 2003,     11/17 Swiss 9R
+2003/11/23 5.09  Pentium3M 1.13GHz 7th Olympiad,Graz,Austria 7/11 19x19
+2003/11/25 5.09a Pentium3M 1.13GHz 7th Olympiad,Graz,Austria 1/10  9x9 Aya won!
+2004/01/10 5.21a Pentium3M 1.13GHz CGF meeting               4/ 9
+2004/10/03 5.52c Opteron248 2.2GHz Gifu Challenge 2004,Ogaki 2/13 8-2
+2005/04/10 5.56  Opteron248 2.2GHz CGF meeting               3/ 5 (1/5 9x9)
+2005/05/08 5.56a Opteron248 2.2GHz KGS 2nd Computer Go       1/11 9x9
+2005/09/06 5.59d Celeron   3.06GHz Olympiad,Taipei,Taiwan    2/ 9 9x9
+2005/09/09 5.59f Celeron   3.06GHz Olympiad,Taipei,Taiwan    3/ 7 19x19
+2005/09/11 5.60a Pentium4  3.00GHz Chang Jung Univ, Tainan   4/ 7 19x19
+2005/10/30 5.61  Opteron248 2.2GHz Gifu Challenge 2005,Ogaki 6/18 6-3
+2006/05/31 5.71  CoreDuo   1.83GHz Olympiad,Torino,Italy     2/11 9x9  16-4 2-0(PlayOff)
+2006/05/31 5.71  CoreDuo   1.83GHz Olympiad,Torino,Italy     4/ 6 19x19	5-5
+2006/10/01 5.85  CoreDuo   1.83GHz Gifu Challenge 2006,Ogaki 4/17 6-3
+2007/06/10 6.02  CoreDuo   1.83GHz CGF meeting, Tyofu        1/ 7 5-1
+2007/12/02 6.26c Xeon x8   2.66GHz UEC Cup, Chofu, Tokyo     4/27 5-0 + tournamet 2-2
+
+
+5. Let's play with Aya!
+
+Latest version is on my homepage.
+http://www32.ocn.ne.jp/~yss/index.html
+
+
+6. History
+
+2006/12/28 5.99
+A bit better Ko fight play.
+"Normal" ... 3 sec/move
+"Ponder" ... 20 sec/move
+Aya's strength is KGS 9k(AyaBot).
+
+2006/10/03 5.86
+Gifu Challenge 2006 Version. Aya went on 4th in all 17 teams.
+
+2004/10/11 5.53
+Gifu Challenge 2004 Version. Aya went on 2nd in all 13 teams.
+
+2004/02/06 5.30
+bug fix at putting stone while thinking.
+
+2004/01/24 5.29
+GTP bug fix.
+
+2004/01/23 5.28
+GTP client.
+Aya uses full board search in 9x9 and uses difference black first and white
+ first in 19x19. Full board search doesn't work well in wide board.
+
+--------------------------------------------------------------------------
+Hiroshi Yamashita

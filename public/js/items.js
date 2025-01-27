@@ -9,7 +9,7 @@ const ALL_ITEMS = [
     },
     {
         title: "Sai",
-        image: "img/image.png",
+        image: "img/go_master.png",
         description: "The SAI himself!",
         price: 500,
         shoppable: true,
@@ -18,7 +18,7 @@ const ALL_ITEMS = [
     },
     {
         title: "Baby Go Bot",
-        image: "img/image.png",
+        image: "img/beginner.png",
         description: "Humble Beginnings!",
         price: 10,
         shoppable: true,
@@ -26,10 +26,10 @@ const ALL_ITEMS = [
         category: ["companion"],
     },
     {
-        title: "A",
-        image: "img/image.png",
-        description: "It a me!",
-        price: 50,
+        title: "Aya",
+        image: "img/aya.png",
+        description: "Aya - the moderately strong GO companion!",
+        price: 100,
         shoppable: true,
         ai_key:63,
         category: ["companion"],
@@ -82,27 +82,28 @@ function renderInventory() {
         card.className = "bg-white rounded-lg shadow-lg p-4 flex flex-col items-center";
 
         card.innerHTML = `
-            <img src="${item.image}" alt="${item.title}" class="w-full h-40 object-cover rounded-md mb-4">
-            <h2 class="text-lg font-bold mb-2">${item.title}</h2>
-            <p class="text-gray-700 mb-4 text-center">${item.description}</p>
-            <span class="text-lg font-semibold mb-2">Quantity: ${item.quantity}</span>
-            <span class="text-sm text-gray-500 mb-4">Price: $${item.price}</span>
-            <div class="flex gap-4">
-                <button 
-                    class="sell-button px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                    data-item-title="${item.title}"
-                    data-item-price="${item.price}"
-                >
-                    Sell for $${(item.price / 2).toFixed(2)}
-                </button>
-                <button 
-                    class="equip-button px-4 py-2 ${item.equipped ? "bg-green-500 text-white" : "bg-gray-500 text-white hover:bg-gray-600"} rounded transition"
-                    data-item-title="${item.title}"
-                >
-                    ${item.equipped ? "Equipped" : "Equip"}
-                </button>
-            </div>
-        `;
+        <img src="${item.image}" alt="${item.title}" class="w-full h-40 object-contain rounded-md mb-4">
+        <h2 class="text-lg font-bold mb-2">${item.title}</h2>
+        <p class="text-gray-700 mb-4 text-center">${item.description}</p>
+        <span class="text-lg font-semibold mb-2">Quantity: ${item.quantity}</span>
+        <span class="text-sm text-gray-500 mb-4">Price: $${item.price}</span>
+        <div class="flex gap-4">
+            <button 
+                class="sell-button px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+                data-item-title="${item.title}"
+                data-item-price="${item.price}"
+            >
+                Sell for $${(item.price / 2).toFixed(2)}
+            </button>
+            <button 
+                class="equip-button px-4 py-2 ${item.equipped ? "bg-green-500 text-white" : "bg-gray-500 text-white hover:bg-gray-600"} rounded transition"
+                data-item-title="${item.title}"
+            >
+                ${item.equipped ? "Equipped" : "Equip"}
+            </button>
+        </div>
+    `;
+    
 
         inventoryContainer.appendChild(card);
     });

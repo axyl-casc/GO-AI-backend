@@ -240,8 +240,8 @@ async function task() {
         if(Object.keys(aiInstances).length < 3){
             console.log(`Training game started at ${new Date().toISOString()}`);
             await Promise.all([
-                trainingGame(sql, 9),
-                trainingGame(sql, 13),
+                trainingGame(sql, 19),
+                trainingGame(sql, 19),
                 trainingGame(sql, 19),
             ]);
     
