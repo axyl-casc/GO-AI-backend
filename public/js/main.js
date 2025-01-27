@@ -303,6 +303,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById("companion-moves").classList.remove("hidden")
             console.log("Companion")
             companion_key = getCompanion().ai_key
+            let companion_display = document.getElementById("companion");
+            companion_display.innerHTML = `<img src="${getCompanion().image}" class="w-2/10 max-w-[20%] h-auto"><br><h3>Companion: </h3>${getCompanion().title}`
+            companion_display.classList.remove("hidden")
             game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}`);
         }
 
@@ -537,53 +540,53 @@ document.addEventListener('DOMContentLoaded', () => {
         block: "center",
         inline: "center",
     });
-// Helper function to convert coordinates to SGF format
-function toSgfCoordinates(x, y) {
-  const letters = "abcdefghijklmnopqrstuvwxyz";
-  return letters[x] + letters[y];
-}
+    // Helper function to convert coordinates to SGF format
+    function toSgfCoordinates(x, y) {
+        const letters = "abcdefghijklmnopqrstuvwxyz";
+        return letters[x] + letters[y];
+    }
 
-// Generate SGF string
-function generateSgf(move_history, boardsize, komi) {
-  let sgf = `(;
+    // Generate SGF string
+    function generateSgf(move_history, boardsize, komi) {
+        let sgf = `(;
 FF[4]GM[1]SZ[${boardsize}]KM[${komi}]\n`; // SGF header with board size and komi
 
-  // Add moves to SGF
-  move_history.forEach(move => {
-    const color = move.c === WGo.B ? "B" : "W"; // Map WGo.B and WGo.W to "B" or "W"
-    const coords = toSgfCoordinates(move.x, move.y);
-    sgf += `;${color}[${coords}]`;
-  });
+        // Add moves to SGF
+        move_history.forEach(move => {
+            const color = move.c === WGo.B ? "B" : "W"; // Map WGo.B and WGo.W to "B" or "W"
+            const coords = toSgfCoordinates(move.x, move.y);
+            sgf += `;${color}[${coords}]`;
+        });
 
-  sgf += "\n)"; // Close SGF file
-  return sgf;
-}
+        sgf += "\n)"; // Close SGF file
+        return sgf;
+    }
 
-// Function to save SGF
-function saveSgf() {
-  const sgf = generateSgf(move_history, boardsize, komi);
+    // Function to save SGF
+    function saveSgf() {
+        const sgf = generateSgf(move_history, boardsize, komi);
 
-  // Create a Blob for the SGF content
-  const blob = new Blob([sgf], { type: "application/x-go-sgf" });
-  const url = URL.createObjectURL(blob);
+        // Create a Blob for the SGF content
+        const blob = new Blob([sgf], { type: "application/x-go-sgf" });
+        const url = URL.createObjectURL(blob);
 
-  // Create a temporary link to download the SGF file
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "game.sgf";
-  a.style.display = "none"; // Hide the link
-  document.body.appendChild(a);
+        // Create a temporary link to download the SGF file
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "game.sgf";
+        a.style.display = "none"; // Hide the link
+        document.body.appendChild(a);
 
-  // Trigger the download
-  a.click();
+        // Trigger the download
+        a.click();
 
-  // Clean up
-  URL.revokeObjectURL(url);
-  document.body.removeChild(a);
-}
+        // Clean up
+        URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    }
 
-// Attach click event to the button
-document.getElementById("save-sgf-button").addEventListener("click", saveSgf);
+    // Attach click event to the button
+    document.getElementById("save-sgf-button").addEventListener("click", saveSgf);
 
 });
 
