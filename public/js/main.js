@@ -295,15 +295,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let companion_key = 38; // default for 20k
         console.log(getCompanion())
+        let companion_display = document.getElementById("companion");
         if (getCompanion() == null) {
             console.log("No Companion")
             document.getElementById("companion-moves").classList.add("hidden")
+            companion_display.innerHTML = ""
+            companion_display.classList.add("hidden")
             game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}`);
         } else {
             document.getElementById("companion-moves").classList.remove("hidden")
             console.log("Companion")
             companion_key = getCompanion().ai_key
-            let companion_display = document.getElementById("companion");
             companion_display.innerHTML = `<img src="${getCompanion().image}" class="w-2/10 max-w-[20%] h-auto"><br><h3>Companion: </h3>${getCompanion().title}`
             companion_display.classList.remove("hidden")
             game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}`);
