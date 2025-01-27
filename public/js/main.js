@@ -15,8 +15,14 @@ async function fetchData(url) {
 
 let game_id = "0"
 let move_count = 0
+let board = null;
+let move_history = []
+let game = null
+let ai_hint = false
+let komi = 6.5
 
 document.addEventListener('DOMContentLoaded', () => {
+    companionToggleButton.addEventListener('click', handleCompanionToggle);
 
     const tabs = document.querySelectorAll('[data-tab]');
     const contents = document.querySelectorAll('.tab-content');
@@ -93,8 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const newGameButton = document.getElementById('newGame');
     const endGameButton = document.getElementById('endGame');
     const boardContainer = document.getElementById('boardContainer');
-    let board = null;
-    let move_history = []
+
     let boardsize = parseInt(document.getElementById('boardSize').value, 10);
     const rankSelector = document.getElementById('rankSelector')
     let has_ai_hint = true;
@@ -117,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         boardsize = parseInt(document.getElementById('boardSize').value, 10)
         let rank = document.getElementById('playerRank').value
         rank = getRank()
+        komi = 6.5
         if (isNaN(boardsize)) {
             console.log("Auto game started...")
 
@@ -125,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 9x9
             const intermediate = convertKyuDanToLevel("20k")
             // 13x13
-            const advanced = convertKyuDanToLevel("16k")
+            const advanced = convertKyuDanToLevel("14k")
             // 19x19
 
             // spread
@@ -136,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (playerlevel < beginner) {
                 boardsize = 7
+                komi = 0.5
             } else if (playerlevel < intermediate) {
                 boardsize = 9
             } else if (playerlevel < advanced) {
@@ -183,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Set initial size
         resizeBoard();
-        let game = new WGo.Game(boardsize, "KO"); // Manages game state and rules
+        game = new WGo.Game(boardsize, "KO"); // Manages game state and rules
         let game_type = "normal"
         let handicap_stones = 0
 
@@ -195,6 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (getRandomInt(1, 5) == 2 && getLevel() > 10 && boardsize >= 13) {
                 game_type = "handicap" // 25% chance of playing handicap game
                 handicap_stones = getRandomInt(2, 5);
+                komi = 0.5
             }
         }
         console.log(`Game type: ${properCase(game_type)}`)
@@ -229,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Place the stone in the game logic
                 game.play(point.x, point.y, WGo.B);
-                move_history.push({x:point.x, y: point.y, c:WGo.B})
+                move_history.push({ x: point.x, y: point.y, c: WGo.B })
 
                 // Display the stone on the board
                 board.addObject({
@@ -259,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let point of starPoints) {
                 // Place the stone in the game logic
                 game.play(point.x, point.y, point.color);
-                move_history.push({x:point.x, y: point.y, c:point.color})
+                move_history.push({ x: point.x, y: point.y, c: point.color })
                 // Display the stone on the board
                 board.addObject({
                     x: point.x,
@@ -287,11 +295,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let companion_key = 38; // default for 20k
         console.log(getCompanion())
-        if(getCompanion() == null){
+        if (getCompanion() == null) {
             console.log("No Companion")
             document.getElementById("companion-moves").classList.add("hidden")
             game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}`);
-        }else{
+        } else {
             document.getElementById("companion-moves").classList.remove("hidden")
             console.log("Companion")
             companion_key = getCompanion().ai_key
@@ -305,24 +313,12 @@ document.addEventListener('DOMContentLoaded', () => {
             move_count++;
             await handleAIMove('pass', board);
         }
-            // Fetch and play AI move
-        let ai_hint = false;;
+        // Fetch and play AI move
+        ai_hint = false;
+        move_count = 0
+        move_history = []
 
-        companionToggleButton.addEventListener('click', () => {
-            clearBoardMarkers(board, game)
-            restore_gamestate(game, move_history)
-            const isActive = companionToggleButton.classList.contains('bg-blue-500');
-            companionToggleButton.classList.toggle('bg-blue-500', !isActive);
-            companionToggleButton.classList.toggle('bg-gray-300', isActive);
-        
-            const toggleCircle = companionToggleButton.querySelector('div');
-            toggleCircle.classList.toggle('translate-x-4', !isActive);
-            if(!isActive){
-                show_ai_hints(game,board,ai_hint)
-            }
 
-            addMarker(move_history[move_history.length-1].x, move_history[move_history.length-1].y,board, move_history[move_history.length-1].c)
-        });
 
 
         // Restrict to one color (e.g., black)
@@ -346,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("Invalid move:", result); // 1 = Out of bounds, 2 = Occupied, 3 = Suicide
                 return;
             }
-            move_history.push({x:x, y: y, c:stoneColor})
+            move_history.push({ x: x, y: y, c: stoneColor })
             // Add the player's stone to the board
             board.addObject({ x: x, y: y, c: stoneColor });
             addMarker(x, y, board, stoneColor); // Update the marker for the player's move
@@ -369,8 +365,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let result_gamestate = restore_gamestate(game, move_history)
             error_flag = result_gamestate[1]
             game = result_gamestate[0]
-            
-            if(error_flag){
+
+            if (error_flag) {
                 console.log("Error")
                 move_count--;
                 move_history.pop()
@@ -383,8 +379,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             ai_hint = await handleAIMove(playerMove, board);
 
-            if(has_ai_hint && companionToggleButton.classList.contains('bg-blue-500')){
-                show_ai_hints(game,board,ai_hint)
+            if (has_ai_hint && companionToggleButton.classList.contains('bg-blue-500')) {
+                show_ai_hints(game, board, ai_hint)
             }
 
         });
@@ -425,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Add AI's stone to the board
                     board.addObject({ x: ai_x, y: ai_y, c: AI_COLOR });
 
-                    move_history.push({x:ai_x, y: ai_y, c:AI_COLOR})
+                    move_history.push({ x: ai_x, y: ai_y, c: AI_COLOR })
                     // Remove captured stones
                     result.forEach(captured => board.removeObjectsAt(captured.x, captured.y));
                     addMarker(ai_x, ai_y, board, AI_COLOR); // Update the marker for the AI's move
@@ -541,6 +537,53 @@ document.addEventListener('DOMContentLoaded', () => {
         block: "center",
         inline: "center",
     });
+// Helper function to convert coordinates to SGF format
+function toSgfCoordinates(x, y) {
+  const letters = "abcdefghijklmnopqrstuvwxyz";
+  return letters[x] + letters[y];
+}
+
+// Generate SGF string
+function generateSgf(move_history, boardsize, komi) {
+  let sgf = `(;
+FF[4]GM[1]SZ[${boardsize}]KM[${komi}]\n`; // SGF header with board size and komi
+
+  // Add moves to SGF
+  move_history.forEach(move => {
+    const color = move.c === WGo.B ? "B" : "W"; // Map WGo.B and WGo.W to "B" or "W"
+    const coords = toSgfCoordinates(move.x, move.y);
+    sgf += `;${color}[${coords}]`;
+  });
+
+  sgf += "\n)"; // Close SGF file
+  return sgf;
+}
+
+// Function to save SGF
+function saveSgf() {
+  const sgf = generateSgf(move_history, boardsize, komi);
+
+  // Create a Blob for the SGF content
+  const blob = new Blob([sgf], { type: "application/x-go-sgf" });
+  const url = URL.createObjectURL(blob);
+
+  // Create a temporary link to download the SGF file
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "game.sgf";
+  a.style.display = "none"; // Hide the link
+  document.body.appendChild(a);
+
+  // Trigger the download
+  a.click();
+
+  // Clean up
+  URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+}
+
+// Attach click event to the button
+document.getElementById("save-sgf-button").addEventListener("click", saveSgf);
 
 });
 
@@ -648,7 +691,7 @@ function updateAtariMarkers(game, board) {
         });
     });
 
-    updateAtariMarkersOpposite(game,board)
+    updateAtariMarkersOpposite(game, board)
 }
 
 function updateAtariMarkersOpposite(game, board) {
@@ -695,7 +738,7 @@ function restore_gamestate(game, move_history) {
     // Initialize a new WGo.Game instance
     game = new WGo.Game(game.size); // Replace 19 with your board size if different
     let err_flag = false
-    
+
     // Iterate over the move history and play each move
     move_history.forEach(move => {
         const result = game.play(move.x, move.y, move.c);
@@ -719,9 +762,9 @@ function restore_gamestate(game, move_history) {
 }
 
 
-function show_ai_hints(game, board, ai_hint){
-    if(!ai_hint){
-        return 
+function show_ai_hints(game, board, ai_hint) {
+    if (!ai_hint) {
+        return
     }
     updateAtariMarkers(game, board)
     ai_hint.forEach((ai_move) => {
@@ -737,4 +780,30 @@ function show_ai_hints(game, board, ai_hint){
             c: "rgba(0, 0, 0.1, 0.3)", // Optional: Customize the marker color (semi-transparent blue)
         });
     });
+}
+
+function handleCompanionToggle() {
+    // Always update the toggle button UI first
+    const isActive = companionToggleButton.classList.contains('bg-blue-500');
+    companionToggleButton.classList.toggle('bg-blue-500', !isActive);
+    companionToggleButton.classList.toggle('bg-gray-300', isActive);
+
+    const toggleCircle = companionToggleButton.querySelector('div');
+    toggleCircle.classList.toggle('translate-x-4', !isActive);
+
+    // If there's no move yet, stop here to avoid errors
+    if (move_count === 0) return;
+
+    // Now restore the board state and show AI hints if toggled on
+    clearBoardMarkers(board, game);
+    restore_gamestate(game, move_history);
+
+    // Only show hints if the toggle was just turned on
+    if (!isActive) {
+        show_ai_hints(game, board, ai_hint);
+    }
+
+    // Restore last move marker (so you don’t lose the marker after toggling)
+    const lastMove = move_history[move_history.length - 1];
+    addMarker(lastMove.x, lastMove.y, board, lastMove.c);
 }
