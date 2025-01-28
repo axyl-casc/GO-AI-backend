@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll(".wgo-tsumego-control").forEach((element) => {
                 element.style.display = "none"; // Properly hides the elements
             });
-            if (targetTab == "play") {
+            if (targetTab === "play") {
                 const startGameButton = document.getElementById('startGame');
 
                 // Check if the button exists and trigger the click event
@@ -60,13 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             }
 
-            if (targetTab == "learn") {
+            if (targetTab === "learn") {
                 document.querySelector("#learninfo").innerHTML = "";
                 document.querySelector("#learnboard").innerHTML = "";
                 updateLessonsVisibility();
             }
 
-            if (targetTab == "puzzle") {
+            if (targetTab === "puzzle") {
                 const testDiv = document.getElementById("tsumego_wrapper");
                 testDiv.scrollIntoView({
                     behavior: "auto",
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            if (targetTab == "profile") {
+            if (targetTab === "profile") {
                 document.getElementById('profile-rank').textContent = getDisplayRank()
                 document.getElementById('profile-level').textContent = getLevel()
                 document.getElementById('profile-games-played').textContent = getGamesPlayed();
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderInventory();
             }
 
-            if (targetTab == "shop") {
+            if (targetTab === "shop") {
                 initshop();
             }
 
@@ -194,19 +194,19 @@ document.addEventListener('DOMContentLoaded', () => {
         let game_type = "normal"
         let handicap_stones = 0
 
-        if (getRandomInt(1, 10) == 2) {
+        if (getRandomInt(1, 10) === 2) {
             game_type = "chinese" // 10% chance of playing chinese gamemode
         }
 
-        if (game_type == 'normal') {
-            if (getRandomInt(1, 5) == 2 && getLevel() > 10 && boardsize >= 13) {
+        if (game_type === 'normal') {
+            if (getRandomInt(1, 5) === 2 && getLevel() > 10 && boardsize >= 13) {
                 game_type = "handicap" // 25% chance of playing handicap game
                 handicap_stones = getRandomInt(2, 5);
                 komi = 0.5
             }
         }
         console.log(`Game type: ${properCase(game_type)}`)
-        if (game_type != "normal") {
+        if (game_type !== "normal") {
             if (getLevel() < 5 || boardsize < 13 || convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("25k")) {
                 game_type = "normal" // make all games lower than level 5 normal
                 console.log("Clamped to normal game")
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         //showToast(`Game type: ${properCase(game_type)}`)
 
         // Place handicap stones for black (WGo.B)
-        if (game_type == "handicap") {
+        if (game_type === "handicap") {
             const starDistance = boardsize >= 13 ? 3 : 2; // 4th line for boards >= 13x13, 3rd line for smaller boards
 
             // Define star points in the traditional handicap placement order
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Place alternating black (B) and white (W) stones on opposite corners
-        if (game_type == "chinese") {
+        if (game_type === "chinese") {
             const starDistance = boardsize >= 13 ? 3 : 2; // 4th line for boards >= 13x13, 3rd line for smaller boards
 
             // Define star points
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let requested_rank = getRank()
         let requested_komi = 6.5
-        if (game_type == "handicap") {
+        if (game_type === "handicap") {
             requested_komi = 0.5
             requested_rank = convertLevelToKyuDan(convertKyuDanToLevel(getRank()) + handicap_stones)
         }
@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
         game_id = game_id.gameId
         console.log(game_id);
 
-        if (game_type == "handicap") {
+        if (game_type === "handicap") {
             move_count++;
             await handleAIMove('pass', board);
         }
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const top_moves = getTopMoves(ai_hint)
                 console.log(top_moves)
                 console.log(`AI move: ${ai_move}`);
-                if (ai_move == 'pass') {
+                if (ai_move === 'pass') {
                     showToast("AI passed!")
                     move_count++; // Switch turns
                     game.pass()
@@ -464,13 +464,13 @@ document.addEventListener('DOMContentLoaded', () => {
         incrementGamesPlayed();
         game_id = "0"
         const score = document.querySelector("#scorespan").textContent
-        if (score[0] == "B" && move_count != 0) {
+        if (score[0] === "B" && move_count !== 0) {
             showToast("You won!")
             incrementPlayerWins();
             adjustRank(1) // increase rank by 1 on win
             incrementExperience(Math.floor(move_count / 2))
             adjustCurrency(5)
-        } else if (move_count != 0) {
+        } else if (move_count !== 0) {
             incrementExperience(Math.floor(move_count / 4))
             showToast("You lost!")
             setHasLost(true);
@@ -605,7 +605,7 @@ function addMarker(x, y, board, color) {
         });
     }
 
-    if (color == WGo.W) {
+    if (color === WGo.W) {
         // Add a new marker at the given coordinates
         board.addObject({
             x: x,
@@ -614,7 +614,7 @@ function addMarker(x, y, board, color) {
             c: "rgba(0, 0, 0, 0.6)", // Optional: Customize the marker color (semi-transparent blue)
         });
     }
-    if (color == WGo.B) {
+    if (color === WGo.B) {
         // Add a new marker at the given coordinates
         board.addObject({
             x: x,

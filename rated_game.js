@@ -19,7 +19,7 @@ async function playRatedGame(ai1_path, ai2_path, boardsize, sql) {
     if(rank_diff > 0){
         komi = 0.5
     }
-    if(rank_diff == 1){
+    if(rank_diff === 1){
         rank_diff = 0 // no handicap stones
     }
 

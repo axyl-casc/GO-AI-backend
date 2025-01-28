@@ -3,7 +3,7 @@ const { parseCommand, cleanMove } = require('./GoAIPlay')
 const { GoAIInstance } = require('./ExternalAI');
 
 function get_opp_color(current) {
-    if (current == "black") {
+    if (current === "black") {
         return "white"
     } else {
         return "black"
@@ -29,7 +29,7 @@ class PlayerAI {
         let ai_between = await sql.getBetween(boardsize, target_level)
         console.log(ai_between)
         this.ai_count = ai_between.length
-        if (this.ai_count == 1) {
+        if (this.ai_count === 1) {
             ai_between = [ai_between[0].path]
         } else {
             ai_between = [ai_between[0].path, ai_between[1].path]
@@ -52,7 +52,7 @@ class PlayerAI {
             ai.sendCommand(`boardsize ${boardsize}`)
         }
         await this.analysisEngine.sendCommand(`boardsize ${boardsize}`);
-        if (type == "handicap") {
+        if (type === "handicap") {
             komi = 0.5
             for (const i of this.instances) {
                 const starDistance = boardsize >= 13 ? 3 : 2; // 4th line for boards >= 13x13, 3rd line for smaller boards
@@ -91,7 +91,7 @@ class PlayerAI {
         await this.analysisEngine.sendCommand(`komi ${komi}`);
 
         // Place alternating black (B) and white (W) stones on opposite corners
-        if (type == "chinese") {
+        if (type === "chinese") {
             for (const i of this.instances) {
                 const starDistance = boardsize >= 13 ? 3 : 2; // 4th line for boards >= 13x13, 3rd line for smaller boards
 
@@ -135,7 +135,7 @@ class PlayerAI {
         this.last_move_time = new Date()
         let response = ""
         await this.analysisEngine.sendCommand(`play ${get_opp_color(this.ai_color)} ${move}`);
-        if (this.ai_count == 1) {
+        if (this.ai_count === 1) {
             response = await this.instances[0].sendCommand(`play ${get_opp_color(this.ai_color)} ${move}`)
             response = await this.instances[0].sendCommand(`genmove ${this.ai_color}`)
 
@@ -150,7 +150,7 @@ class PlayerAI {
             this.instances[this.moveCount % this.ai_count].sendCommand(`play ${this.ai_color} ${cleanMove(response[0])}`)
         }
         let score = "";
-        if (this.moveCount % 2 == 0) {
+        if (this.moveCount % 2 === 0) {
             this.score_estimate = [];
             // Update score estimate
             for (const i of this.instances) {

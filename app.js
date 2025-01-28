@@ -193,7 +193,7 @@ app.get('/tsumego-complete', async (req, res) => {
     const user_rating = await convertKyuDanToLevel(user_rank);
 
     if (Math.abs(puzzle_rating - user_rating) <= 4) {
-        if (is_correct == 'true') {
+        if (is_correct === 'true') {
             console.log("Correct")
             await tsumego_sql.adjustRating(puzzle_id, -1)
             await tsumego_sql.markPuzzleAsSolved(puzzle_id)

@@ -403,7 +403,7 @@ class TsumegoConnection {
 
   async adjustRating(puzzleId, delta) {
     const anchor = await this.getAnchorById(puzzleId);
-    if (anchor == '1') { // if the puzzle is an anchor, don't adjust the rating  
+    if (anchor === '1') { // if the puzzle is an anchor, don't adjust the rating
       console.log("Anchor puzzle, rating not adjusted");
       return;
     }

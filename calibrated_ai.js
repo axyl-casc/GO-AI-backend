@@ -38,7 +38,7 @@ async function test(sql, boardsize) {
         console.log(`Avg rank: ${convertLevelToKyuDan(avg)}`)
 
         let ai_between = await sql.getBetween(boardsize, convertLevelToKyuDan(avg))
-        if (ai_between.length == 1) {
+        if (ai_between.length === 1) {
             ai_between = [ai_between[0].path]
         } else {
             ai_between = [ai_between[0].path, ai_between[1].path]

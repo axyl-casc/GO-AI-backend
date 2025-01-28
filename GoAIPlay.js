@@ -138,7 +138,7 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
         }
 
         // for a tie breaker, assume server is correct
-        if (game_result.bCount == game_result.wCount) {
+        if (game_result.bCount === game_result.wCount) {
             if (game.score().black > game.score().white) {
                 scores.push(`B+${score_diff}`);
             } else {
