@@ -19,7 +19,7 @@ const aiInstances = {};
 
 
 const AI_game_delay_seconds = 10
-const is_train = true
+const is_train = false
 
 // seconds per week = 604800
 // seconds per day = 86400
@@ -290,10 +290,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get("/create-game", async (req, res) => {
     let { companion_key = 38, komi = 6.5, handicap = 0, rank = "30k", boardsize = 13, ai_color = "white", type = "normal" } =
         req.query;
-
-    // companion delta is the rank difference between the player
-    // and the AI helper for the player.
-    // ex: 20k player, 20k AI opponent and 15k AI companion 
 
     console.log(req.query)
     // games types

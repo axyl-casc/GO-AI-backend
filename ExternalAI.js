@@ -108,8 +108,9 @@ class GoAIInstance {
             this.pendingRequests.splice(idx, 1);
           }
         }
-        reject(new Error('Timeout waiting for response'));
+        this.terminate();
       }, timeout);
+      
 
       const originalResolve = request.resolve;
       request.resolve = (lines) => {
