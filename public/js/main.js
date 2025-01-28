@@ -17,7 +17,8 @@ let game_id = "0"
 let move_count = 0
 let board = null;
 let move_history = []
-let game = null
+let game = null;
+let previous_movelist = null;
 let ai_hint = false
 let komi = 6.5
 
@@ -339,6 +340,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return; // Not the player's turn
             }
 
+            if(move_count > 5){
+                previous_movelist = [... move_list]
+            }
+
             // Play the move and validate using WGo.Game
             game.repeating = "NONE"
             const result = game.play(x, y, stoneColor); // Validates and checks captures
@@ -549,12 +554,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Generate SGF string
-    function generateSgf(move_history, boardsize, komi) {
+    function generateSgf(history, boardsize, komi) {
         let sgf = `(;
 FF[4]GM[1]SZ[${boardsize}]KM[${komi}]\n`; // SGF header with board size and komi
 
         // Add moves to SGF
-        move_history.forEach(move => {
+        history.forEach(move => {
             const color = move.c === WGo.B ? "B" : "W"; // Map WGo.B and WGo.W to "B" or "W"
             const coords = toSgfCoordinates(move.x, move.y);
             sgf += `;${color}[${coords}]`;
@@ -566,7 +571,7 @@ FF[4]GM[1]SZ[${boardsize}]KM[${komi}]\n`; // SGF header with board size and komi
 
     // Function to save SGF
     function saveSgf() {
-        const sgf = generateSgf(move_history, boardsize, komi);
+        const sgf = generateSgf(previous_movelist, boardsize, komi);
 
         // Create a Blob for the SGF content
         const blob = new Blob([sgf], { type: "application/x-go-sgf" });
@@ -575,7 +580,7 @@ FF[4]GM[1]SZ[${boardsize}]KM[${komi}]\n`; // SGF header with board size and komi
         // Create a temporary link to download the SGF file
         const a = document.createElement("a");
         a.href = url;
-        a.download = "game.sgf";
+        a.download = `game-${getRank()}-${getLevel()}-${getRandomInt(1,99)}.sgf`;
         a.style.display = "none"; // Hide the link
         document.body.appendChild(a);
 
