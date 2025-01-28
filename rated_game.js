@@ -9,8 +9,8 @@ function getDist(a, b) {
 
 async function playRatedGame(ai1_path, ai2_path, boardsize, sql) {
 
-    let rank1 = await sql.getRank(ai1_path, boardsize);
-    let rank2 = await sql.getRank(ai2_path, boardsize);
+    const rank1 = await sql.getRank(ai1_path, boardsize);
+    const rank2 = await sql.getRank(ai2_path, boardsize);
     let komi = 6.5
     let rank_diff = getDist(rank1, rank2);
     if(rank_diff > 9){
@@ -19,7 +19,7 @@ async function playRatedGame(ai1_path, ai2_path, boardsize, sql) {
     if(rank_diff > 0){
         komi = 0.5
     }
-    if(rank_diff == 1){
+    if(rank_diff === 1){
         rank_diff = 0 // no handicap stones
     }
 

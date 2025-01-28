@@ -16,8 +16,8 @@ async function trainingGame(sql, boardsize) {
         let acceptedDist = 5;
 
         while (!validPair) {
-            let rank1 = await sql.getRank(AI1, boardsize);
-            let rank2 = await sql.getRank(AI2, boardsize);
+            const rank1 = await sql.getRank(AI1, boardsize);
+            const rank2 = await sql.getRank(AI2, boardsize);
 
             if (getDist(rank1, rank2) < acceptedDist && AI1 !== AI2) {
                 validPair = true;
@@ -33,7 +33,7 @@ async function trainingGame(sql, boardsize) {
         console.log(`AI1: ${AI1}, Rank: ${await sql.getRank(AI1, boardsize)}`);
         console.log(`AI2: ${AI2}, Rank: ${await sql.getRank(AI2, boardsize)}`);
 
-        let result = await playRatedGame(AI1, AI2, boardsize, sql);
+        const result = await playRatedGame(AI1, AI2, boardsize, sql);
         console.log(result);
     } catch (error) {
         console.error("Error during game execution:", error);

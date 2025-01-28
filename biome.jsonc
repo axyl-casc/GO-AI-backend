@@ -1,0 +1,34 @@
+{
+  "files": {
+    "ignore": [
+      "baduk_AI/**/*",
+      "public/extensions/**/*",
+      "public/i18n/i18n.*.js",
+      "public/js/tailwind.js",
+      "public/js/plotly-*.min.js",
+      "public/tenuki.min.js",
+      "public/themes/wgo.*.css",
+      "public/wgo/**/*"
+    ]
+  },
+  "linter": {
+    "rules": {
+      "complexity": {
+        "noForEach": "off"
+      },
+      "correctness": {
+        "noNodejsModules": "off",
+        "noUnusedFunctionParameters": "off",
+        "useImportExtensions": "off"
+      },
+      "style": {
+        "noParameterAssign": "off",
+        "noUselessElse": "off",
+        "useNodejsImportProtocol": "off",
+        "useNumberNamespace": "off",
+        "useSingleVarDeclarator": "off",
+        "useTemplate": "off"
+      }
+    }
+  }
+}

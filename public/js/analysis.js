@@ -7,14 +7,14 @@ function getTopMoves(data) {
     let currentMove = null;
     let moveScore = null;
 
-    for (let line of lines) {
+    for (const line of lines) {
         if (line.startsWith(' move')) {
             const tokens = line.split(' ');
             currentMove = tokens[2];
             moveScore = parseFloat(tokens[10]); // Parse as a float for numerical sorting
 
             // Start a new move entry
-            if (currentMove && !isNaN(moveScore)) {
+            if (currentMove && !Number.isNaN(moveScore)) {
                 moves.push({ move: currentMove, winrate: moveScore });
             }
         }

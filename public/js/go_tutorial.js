@@ -83,8 +83,8 @@ function startInteractiveTutorial(topic, boardsize) {
 
     const lessoninfo = document.getElementById("learninfo");
     lessoninfo.innerHTML = "";
-    let stoneX = 1, stoneY = 1; // Coordinates of the black stone
-    let liberties = [];
+    const stoneX = 1, stoneY = 1; // Coordinates of the black stone
+    const liberties = [];
 
     // Handle tutorial topics
     switch (topic) {
@@ -128,7 +128,7 @@ function startInteractiveTutorial(topic, boardsize) {
         `;
             break;
 
-        case "liberties":
+        case "liberties": {
             board.addObject({ x: stoneX, y: stoneY, c: WGo.B }); // Add black stone
             game.play(x, y, WGo.B); // Play the black stone
 
@@ -153,7 +153,8 @@ function startInteractiveTutorial(topic, boardsize) {
 
             lessoninfo.innerHTML = "Count liberties of the black stone.";
             break;
-        case "capture":
+        }
+        case "capture": {
             const centerX = Math.floor(boardsize / 2); // Center X coordinate
             const centerY = Math.floor(boardsize / 2); // Center Y coordinate
 
@@ -187,13 +188,14 @@ function startInteractiveTutorial(topic, boardsize) {
                 <p>Place another black stone to capture the white stone by surrounding it completely.</p>
             `;
             break;
+        }
 
-        case "9x9demo":
+        case "9x9demo": {
             // Replace the interactive board with the SGF player
             learnboard.innerHTML = ""; // Clear the existing board for the player
 
             // Initialize WGo.BasicPlayer for the 9x9 SGF demo
-            let player = new WGo.BasicPlayer(learnboard, {
+            const player = new WGo.BasicPlayer(learnboard, {
                 sgfFile: "./SGF/demo_9x9.sgf", // Path to your SGF file
                 board: {
                     width: 600, // Adjust board size (optional)
@@ -210,6 +212,7 @@ function startInteractiveTutorial(topic, boardsize) {
             createButtonContainer(".wgo-player-control", player);
             lessoninfo.innerHTML = "<br>Explore the loaded 9x9 SGF demo.<br>(right/left arrow key)";
             break;
+        }
         case 'empty_triangle':
             board.addObject({ x: 1, y: 1, c: WGo.B });
             board.addObject({ x: 1, y: 2, c: WGo.B });
@@ -252,7 +255,7 @@ function createButtonContainer(containerID, player) {
     const container = document.querySelector(containerID);
 
     // Previous Button
-    let prevButton = document.createElement("button");
+    const prevButton = document.createElement("button");
     prevButton.className = "px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 m-2";
     prevButton.textContent = "← Previous";
     prevButton.onclick = () => {
@@ -261,7 +264,7 @@ function createButtonContainer(containerID, player) {
     };
 
     // Next Button
-    let nextButton = document.createElement("button");
+    const nextButton = document.createElement("button");
     nextButton.className = "px-4 py-2 bg-green-500 text-white font-semibold rounded shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 m-2";
     nextButton.textContent = "Next →";
     nextButton.onclick = () => {

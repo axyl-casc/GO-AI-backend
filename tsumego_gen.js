@@ -23,7 +23,8 @@ async function insertTEAfterCorrect(input) {
 async function parseSGFAndAddVW(sgf) {
   return await insertTEAfterCorrect(sgf)
   // Valid letters for a 19x19 board, skipping 'i'
-  const validLetters = "abcdefghjklmnopqrst";
+  /*
+    const validLetters = "abcdefghjklmnopqrst";
 
   // Regex to find B[...] or W[...] with two coordinates
   const regex = /[BW]\[([a-z])([a-z])\]/g;
@@ -74,6 +75,7 @@ async function parseSGFAndAddVW(sgf) {
 
   // Add VW property right after the first "(;"
   return sgf.replace("(;", `(;VW[${vwValue}]`);
+  */
 }
 
 

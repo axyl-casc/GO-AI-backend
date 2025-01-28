@@ -10,8 +10,8 @@ async function new_tsumego() {
     wrapper.innerHTML = "";
 
     // Get rank and type
-    let rank = getRank();
-    let type = "any";
+    const rank = getRank();
+    const type = "any";
 
     try {
         // Fetch tsumego data from the server

@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll(".wgo-tsumego-control").forEach((element) => {
                 element.style.display = "none"; // Properly hides the elements
             });
-            if (targetTab == "play") {
+            if (targetTab === "play") {
                 const startGameButton = document.getElementById('startGame');
 
                 // Check if the button exists and trigger the click event
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const clickEvent = new Event('click', { bubbles: true, cancelable: true });
                     startGameButton.dispatchEvent(clickEvent);
                 }
-                let testDiv = document.getElementById("boardContainer");
+                const testDiv = document.getElementById("boardContainer");
                 testDiv.scrollIntoView({
                     behavior: "auto",
                     block: "center",
@@ -60,14 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             }
 
-            if (targetTab == "learn") {
+            if (targetTab === "learn") {
                 document.querySelector("#learninfo").innerHTML = "";
                 document.querySelector("#learnboard").innerHTML = "";
                 updateLessonsVisibility();
             }
 
-            if (targetTab == "puzzle") {
-                let testDiv = document.getElementById("tsumego_wrapper");
+            if (targetTab === "puzzle") {
+                const testDiv = document.getElementById("tsumego_wrapper");
                 testDiv.scrollIntoView({
                     behavior: "auto",
                     block: "center",
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            if (targetTab == "profile") {
+            if (targetTab === "profile") {
                 document.getElementById('profile-rank').textContent = getDisplayRank()
                 document.getElementById('profile-level').textContent = getLevel()
                 document.getElementById('profile-games-played').textContent = getGamesPlayed();
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderInventory();
             }
 
-            if (targetTab == "shop") {
+            if (targetTab === "shop") {
                 initshop();
             }
 
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let boardsize = parseInt(document.getElementById('boardSize').value, 10);
     const rankSelector = document.getElementById('rankSelector')
-    let has_ai_hint = true;
+    const has_ai_hint = true;
 
     document.getElementById('boardSize').addEventListener("change", () => {
         rankSelector.classList.remove('hidden');
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let rank = document.getElementById('playerRank').value
         rank = getRank()
         komi = 6.5
-        if (isNaN(boardsize)) {
+        if (Number.isNaN(boardsize)) {
             console.log("Auto game started...")
 
             // 7x7
@@ -194,19 +194,19 @@ document.addEventListener('DOMContentLoaded', () => {
         let game_type = "normal"
         let handicap_stones = 0
 
-        if (getRandomInt(1, 10) == 2) {
+        if (getRandomInt(1, 10) === 2) {
             game_type = "chinese" // 10% chance of playing chinese gamemode
         }
 
-        if (game_type == 'normal') {
-            if (getRandomInt(1, 5) == 2 && getLevel() > 10 && boardsize >= 13) {
+        if (game_type === 'normal') {
+            if (getRandomInt(1, 5) === 2 && getLevel() > 10 && boardsize >= 13) {
                 game_type = "handicap" // 25% chance of playing handicap game
                 handicap_stones = getRandomInt(2, 5);
                 komi = 0.5
             }
         }
         console.log(`Game type: ${properCase(game_type)}`)
-        if (game_type != "normal") {
+        if (game_type !== "normal") {
             if (getLevel() < 5 || boardsize < 13 || convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("25k")) {
                 game_type = "normal" // make all games lower than level 5 normal
                 console.log("Clamped to normal game")
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         //showToast(`Game type: ${properCase(game_type)}`)
 
         // Place handicap stones for black (WGo.B)
-        if (game_type == "handicap") {
+        if (game_type === "handicap") {
             const starDistance = boardsize >= 13 ? 3 : 2; // 4th line for boards >= 13x13, 3rd line for smaller boards
 
             // Define star points in the traditional handicap placement order
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Place alternating black (B) and white (W) stones on opposite corners
-        if (game_type == "chinese") {
+        if (game_type === "chinese") {
             const starDistance = boardsize >= 13 ? 3 : 2; // 4th line for boards >= 13x13, 3rd line for smaller boards
 
             // Define star points
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ];
 
             // Add stones to the game logic and display them on the board
-            for (let point of starPoints) {
+            for (const point of starPoints) {
                 // Place the stone in the game logic
                 game.play(point.x, point.y, point.color);
                 move_history.push({ x: point.x, y: point.y, c: point.color })
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let requested_rank = getRank()
         let requested_komi = 6.5
-        if (game_type == "handicap") {
+        if (game_type === "handicap") {
             requested_komi = 0.5
             requested_rank = convertLevelToKyuDan(convertKyuDanToLevel(getRank()) + handicap_stones)
         }
@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let companion_key = 38; // default for 20k
         console.log(getCompanion())
-        let companion_display = document.getElementById("companion");
+        const companion_display = document.getElementById("companion");
         if (getCompanion() == null) {
             console.log("No Companion")
             document.getElementById("companion-moves").classList.add("hidden")
@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
         game_id = game_id.gameId
         console.log(game_id);
 
-        if (game_type == "handicap") {
+        if (game_type === "handicap") {
             move_count++;
             await handleAIMove('pass', board);
         }
@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const stoneColor = WGo.B; // WGo.B for Black, WGo.W for White
 
         // Add a click event listener to place a stone// Board click event listener for player's move
-        board.addEventListener("click", async function (x, y) {
+        board.addEventListener("click", async (x, y) => {
             if (!game.isOnBoard(x, y)) return; // Ignore invalid clicks
 
             // Check if it's the player's turn
@@ -367,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 endGameButton.classList.remove('hidden');
             }
             let error_flag = false
-            let result_gamestate = restore_gamestate(game, move_history)
+            const result_gamestate = restore_gamestate(game, move_history)
             error_flag = result_gamestate[1]
             game = result_gamestate[0]
 
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const top_moves = getTopMoves(ai_hint)
                 console.log(top_moves)
                 console.log(`AI move: ${ai_move}`);
-                if (ai_move == 'pass') {
+                if (ai_move === 'pass') {
                     showToast("AI passed!")
                     move_count++; // Switch turns
                     game.pass()
@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Play AI's move using WGo.Game
                 const result = game.play(ai_x, ai_y, AI_COLOR); // AI is White
-                if (result instanceof Array) {
+                if (Array.isArray(result)) {
                     // Add AI's stone to the board
                     board.addObject({ x: ai_x, y: ai_y, c: AI_COLOR });
 
@@ -463,14 +463,14 @@ document.addEventListener('DOMContentLoaded', () => {
     endGameButton.addEventListener('click', async () => {
         incrementGamesPlayed();
         game_id = "0"
-        let score = document.querySelector("#scorespan").textContent
-        if (score[0] == "B" && move_count != 0) {
+        const score = document.querySelector("#scorespan").textContent
+        if (score[0] === "B" && move_count !== 0) {
             showToast("You won!")
             incrementPlayerWins();
             adjustRank(1) // increase rank by 1 on win
             incrementExperience(Math.floor(move_count / 2))
             adjustCurrency(5)
-        } else if (move_count != 0) {
+        } else if (move_count !== 0) {
             incrementExperience(Math.floor(move_count / 4))
             showToast("You lost!")
             setHasLost(true);
@@ -536,7 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    let testDiv = document.getElementById("boardContainer");
+    const testDiv = document.getElementById("boardContainer");
     testDiv.scrollIntoView({
         behavior: "auto",
         block: "center",
@@ -605,7 +605,7 @@ function addMarker(x, y, board, color) {
         });
     }
 
-    if (color == WGo.W) {
+    if (color === WGo.W) {
         // Add a new marker at the given coordinates
         board.addObject({
             x: x,
@@ -614,7 +614,7 @@ function addMarker(x, y, board, color) {
             c: "rgba(0, 0, 0, 0.6)", // Optional: Customize the marker color (semi-transparent blue)
         });
     }
-    if (color == WGo.B) {
+    if (color === WGo.B) {
         // Add a new marker at the given coordinates
         board.addObject({
             x: x,
@@ -639,7 +639,7 @@ function clearBoardMarkers(board, game) {
     // Iterate through the entire board to place stones
     for (let x = 0; x < size; x++) {
         for (let y = 0; y < size; y++) {
-            let color = position.get(x, y);
+            const color = position.get(x, y);
             if (color) {
                 // Place stones on the board
                 board.addObject({ x: x, y: y, c: color });
@@ -776,8 +776,8 @@ function show_ai_hints(game, board, ai_hint) {
         console.log(ai_move.move);
         ai_move = ai_move.move
         // Convert AI move to coordinates
-        let ai_x = ai_move[0].charCodeAt(0) - "A".charCodeAt(0) - (ai_move[0] >= "J" ? 1 : 0);
-        let ai_y = parseInt(ai_move.slice(1)) - 1;
+        const ai_x = ai_move[0].charCodeAt(0) - "A".charCodeAt(0) - (ai_move[0] >= "J" ? 1 : 0);
+        const ai_y = parseInt(ai_move.slice(1)) - 1;
         board.addObject({
             x: ai_x,
             y: ai_y,

@@ -173,21 +173,7 @@ function incrementPlayerWins() {
     localStorage.setItem("playerWins", JSON.stringify(newWins));
     return newWins;
 }
-// For checking the player's win status
-function getPlayerWins() {
-    if (localStorage.getItem("playerWins") === null) {
-        localStorage.setItem("playerWins", JSON.stringify(0));
-        return 0;
-    }
-    return JSON.parse(localStorage.getItem("playerWins"));
-}
 
-function incrementPlayerWins() {
-    const currentWins = getPlayerWins();
-    const newWins = currentWins + 1;
-    localStorage.setItem("playerWins", JSON.stringify(newWins));
-    return newWins;
-}
 function getExperience() {
     if (localStorage.getItem("experience") === null) {
         localStorage.setItem("experience", JSON.stringify(0));

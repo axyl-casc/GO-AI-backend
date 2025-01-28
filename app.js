@@ -170,7 +170,7 @@ app.get('/tsumego-rate', async (req, res) => {
     // Extract query parameters
     const { puzzle_id, delta } = req.query; // 1 for like, -1 for dislike
 
-    console.log(`Tsumego like Data:`);
+    console.log("Tsumego like Data:");
     console.log(`  Puzzle ID: ${puzzle_id}`);
     console.log(`  Delta: ${delta}`);
 
@@ -184,7 +184,7 @@ app.get('/tsumego-complete', async (req, res) => {
     const { is_correct, puzzle_id, user_rank } = req.query;
 
     // Log the parameters to the console
-    console.log(`Tsumego Completion Data:`);
+    console.log("Tsumego Completion Data:");
     console.log(`  Is Correct: ${is_correct}`);
     console.log(`  Puzzle ID: ${puzzle_id}`);
     console.log(`  User Rank: ${user_rank}`);
@@ -193,7 +193,7 @@ app.get('/tsumego-complete', async (req, res) => {
     const user_rating = await convertKyuDanToLevel(user_rank);
 
     if (Math.abs(puzzle_rating - user_rating) <= 4) {
-        if (is_correct == 'true') {
+        if (is_correct === 'true') {
             console.log("Correct")
             await tsumego_sql.adjustRating(puzzle_id, -1)
             await tsumego_sql.markPuzzleAsSolved(puzzle_id)
@@ -339,7 +339,7 @@ app.get("/move", async (req, res) => {
     try {
         console.log("Playing the move B")
         // Send the player's move to the AI
-        let { response, score, hint } = await game.ai.play(move);
+        const { response, score, hint } = await game.ai.play(move);
 
         res.json({ aiResponse: response, aiScore: score, hint: hint });
     } catch (err) {

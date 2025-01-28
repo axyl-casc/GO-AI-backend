@@ -17,8 +17,8 @@ async function test(sql, boardsize) {
         let validPair = false;
 
         while (!validPair) {
-            let rank1 = await sql.getRank(AI1, boardsize);
-            let rank2 = await sql.getRank(AI2, boardsize);
+            const rank1 = await sql.getRank(AI1, boardsize);
+            const rank2 = await sql.getRank(AI2, boardsize);
 
             if (getDist(rank1, rank2) > 3 && getDist(rank1, rank2) < 9 && AI1 !== AI2) {
                 validPair = true;
@@ -29,16 +29,16 @@ async function test(sql, boardsize) {
 
         }
 
-        let r1 = await sql.getRank(AI1, boardsize)
-        let r2 = await sql.getRank(AI2, boardsize)
+        const r1 = await sql.getRank(AI1, boardsize)
+        const r2 = await sql.getRank(AI2, boardsize)
         console.log(`AI1:\n${AI1}, Rank: ${convertLevelToKyuDan(r1)}`);
         console.log(`AI2:\n${AI2}, Rank: ${convertLevelToKyuDan(r2)}`);
 
-        let avg = Math.floor((r1 + r2) / 2)
+        const avg = Math.floor((r1 + r2) / 2)
         console.log(`Avg rank: ${convertLevelToKyuDan(avg)}`)
 
         let ai_between = await sql.getBetween(boardsize, convertLevelToKyuDan(avg))
-        if (ai_between.length == 1) {
+        if (ai_between.length === 1) {
             ai_between = [ai_between[0].path]
         } else {
             ai_between = [ai_between[0].path, ai_between[1].path]
@@ -46,7 +46,7 @@ async function test(sql, boardsize) {
         console.log("AI opp")
         console.log(ai_between)
 
-        let result = await playGame(ai_between, [AI1, AI2], 0, 6.5, 13)
+        const result = await playGame(ai_between, [AI1, AI2], 0, 6.5, 13)
         console.log(result);
     } catch (error) {
         console.error("Error during game execution:", error);
