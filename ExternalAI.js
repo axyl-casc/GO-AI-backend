@@ -63,13 +63,21 @@ class GoAIInstance {
     }
   }
 
-  /**
-   * Terminates the child process and cleans up resources.
-   */
   terminate() {
-    this.rl.close();
-    this.child.stdin.end();
-    this.child.kill();
+    if (this.rl) {
+      this.rl.close();
+    }
+    if (this.child && !this.child.killed) {
+      this.child.stdin.end();
+      this.child.kill('SIGTERM');
+    }
+
+    this.rejectAll(new Error('Instance terminated'));
+
+    this.rl = null;
+    this.child = null;
+    this.pendingRequests = [];
+    this.currentRequest = null;
   }
 
   /**
