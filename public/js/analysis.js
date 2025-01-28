@@ -14,7 +14,7 @@ function getTopMoves(data) {
             moveScore = parseFloat(tokens[10]); // Parse as a float for numerical sorting
 
             // Start a new move entry
-            if (currentMove && !isNaN(moveScore)) {
+            if (currentMove && !Number.isNaN(moveScore)) {
                 moves.push({ move: currentMove, winrate: moveScore });
             }
         }

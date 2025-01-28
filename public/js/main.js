@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let rank = document.getElementById('playerRank').value
         rank = getRank()
         komi = 6.5
-        if (isNaN(boardsize)) {
+        if (Number.isNaN(boardsize)) {
             console.log("Auto game started...")
 
             // 7x7
@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const stoneColor = WGo.B; // WGo.B for Black, WGo.W for White
 
         // Add a click event listener to place a stone// Board click event listener for player's move
-        board.addEventListener("click", async function (x, y) {
+        board.addEventListener("click", async (x, y) => {
             if (!game.isOnBoard(x, y)) return; // Ignore invalid clicks
 
             // Check if it's the player's turn
@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Play AI's move using WGo.Game
                 const result = game.play(ai_x, ai_y, AI_COLOR); // AI is White
-                if (result instanceof Array) {
+                if (Array.isArray(result)) {
                     // Add AI's stone to the board
                     board.addObject({ x: ai_x, y: ai_y, c: AI_COLOR });
 
