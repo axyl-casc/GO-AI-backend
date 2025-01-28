@@ -116,10 +116,10 @@ class PlayerAI {
 
     async terminate() {
         for (const i of this.instances) {
-            await i.sendCommand(`quit`);
+            await i.sendCommand("quit");
             await i.terminate()
         }
-        await this.analysisEngine.sendCommand(`quit`);
+        await this.analysisEngine.sendCommand("quit");
         this.analysisEngine.terminate()
     }
 
@@ -154,10 +154,10 @@ class PlayerAI {
             this.score_estimate = [];
             // Update score estimate
             for (const i of this.instances) {
-                score = await i.sendCommand(`final_score`); // Wait for each command
+                score = await i.sendCommand("final_score"); // Wait for each command
                 this.score_estimate.push(cleanMove(score[0]));
             }
-            score = await this.analysisEngine.sendCommand(`final_score`); // Wait for each command
+            score = await this.analysisEngine.sendCommand("final_score"); // Wait for each command
             this.score_estimate.push(cleanMove(score[0]));
         }
         await this.analysisEngine.sendCommand(`play ${this.ai_color} ${cleanMove(response[0])}`)
@@ -165,10 +165,10 @@ class PlayerAI {
         //let analysis_moves = await this.analysisEngine.sendCommand(`kata-analyze ${get_opp_color(this.ai_color)} 1`)
         // print AI view
 
-        const analysis_moves = await this.analysisEngine.sendCommand(`kata-search_analyze`)
+        const analysis_moves = await this.analysisEngine.sendCommand("kata-search_analyze")
         //console.log(this.getTopMoves(analysis_moves, 3))
         response = cleanMove(response[0])
-        const test = await this.analysisEngine.sendCommand(`showboard`);
+        const test = await this.analysisEngine.sendCommand("showboard");
         console.log(test);
         return { response: response, score: this.score_estimate, hint: analysis_moves };
     }

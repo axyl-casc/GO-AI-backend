@@ -271,7 +271,7 @@ class SqlConnection {
   }
 
   async getRandomAI() {
-    const sql = `SELECT path FROM AI;`;
+    const sql = "SELECT path FROM AI;";
     const paths = await this._send(sql);
     const randomIndex = Math.floor(Math.random() * paths.length);
     return paths[randomIndex].path;
@@ -312,7 +312,7 @@ class TsumegoConnection {
   }
 
   async clearTable() {
-    const sql = `DELETE FROM puzzles;`;
+    const sql = "DELETE FROM puzzles;";
     await this._send(sql);
   }
 
@@ -325,7 +325,7 @@ class TsumegoConnection {
   }
 
   async getPuzzleCount() {
-    const sql = `SELECT COUNT(*) AS count FROM puzzles;`;
+    const sql = "SELECT COUNT(*) AS count FROM puzzles;";
     const result = await this._send(sql);
     return result.count;
   }
@@ -336,7 +336,7 @@ class TsumegoConnection {
   }
 
   async getSolvedPuzzles() {
-    const sql = `SELECT * FROM puzzles WHERE solved > 0;`;
+    const sql = "SELECT * FROM puzzles WHERE solved > 0;";
     return await this._send(sql);
   }
 

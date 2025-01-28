@@ -170,7 +170,7 @@ app.get('/tsumego-rate', async (req, res) => {
     // Extract query parameters
     const { puzzle_id, delta } = req.query; // 1 for like, -1 for dislike
 
-    console.log(`Tsumego like Data:`);
+    console.log("Tsumego like Data:");
     console.log(`  Puzzle ID: ${puzzle_id}`);
     console.log(`  Delta: ${delta}`);
 
@@ -184,7 +184,7 @@ app.get('/tsumego-complete', async (req, res) => {
     const { is_correct, puzzle_id, user_rank } = req.query;
 
     // Log the parameters to the console
-    console.log(`Tsumego Completion Data:`);
+    console.log("Tsumego Completion Data:");
     console.log(`  Is Correct: ${is_correct}`);
     console.log(`  Puzzle ID: ${puzzle_id}`);
     console.log(`  User Rank: ${user_rank}`);

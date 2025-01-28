@@ -36,7 +36,7 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
 
     const allAIs = [...team1, ...team2];
     for (const ai of allAIs) {
-        await ai.sendCommand(`clear_board`);
+        await ai.sendCommand("clear_board");
         await ai.sendCommand(`boardsize ${boardsize}`);
         await ai.sendCommand(`komi ${komi}`);
     }
@@ -118,7 +118,7 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
         const scores = [];
 
         for (const ai of allAIs) {
-            const AI_score = await ai.sendCommand(`final_score`);
+            const AI_score = await ai.sendCommand("final_score");
             scores.push(cleanMove(AI_score[0]));
         }
         if (game.score().black > game.score().white) {
@@ -133,7 +133,7 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
 
         // tell AI to exit
         for (const ai of allAIs) {
-            await ai.sendCommand(`quit`);
+            await ai.sendCommand("quit");
             await ai.terminate();
         }
 
