@@ -128,7 +128,7 @@ function startInteractiveTutorial(topic, boardsize) {
         `;
             break;
 
-        case "liberties":
+        case "liberties": {
             board.addObject({ x: stoneX, y: stoneY, c: WGo.B }); // Add black stone
             game.play(x, y, WGo.B); // Play the black stone
 
@@ -153,7 +153,8 @@ function startInteractiveTutorial(topic, boardsize) {
 
             lessoninfo.innerHTML = "Count liberties of the black stone.";
             break;
-        case "capture":
+        }
+        case "capture": {
             const centerX = Math.floor(boardsize / 2); // Center X coordinate
             const centerY = Math.floor(boardsize / 2); // Center Y coordinate
 
@@ -187,8 +188,9 @@ function startInteractiveTutorial(topic, boardsize) {
                 <p>Place another black stone to capture the white stone by surrounding it completely.</p>
             `;
             break;
+        }
 
-        case "9x9demo":
+        case "9x9demo": {
             // Replace the interactive board with the SGF player
             learnboard.innerHTML = ""; // Clear the existing board for the player
 
@@ -210,6 +212,7 @@ function startInteractiveTutorial(topic, boardsize) {
             createButtonContainer(".wgo-player-control", player);
             lessoninfo.innerHTML = "<br>Explore the loaded 9x9 SGF demo.<br>(right/left arrow key)";
             break;
+        }
         case 'empty_triangle':
             board.addObject({ x: 1, y: 1, c: WGo.B });
             board.addObject({ x: 1, y: 2, c: WGo.B });
