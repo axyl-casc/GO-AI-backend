@@ -38,23 +38,23 @@ class PlayerAI {
         this.instances = []
         this.ai_color = ai_color
 
-        for (let i of this.paths) {
-            let [exe, args] = parseCommand(i)
+        for (const i of this.paths) {
+            const [exe, args] = parseCommand(i)
             this.instances.push(new GoAIInstance(exe, args))
         }
         console.log(`key -> ${companion_key}`)
         let analysis_engine_path = await sql.getAIFromKey(companion_key);
         analysis_engine_path = analysis_engine_path[0].path
         console.log(`Analysis Engine: ${analysis_engine_path}`)
-        let [exe, args] = parseCommand(analysis_engine_path)
+        const [exe, args] = parseCommand(analysis_engine_path)
         this.analysisEngine = new GoAIInstance(exe, args)
-        for (let ai of this.instances) {
+        for (const ai of this.instances) {
             ai.sendCommand(`boardsize ${boardsize}`)
         }
         await this.analysisEngine.sendCommand(`boardsize ${boardsize}`);
         if (type == "handicap") {
             komi = 0.5
-            for (let i of this.instances) {
+            for (const i of this.instances) {
                 const starDistance = boardsize >= 13 ? 3 : 2; // 4th line for boards >= 13x13, 3rd line for smaller boards
             
                 // Define star points in the traditional handicap placement order
@@ -85,14 +85,14 @@ class PlayerAI {
             }
 
         }
-        for (let ai of this.instances) {
+        for (const ai of this.instances) {
             ai.sendCommand(`komi ${komi}`)
         }
         await this.analysisEngine.sendCommand(`komi ${komi}`);
 
         // Place alternating black (B) and white (W) stones on opposite corners
         if (type == "chinese") {
-            for (let i of this.instances) {
+            for (const i of this.instances) {
                 const starDistance = boardsize >= 13 ? 3 : 2; // 4th line for boards >= 13x13, 3rd line for smaller boards
 
                 // Define star points
@@ -104,7 +104,7 @@ class PlayerAI {
                 ];
 
                 // Place stones on the star points
-                for (let point of starPoints) {
+                for (const point of starPoints) {
                     const letter = String.fromCharCode(65 + point.x); // Convert x to letter (A, B, ...)
                     const number = boardsize - point.y; // Convert y to Go coordinates (1, 2, ...)
                     await i.sendCommand(`play ${point.color} ${letter}${number}`);
@@ -115,7 +115,7 @@ class PlayerAI {
     }
 
     async terminate() {
-        for (let i of this.instances) {
+        for (const i of this.instances) {
             await i.sendCommand(`quit`);
             await i.terminate()
         }
@@ -153,7 +153,7 @@ class PlayerAI {
         if (this.moveCount % 2 == 0) {
             this.score_estimate = [];
             // Update score estimate
-            for (let i of this.instances) {
+            for (const i of this.instances) {
                 score = await i.sendCommand(`final_score`); // Wait for each command
                 this.score_estimate.push(cleanMove(score[0]));
             }
@@ -165,10 +165,10 @@ class PlayerAI {
         //let analysis_moves = await this.analysisEngine.sendCommand(`kata-analyze ${get_opp_color(this.ai_color)} 1`)
         // print AI view
 
-        let analysis_moves = await this.analysisEngine.sendCommand(`kata-search_analyze`)
+        const analysis_moves = await this.analysisEngine.sendCommand(`kata-search_analyze`)
         //console.log(this.getTopMoves(analysis_moves, 3))
         response = cleanMove(response[0])
-        let test = await this.analysisEngine.sendCommand(`showboard`);
+        const test = await this.analysisEngine.sendCommand(`showboard`);
         console.log(test);
         return { response: response, score: this.score_estimate, hint: analysis_moves };
     }

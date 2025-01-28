@@ -7,7 +7,7 @@ function getTopMoves(data) {
     let currentMove = null;
     let moveScore = null;
 
-    for (let line of lines) {
+    for (const line of lines) {
         if (line.startsWith(' move')) {
             const tokens = line.split(' ');
             currentMove = tokens[2];

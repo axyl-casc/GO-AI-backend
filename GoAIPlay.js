@@ -10,14 +10,14 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
     const team2 = [];
     let team1_counter = 0;
     let team2_counter = 0;
-    let move_list = [];
+    const move_list = [];
 
-    for (let t of team1_paths) {
-        let [exePath, args] = parseCommand(t);
+    for (const t of team1_paths) {
+        const [exePath, args] = parseCommand(t);
         team1.push(new GoAIInstance(exePath, args));
     }
-    for (let t of team2_paths) {
-        let [exePath, args] = parseCommand(t);
+    for (const t of team2_paths) {
+        const [exePath, args] = parseCommand(t);
         team2.push(new GoAIInstance(exePath, args));
     }
 
@@ -35,16 +35,16 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
 
 
     const allAIs = [...team1, ...team2];
-    for (let ai of allAIs) {
+    for (const ai of allAIs) {
         await ai.sendCommand(`clear_board`);
         await ai.sendCommand(`boardsize ${boardsize}`);
         await ai.sendCommand(`komi ${komi}`);
     }
-    let placed_stones = scanBoardStones(game)
+    const placed_stones = scanBoardStones(game)
     // Propagate the scanned stones to all AIs
     for (const stone of placed_stones) {
         const gtpMove = formatToGTP(stone.x, stone.y, boardsize); // Convert coordinates to GTP
-        for (let ai of allAIs) {
+        for (const ai of allAIs) {
             await ai.sendCommand(`play black ${gtpMove}`);
         }
     }
@@ -85,14 +85,14 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
                 turn_counter++;
             } else {
                 // Parse the move into board coordinates
-                let [x, y] = parseCoordinates(stone_move, boardsize);
+                const [x, y] = parseCoordinates(stone_move, boardsize);
 
                 move_list.push(stone_move);
 
                 // Apply the move to the Tenuki board
                 if (game.playAt(y, x)) {
                     // Propagate the move to all other AIs
-                    for (let ai of allAIs) {
+                    for (const ai of allAIs) {
                         if (ai !== currentPlayer) {
                             await ai.sendCommand(`play ${moveColor} ${stone_move}`);
                         }
@@ -115,10 +115,10 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
 
         const score_diff = game.score().black - game.score().white;
         console.log(`\n\nScore:\nBlack: ${game.score().black}\nWhite: ${game.score().white}`);
-        let scores = [];
+        const scores = [];
 
-        for (let ai of allAIs) {
-            let AI_score = await ai.sendCommand(`final_score`);
+        for (const ai of allAIs) {
+            const AI_score = await ai.sendCommand(`final_score`);
             scores.push(cleanMove(AI_score[0]));
         }
         if (game.score().black > game.score().white) {
@@ -132,7 +132,7 @@ async function playGame(team1_paths, team2_paths, handicap_stone_count, komi, bo
         let certainty = 0;
 
         // tell AI to exit
-        for (let ai of allAIs) {
+        for (const ai of allAIs) {
             await ai.sendCommand(`quit`);
             await ai.terminate();
         }
@@ -170,7 +170,7 @@ function countResults(results) {
     let bCount = 0;
     let wCount = 0;
 
-    for (let result of results) {
+    for (const result of results) {
         if (result.startsWith('B+')) {
             bCount++;
         } else if (result.startsWith('W+')) {

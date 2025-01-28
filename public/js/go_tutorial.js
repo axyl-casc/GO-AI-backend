@@ -83,8 +83,8 @@ function startInteractiveTutorial(topic, boardsize) {
 
     const lessoninfo = document.getElementById("learninfo");
     lessoninfo.innerHTML = "";
-    let stoneX = 1, stoneY = 1; // Coordinates of the black stone
-    let liberties = [];
+    const stoneX = 1, stoneY = 1; // Coordinates of the black stone
+    const liberties = [];
 
     // Handle tutorial topics
     switch (topic) {
@@ -193,7 +193,7 @@ function startInteractiveTutorial(topic, boardsize) {
             learnboard.innerHTML = ""; // Clear the existing board for the player
 
             // Initialize WGo.BasicPlayer for the 9x9 SGF demo
-            let player = new WGo.BasicPlayer(learnboard, {
+            const player = new WGo.BasicPlayer(learnboard, {
                 sgfFile: "./SGF/demo_9x9.sgf", // Path to your SGF file
                 board: {
                     width: 600, // Adjust board size (optional)
@@ -252,7 +252,7 @@ function createButtonContainer(containerID, player) {
     const container = document.querySelector(containerID);
 
     // Previous Button
-    let prevButton = document.createElement("button");
+    const prevButton = document.createElement("button");
     prevButton.className = "px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 m-2";
     prevButton.textContent = "← Previous";
     prevButton.onclick = () => {
@@ -261,7 +261,7 @@ function createButtonContainer(containerID, player) {
     };
 
     // Next Button
-    let nextButton = document.createElement("button");
+    const nextButton = document.createElement("button");
     nextButton.className = "px-4 py-2 bg-green-500 text-white font-semibold rounded shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 m-2";
     nextButton.textContent = "Next →";
     nextButton.onclick = () => {

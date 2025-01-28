@@ -339,7 +339,7 @@ app.get("/move", async (req, res) => {
     try {
         console.log("Playing the move B")
         // Send the player's move to the AI
-        let { response, score, hint } = await game.ai.play(move);
+        const { response, score, hint } = await game.ai.play(move);
 
         res.json({ aiResponse: response, aiScore: score, hint: hint });
     } catch (err) {

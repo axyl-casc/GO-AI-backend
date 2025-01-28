@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const clickEvent = new Event('click', { bubbles: true, cancelable: true });
                     startGameButton.dispatchEvent(clickEvent);
                 }
-                let testDiv = document.getElementById("boardContainer");
+                const testDiv = document.getElementById("boardContainer");
                 testDiv.scrollIntoView({
                     behavior: "auto",
                     block: "center",
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (targetTab == "puzzle") {
-                let testDiv = document.getElementById("tsumego_wrapper");
+                const testDiv = document.getElementById("tsumego_wrapper");
                 testDiv.scrollIntoView({
                     behavior: "auto",
                     block: "center",
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let boardsize = parseInt(document.getElementById('boardSize').value, 10);
     const rankSelector = document.getElementById('rankSelector')
-    let has_ai_hint = true;
+    const has_ai_hint = true;
 
     document.getElementById('boardSize').addEventListener("change", () => {
         rankSelector.classList.remove('hidden');
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ];
 
             // Add stones to the game logic and display them on the board
-            for (let point of starPoints) {
+            for (const point of starPoints) {
                 // Place the stone in the game logic
                 game.play(point.x, point.y, point.color);
                 move_history.push({ x: point.x, y: point.y, c: point.color })
@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let companion_key = 38; // default for 20k
         console.log(getCompanion())
-        let companion_display = document.getElementById("companion");
+        const companion_display = document.getElementById("companion");
         if (getCompanion() == null) {
             console.log("No Companion")
             document.getElementById("companion-moves").classList.add("hidden")
@@ -367,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 endGameButton.classList.remove('hidden');
             }
             let error_flag = false
-            let result_gamestate = restore_gamestate(game, move_history)
+            const result_gamestate = restore_gamestate(game, move_history)
             error_flag = result_gamestate[1]
             game = result_gamestate[0]
 
@@ -463,7 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
     endGameButton.addEventListener('click', async () => {
         incrementGamesPlayed();
         game_id = "0"
-        let score = document.querySelector("#scorespan").textContent
+        const score = document.querySelector("#scorespan").textContent
         if (score[0] == "B" && move_count != 0) {
             showToast("You won!")
             incrementPlayerWins();
@@ -536,7 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    let testDiv = document.getElementById("boardContainer");
+    const testDiv = document.getElementById("boardContainer");
     testDiv.scrollIntoView({
         behavior: "auto",
         block: "center",
@@ -639,7 +639,7 @@ function clearBoardMarkers(board, game) {
     // Iterate through the entire board to place stones
     for (let x = 0; x < size; x++) {
         for (let y = 0; y < size; y++) {
-            let color = position.get(x, y);
+            const color = position.get(x, y);
             if (color) {
                 // Place stones on the board
                 board.addObject({ x: x, y: y, c: color });
@@ -776,8 +776,8 @@ function show_ai_hints(game, board, ai_hint) {
         console.log(ai_move.move);
         ai_move = ai_move.move
         // Convert AI move to coordinates
-        let ai_x = ai_move[0].charCodeAt(0) - "A".charCodeAt(0) - (ai_move[0] >= "J" ? 1 : 0);
-        let ai_y = parseInt(ai_move.slice(1)) - 1;
+        const ai_x = ai_move[0].charCodeAt(0) - "A".charCodeAt(0) - (ai_move[0] >= "J" ? 1 : 0);
+        const ai_y = parseInt(ai_move.slice(1)) - 1;
         board.addObject({
             x: ai_x,
             y: ai_y,

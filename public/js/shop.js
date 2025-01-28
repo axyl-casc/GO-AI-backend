@@ -4,7 +4,7 @@ function initshop() {
     // JSON data for shop items with categories as arrays
 
     const shopItems = []
-    for(let item of ALL_ITEMS){
+    for(const item of ALL_ITEMS){
         if(item.shoppable){
             shopItems.push(item)
         }
@@ -32,7 +32,7 @@ function initshop() {
             card.className = "bg-white rounded-lg shadow-lg p-4 flex flex-col items-center";
         
             // Check if the user can afford the item
-            let canAfford = userCurrency >= item.price;
+            const canAfford = userCurrency >= item.price;
         
             card.innerHTML = `
                 <img src="${item.image}" alt="${item.title}" class="w-full h-40 object-contain rounded-md mb-4">
