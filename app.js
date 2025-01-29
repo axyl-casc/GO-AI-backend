@@ -19,7 +19,7 @@ const aiInstances = {};
 
 
 const AI_game_delay_seconds = 10
-const is_train = false
+const is_train = true
 
 // seconds per week = 604800
 // seconds per day = 86400
@@ -239,12 +239,11 @@ async function task() {
         // Promise.all waits until they all complete (or fail on any error).
         if(Object.keys(aiInstances).length < 4){
             console.log(`Training game started at ${new Date().toISOString()}`);
-            await Promise.all([
-                trainingGame(sql, 9),
-                trainingGame(sql, 13),
-                trainingGame(sql, 19),
-            ]);
-    
+
+            await trainingGame(sql, 9)
+            await trainingGame(sql, 13)
+            await trainingGame(sql, 19)
+
             console.log(`Training game completed at ${new Date().toISOString()}`);
         }else{
             console.log(`Skipped training...\nLIVE games -> ${Object.keys(aiInstances).length}`)

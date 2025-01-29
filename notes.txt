@@ -16,6 +16,7 @@ lesson =
 tsumego lesson?
 joseki lesson? pick random from joseki.sgf
 
+lose 100 games achievement
 
 spend on
 avatar

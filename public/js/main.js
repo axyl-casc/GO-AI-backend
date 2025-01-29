@@ -19,6 +19,8 @@ let board = null;
 let move_history = []
 let game = null;
 let previous_movelist = null;
+let previous_boardsize = 0
+let previous_komi = 0
 let ai_hint = false
 let komi = 6.5
 
@@ -164,8 +166,11 @@ document.addEventListener('DOMContentLoaded', () => {
             rank = MAXRANK
         }
 
+        // Fetch and play AI move
+        ai_hint = false;
         move_count = 0
         move_history = []
+
 
         // Hide selectors and show WGo.js board
         selectors.classList.add('hidden');
@@ -307,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById("companion-moves").classList.remove("hidden")
             console.log("Companion")
             companion_key = getCompanion().ai_key
-            companion_display.innerHTML = `<img src="${getCompanion().image}" class="w-2/10 max-w-[20%] h-auto"><br><h3>Companion: </h3>${getCompanion().title}`
+            companion_display.innerHTML = `<img src="${getCompanion().image}" class="w-2/10 max-w-[50%] h-auto"><br><h3>Companion: </h3>${getCompanion().title}`
             companion_display.classList.remove("hidden")
             game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}`);
         }
@@ -319,13 +324,6 @@ document.addEventListener('DOMContentLoaded', () => {
             move_count++;
             await handleAIMove('pass', board);
         }
-        // Fetch and play AI move
-        ai_hint = false;
-        move_count = 0
-        move_history = []
-
-
-
 
         // Restrict to one color (e.g., black)
         const stoneColor = WGo.B; // WGo.B for Black, WGo.W for White
@@ -341,7 +339,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if(move_count > 5){
-                previous_movelist = [... move_list]
+                previous_komi = komi
+                previous_boardsize = boardsize
+                previous_movelist = [... move_history]
             }
 
             // Play the move and validate using WGo.Game
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetchData(`/move?id=${game_id}&move=${playerMove}`);
                 console.log(response)
                 const score = response.aiScore[0]
-                const ai_move = response.aiResponse; // Example: "D4"
+                const ai_move = await response.aiResponse; // Example: "D4"
                 const ai_hint = String(response.hint);
                 const top_moves = getTopMoves(ai_hint)
                 console.log(top_moves)
@@ -473,13 +473,13 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast("You won!")
             incrementPlayerWins();
             adjustRank(1) // increase rank by 1 on win
-            incrementExperience(Math.floor(move_count / 2))
-            adjustCurrency(5)
-        } else if (move_count !== 0) {
             incrementExperience(Math.floor(move_count / 4))
+            adjustCurrency(Math.floor(move_count / 2) + getLevel()) // increase money earned by your level
+        } else if (move_count !== 0) {
+            incrementExperience(Math.floor(move_count / 8))
             showToast("You lost!")
             setHasLost(true);
-            adjustCurrency(2)
+            adjustCurrency((Math.floor(move_count / 2) + getLevel()) / 2)
             adjustRank(-1) // decrease rank by 1 on loss
             if (convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")) {
                 adjustRank(-1)
@@ -571,7 +571,7 @@ FF[4]GM[1]SZ[${boardsize}]KM[${komi}]\n`; // SGF header with board size and komi
 
     // Function to save SGF
     function saveSgf() {
-        const sgf = generateSgf(previous_movelist, boardsize, komi);
+        const sgf = generateSgf(previous_movelist, previous_boardsize, previous_komi);
 
         // Create a Blob for the SGF content
         const blob = new Blob([sgf], { type: "application/x-go-sgf" });

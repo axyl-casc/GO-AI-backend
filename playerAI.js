@@ -120,7 +120,7 @@ class PlayerAI {
             await i.terminate()
         }
         await this.analysisEngine.sendCommand("quit");
-        this.analysisEngine.terminate()
+        await this.analysisEngine.terminate()
     }
 
 
@@ -146,8 +146,8 @@ class PlayerAI {
             response = await this.instances[this.moveCount % this.ai_count].sendCommand(`genmove ${this.ai_color}`)
 
             this.moveCount++;
-            this.instances[this.moveCount % this.ai_count].sendCommand(`play ${get_opp_color(this.ai_color)} ${move}`)
-            this.instances[this.moveCount % this.ai_count].sendCommand(`play ${this.ai_color} ${cleanMove(response[0])}`)
+            await this.instances[this.moveCount % this.ai_count].sendCommand(`play ${get_opp_color(this.ai_color)} ${move}`)
+            await this.instances[this.moveCount % this.ai_count].sendCommand(`play ${this.ai_color} ${cleanMove(response[0])}`)
         }
         let score = "";
         if (this.moveCount % 2 === 0) {

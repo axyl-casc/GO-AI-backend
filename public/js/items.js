@@ -1,7 +1,7 @@
 const ALL_ITEMS = [
     {
         title: "Go Board",
-        image: "img/image.png",
+        image: "wgo/wood_1024.jpg",
         description: "High-quality wooden Go board with grid markings.",
         price: 50,
         shoppable: true,
@@ -9,58 +9,64 @@ const ALL_ITEMS = [
     },
     {
         title: "Sai",
-        image: "img/go_master.png",
+        image: "img/go_master.webp",
         description: "The SAI himself!",
-        price: 500,
+        price: 5000,
         shoppable: true,
         ai_key:34, // 1800s ai
-        category: ["featured", "companion"],
-    },
-    {
-        title: "Baby Go Bot",
-        image: "img/beginner.png",
-        description: "Humble Beginnings!",
-        price: 10,
-        shoppable: true,
-        ai_key:38, //20k
         category: ["companion"],
     },
     {
-        title: "Aya",
-        image: "img/aya.png",
-        description: "Aya - the moderately strong GO companion!",
+        title: "Baby Go Bot",
+        image: "img/beginner.webp",
+        description: "Humble Beginnings!",
         price: 100,
         shoppable: true,
+        ai_key:38, //20k
+        category: ["featured", "companion"],
+    },
+    {
+        title: "Aya",
+        image: "img/aya.webp",
+        description: "Aya - the moderately strong GO companion!",
+        price: 500,
+        shoppable: false,
         ai_key:63,
         category: ["companion"],
     },
     {
-        title: "Shell Stones",
-        image: "img/image.png",
+        title: "Dean",
+        image: "img/dean.webp",
+        description: "A decently strong go player. Follows traditional strategy",
+        price: 250,
+        shoppable: true,
+        ai_key:36,
+        category: ["companion"],
+    },
+    {
+        title: "Danielle",
+        image: "img/other_dean.webp",
+        description: "A decently strong go player. Follows new age strategy",
+        price: 250,
+        shoppable: true,
+        ai_key:48,
+        category: ["companion"],
+    },
+    {
+        title: "Slate & Shell Stones",
+        image: "wgo/white_128.png",
         description: "Set of polished white Go stones.",
-        price: 30,
+        price: 50,
         shoppable: true,
         category: ["stones", "featured"],
-    },
-    {
-        title: "Slate Stones",
-        image: "img/image.png",
-        description: "Set of polished black Go stones.",
-        price: 30,
-        shoppable: true,
-        category: ["stones", "featured"],
-    },
-    {
-        title: "Beginner's Guide to Go",
-        image: "img/image.png",
-        description: "A comprehensive guide for beginners to learn Go.",
-        price: 15,
-        shoppable: true,
-        category: ["featured"],
-    },
+    }
 ];
 
+// ability to purchase game SGF demos
+
+
 function renderInventory() {
+    document.getElementById('profile-currency').textContent = getCurrency();
     const inventoryContainer = document.getElementById("inventory-items");
 
     // Clear existing inventory cards
