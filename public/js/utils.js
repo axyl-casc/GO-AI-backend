@@ -155,7 +155,7 @@ function incrementLevel() {
     adjustCurrency(newLevel * 2)
 
     if(newLevel % 5 === 0){
-        const found_item = getItemDrop(1)
+        const found_item = getItemDrop(getLevel())
         addToInventory(found_item);
         showToastAux(`Leveled up from ${getLevel() - 1} to ${getLevel()}!<br>You found a ${found_item}`)
     }else{
@@ -167,7 +167,7 @@ function incrementLevel() {
 
 function getItemDrop(rarity){
     const random_item = ALL_ITEMS[Math.floor(Math.random() * ALL_ITEMS.length)];
-    if(getRandomInt(rarity, random_item.dropchance - rarity) === Math.floor(random_item.dropchance/2)){
+    if(2 * rarity >= dropchance || getRandomInt(rarity, random_item.dropchance - rarity) === Math.floor(random_item.dropchance/2)){
         // item dropped
         return random_item.title
     }else{
