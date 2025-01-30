@@ -32,6 +32,176 @@
 
 <body class="bg-badukWood font-sans m-0">
 
+<!-- Dialog -->
+<dialog id="welcomeDialog" class="bg-white rounded-lg shadow-lg w-4/5 h-4/5 p-0">
+    <!-- Modal Header -->
+    <div class="px-4 py-2 bg-blue-600 text-white flex justify-between items-center rounded-t-lg">
+      <h2 class="text-lg font-semibold">Welcome to Go!</h2>
+      <button id="closeDialog" class="text-white hover:text-gray-300"
+        onclick="document.querySelector('#welcomeDialog').close()">&times;</button>
+    </div>
+  
+    <div class="flex space-x-4 m-2">
+      <span id="welcome" class="px-4 py-2 bg-blue-500 text-white font-bold text-lg rounded-lg hover:bg-blue-600 transform hover:scale-105 transition duration-300">Welcome</span>
+      <span id="howToPlay" class="px-4 py-2 bg-green-500 text-white font-bold text-lg rounded-lg hover:bg-green-600 transform hover:scale-105 transition duration-300">How to Play</span>
+      <span id="goRanks" class="px-4 py-2 bg-yellow-500 text-white font-bold text-lg rounded-lg hover:bg-yellow-600 transform hover:scale-105 transition duration-300">Go Ranks</span>
+    </div>
+  
+    <p id="info-box" class="p-2 text-gray-700 mt-4">Click on a topic to see its description.</p>
+  
+    <script>
+      const infoContent = {
+        welcome: `
+<h2 style="font-size: 1.8rem; font-weight: bold; margin-bottom: 12px;">Welcome to Your Go Learning Journey!</h2>
+
+<p style="margin-bottom: 16px; line-height: 1.6;">
+  This website is designed to help you <span style="color: #2563eb; font-weight: 600;">learn Go by playing</span> rather than just reading about it. 
+  Instead of overwhelming you with theory, the best way to improve is to <span style="color: #16a34a; font-weight: 600;">dive in and start placing stones on the board</span>. 
+  Through interactive lessons, AI matches, and progressively challenging puzzles, you'll develop an intuitive understanding of Go.
+</p>
+
+<h3 style="font-size: 1.4rem; font-weight: 600; margin-top: 24px; margin-bottom: 8px;">How to Use This Website</h3>
+<ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 16px; line-height: 1.6;">
+  <li><span style="color: #2563eb; font-weight: 600;">Jump In and Play</span> – Start a game right away against an AI or a friend. Making moves and seeing the results is the fastest way to learn.</li>
+  <li><span style="color: #16a34a; font-weight: 600;">Beginner-Friendly Tutorials</span> – Follow step-by-step guides through practical situations you’ll encounter in real games.</li>
+  <li><span style="color: #f59e0b; font-weight: 600;">Unlockable Lessons & Puzzles</span> – New lessons and challenges unlock as you progress to reinforce your learning.</li>
+  <li><span style="color: #9333ea; font-weight: 600;">Break Through the Ranks</span> – Follow structured exercises aimed at helping you improve from 30k to 1d and beyond.</li>
+</ul>
+
+<h3 style="font-size: 1.4rem; font-weight: 600; margin-top: 24px; margin-bottom: 8px;">Progressive Learning System</h3>
+<p style="margin-bottom: 16px; line-height: 1.6;">
+  The key to mastering Go is <span style="color: #16a34a; font-weight: 600;">repetition and experience</span>. 
+  This website adapts to your progress, unlocking <span style="color: #f59e0b; font-weight: 600;">new challenges</span> as you complete lessons and games, 
+  making learning feel like an adventure.
+</p>
+
+<h4 style="font-size: 1.2rem; font-weight: 600; margin-top: 16px; margin-bottom: 8px;">Key Features That Will Help You Improve:</h4>
+<ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 16px; line-height: 1.6;">
+  <li><span style="color: #2563eb; font-weight: 600;">Guided Play</span> – Follow interactive challenges that introduce Go concepts step by step.</li>
+  <li><span style="color: #f59e0b; font-weight: 600;">Adaptive Puzzles</span> – Struggling with a concept? The site will suggest puzzles to reinforce your understanding.</li>
+  <li><span style="color: #16a34a; font-weight: 600;">AI Opponents</span> – Play against AI of different levels, from beginner-friendly bots to strong opponents that push your limits.</li>
+  <li><span style="color: #9333ea; font-weight: 600;">Rank Tracking</span> – See your progress over time and measure how much you've improved.</li>
+</ul>
+
+<h3 style="font-size: 1.4rem; font-weight: 600; margin-top: 24px; margin-bottom: 8px;">Getting Started</h3>
+<ol style="list-style-type: decimal; padding-left: 20px; margin-bottom: 16px; line-height: 1.6;">
+  <li><span style="color: #2563eb; font-weight: 600;">Click "Start Game"</span> – Begin playing right away.</li>
+  <li><span style="color: #16a34a; font-weight: 600;">Follow the Guided Lessons</span> – Unlock new concepts by playing and completing tasks.</li>
+  <li><span style="color: #f59e0b; font-weight: 600;">Solve Puzzles</span> – Reinforce your learning with interactive tsumego exercises.</li>
+  <li><span style="color: #9333ea; font-weight: 600;">Climb the Ranks</span> – Use what you learn to win more games and unlock harder challenges.</li>
+</ol>
+
+<blockquote style="font-style: italic; color: #6b7280; border-left: 4px solid #d1d5db; padding-left: 12px; margin-top: 16px;">
+  "The best way to learn Go is to play Go. Study supplements experience, but playing builds intuition." – Modern Go Wisdom
+</blockquote>
+`,
+
+howToPlay: `
+<h2 style="font-size: 1.8rem; font-weight: bold; margin-bottom: 12px;">How to Play Go</h2>
+
+<p style="margin-bottom: 16px; line-height: 1.6;">
+  Go is an ancient board game that is easy to learn but takes a lifetime to master. 
+  It is played on a grid (typically <span style="color: #2563eb; font-weight: 600;">19×19, 13×13, or 9×9</span>). 
+  Players take turns placing stones on intersections, aiming to surround more territory than their opponent.
+</p>
+
+<h3 style="font-size: 1.4rem; font-weight: 600; margin-bottom: 8px;">Basic Rules</h3>
+<ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 16px; line-height: 1.6;">
+  <li><span style="color: #2563eb; font-weight: 600;">Black plays first</span>, followed by White.</li>
+  <li>Stones must have at least one adjacent open point (<span style="color: #16a34a; font-weight: 600;">liberty</span>) to stay on the board.</li>
+  <li>Groups of stones with no liberties are <span style="color: #f59e0b; font-weight: 600;">captured</span> and removed from the board.</li>
+  <li>The game ends when both players pass in succession.</li>
+  <li>The final score is determined by the total <span style="color: #9333ea; font-weight: 600;">controlled territory</span> and captured stones.</li>
+</ul>
+
+<h3 style="font-size: 1.4rem; font-weight: 600; margin-top: 24px; margin-bottom: 8px;">Capturing Stones</h3>
+<p style="margin-bottom: 16px; line-height: 1.6;">
+  If a stone or group of stones is completely surrounded by the opponent’s stones and has no remaining liberties, it is captured and removed from the board.
+  Capturing is a fundamental tactic used to reduce the opponent’s influence and secure territory.
+</p>
+
+<h3 style="font-size: 1.4rem; font-weight: 600; margin-top: 24px; margin-bottom: 8px;">Key Concepts in Go</h3>
+<ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 16px; line-height: 1.6;">
+  <li><span style="color: #16a34a; font-weight: 600;">Eyes:</span> Two empty spaces within a group that prevent it from being captured.</li>
+  <li><span style="color: #2563eb; font-weight: 600;">Ko Rule:</span> A rule that prevents an infinite cycle by disallowing immediate repetition of a previous board position.</li>
+  <li><span style="color: #f59e0b; font-weight: 600;">Sente & Gote:</span> The balance between taking initiative (sente) and responding to an opponent’s move (gote).</li>
+  <li><span style="color: #9333ea; font-weight: 600;">Territory vs. Influence:</span> Deciding between securing territory early or building large frameworks to control the board.</li>
+</ul>
+
+<h3 style="font-size: 1.4rem; font-weight: 600; margin-top: 24px; margin-bottom: 8px;">Common Board Sizes & Their Uses</h3>
+<ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 16px; line-height: 1.6;">
+  <li><strong>19×19:</strong> The standard full-size board for competitive play.</li>
+  <li><strong>13×13:</strong> A medium-sized board, great for practice and faster games.</li>
+  <li><strong>9×9:</strong> Ideal for beginners and for quick tactical games.</li>
+</ul>
+
+<blockquote style="font-style: italic; color: #6b7280; border-left: 4px solid #d1d5db; padding-left: 12px; margin-top: 16px;">
+  "The best strategy is to play lightly." – Go wisdom
+</blockquote>
+`,
+
+
+goRanks: `
+<h2 style="font-size: 1.8rem; font-weight: bold; margin-bottom: 12px;">Go Ranks Explained</h2>
+
+<p style="margin-bottom: 16px; line-height: 1.6;">
+  The ranking system in Go helps players understand their skill level and track improvement. 
+  The ranks are divided into **Kyu** (beginner to intermediate), **Dan** (advanced), and **Professional** levels.
+</p>
+
+<h3 style="font-size: 1.4rem; font-weight: 600; margin-bottom: 8px;">Kyu (30k - 1k) – Beginner to Intermediate</h3>
+<ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 16px; line-height: 1.6;">
+  <li><span style="color: #2563eb; font-weight: 600;">30k - 20k:</span> Complete beginner learning basic rules and capturing techniques.</li>
+  <li><span style="color: #16a34a; font-weight: 600;">19k - 10k:</span> Understands territory, simple tactics, and opening strategies.</li>
+  <li><span style="color: #f59e0b; font-weight: 600;">9k - 1k:</span> More refined play, deeper reading ability, and better positional understanding.</li>
+</ul>
+
+<h3 style="font-size: 1.4rem; font-weight: 600; margin-bottom: 8px;">Dan (1d - 9d) – Advanced</h3>
+<ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 16px; line-height: 1.6;">
+  <li><span style="color: #2563eb; font-weight: 600;">1d - 3d:</span> Strong amateur player with solid understanding of shape and efficiency.</li>
+  <li><span style="color: #16a34a; font-weight: 600;">4d - 6d:</span> High-level amateur capable of deep reading, advanced joseki, and global thinking.</li>
+  <li><span style="color: #f59e0b; font-weight: 600;">7d - 9d:</span> Near-professional level, competing in major amateur tournaments.</li>
+</ul>
+
+<h3 style="font-size: 1.4rem; font-weight: 600; margin-bottom: 8px;">Professional Ranks (1p - 9p)</h3>
+<p style="margin-bottom: 16px; line-height: 1.6;">
+  Professional Go players are ranked from 1p (entry-level) to 9p (strongest). 
+  These players compete in international tournaments and dedicate their lives to mastering the game.
+</p>
+
+<h3 style="font-size: 1.4rem; font-weight: 600; margin-bottom: 8px;">How to Improve Your Rank</h3>
+<ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 16px; line-height: 1.6;">
+  <li><span style="color: #2563eb; font-weight: 600;">Play More Games:</span> The fastest way to improve is by playing regularly.</li>
+  <li><span style="color: #16a34a; font-weight: 600;">Solve Puzzles (Tsumego):</span> Reading life-and-death situations builds stronger intuition.</li>
+  <li><span style="color: #f59e0b; font-weight: 600;">Review Your Games:</span> Analyzing mistakes helps avoid them in future matches.</li>
+  <li><span style="color: #9333ea; font-weight: 600;">Study Professional Games:</span> Observing high-level play reveals deeper strategies.</li>
+</ul>
+
+<blockquote style="font-style: italic; color: #6b7280; border-left: 4px solid #d1d5db; padding-left: 12px; margin-top: 16px;">
+  "A strong player sees further ahead, but the best player sees the whole board." – Go proverb
+</blockquote>
+`
+
+      };
+  
+      function updateInfo(topic) {
+        document.querySelector("#info-box").innerHTML = infoContent[topic];
+      }
+      updateInfo("welcome")
+      document.querySelector("#welcome").addEventListener("click", () => updateInfo("welcome"));
+      document.querySelector("#howToPlay").addEventListener("click", () => updateInfo("howToPlay"));
+      document.querySelector("#goRanks").addEventListener("click", () => updateInfo("goRanks"));
+    </script>
+  
+    <div class="absolute bottom-0 left-0 w-full px-4 py-2 bg-gray-100 flex justify-end rounded-b-lg">
+      <button id="closeDialogFooter" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+        onclick="document.querySelector('#welcomeDialog').close()">
+        Close
+      </button>
+    </div>
+  </dialog>
+  
+
     <!-- Toast Container -->
     <div id="toast-container" class="fixed top-1/2 right-20 hidden z-50">
         <div id="toast"
@@ -229,6 +399,9 @@
                             <p>
                                 Good luck, and most importantly, have fun!
                             </p>
+                            <br><button
+                                class="btn mt-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow"
+                                onclick="document.querySelector('#welcomeDialog').showModal()">More Info</button>
                         </div>
                     </div>
                     <div class="lesson-item border rounded-lg bg-white shadow" data-rank="50k" data-level="0">
@@ -307,6 +480,12 @@
                     <br>
                     <button class="btn mt-2 px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg shadow"
                         onclick="resetStats()">Reset Profile</button>
+                        <div class="my-8">
+                            <p>Notification History:</p>
+                            <div class="my-4 w-80 h-96 border border-gray-300 rounded-lg shadow-lg bg-white p-2 overflow-y-auto" id="scrollableList">
+                                <!-- List items will be populated here -->
+                            </div>
+                        </div>
                 </div>
                 <div id="profile-inventory" class="w-1/2 ml-4">
                     <h1 class="text-2xl font-bold mb-6 text-badukBlack">Inventory</h1>

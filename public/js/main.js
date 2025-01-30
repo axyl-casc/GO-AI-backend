@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('profile-puzzles-correct').textContent = getPuzzlesCorrect();
                 document.getElementById('profile-currency').textContent = getCurrency();
                 renderInventory();
+                populateNotifications();
             }
 
             if (targetTab === "shop") {
@@ -595,6 +596,10 @@ FF[4]GM[1]SZ[${boardsize}]KM[${komi}]\n`; // SGF header with board size and komi
 
     // Attach click event to the button
     document.getElementById("save-sgf-button").addEventListener("click", saveSgf);
+
+    if(isNewAccount()){
+        document.querySelector('#welcomeDialog').showModal()
+    }
 
 });
 

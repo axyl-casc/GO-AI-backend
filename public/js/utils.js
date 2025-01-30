@@ -5,6 +5,8 @@ function getRandomInt(min, max) {
 }
 
 
+const toastHistory = []
+
 function showToast(text) {
     const toast = document.querySelector('#toast');
     const toastContainer = document.querySelector('#toast-container');
@@ -14,6 +16,7 @@ function showToast(text) {
         return;
     }
 
+    toastHistory.push(text)
     toast.innerHTML = text;
 
     // Show the toast
@@ -41,7 +44,7 @@ function showToastAux(text) {
     }
 
     toastAux.innerHTML = text;
-
+    toastHistory.push(text)
     // Show the toast
     toastContainerAux.classList.remove('hidden');
     toastAux.classList.remove('opacity-0');
@@ -55,6 +58,30 @@ function showToastAux(text) {
             toastContainerAux.classList.add('hidden');
         }, 500);
     }, 1500);
+}
+
+function isNewAccount(){
+    if(getLevel() === 1 && getGamesPlayed() < 1){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function populateNotifications() {
+    const listContainer = document.getElementById("scrollableList");
+    listContainer.innerHTML = ""; // Clear the list
+
+    // Reverse the order so the oldest item (index 0) appears at the bottom
+    toastHistory.slice().reverse().forEach(text => {
+        const div = document.createElement("div");
+        div.className = "p-2 border-b last:border-none text-gray-700";
+        div.textContent = text;
+        listContainer.prepend(div); // Prepend to maintain correct order
+    });
+
+    // Scroll to the bottom so the oldest item is in view
+    listContainer.scrollTop = listContainer.scrollHeight;
 }
 
 function resetStats() {
@@ -167,10 +194,16 @@ function incrementLevel() {
 
 function getItemDrop(rarity){
     const random_item = ALL_ITEMS[Math.floor(Math.random() * ALL_ITEMS.length)];
+
+    if(random_item.dropchance < 2 * rarity){
+        return getItemDrop(rarity) // item was not rare enough
+    }
+
     if(2 * rarity >= random_item.dropchance || getRandomInt(rarity, random_item.dropchance - rarity) === Math.floor(random_item.dropchance/2)){
         // item dropped
         return random_item.title
     }else{
+        // failed to colect the item and try with another
         return getItemDrop(rarity)
     }
 }
