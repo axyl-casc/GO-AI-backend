@@ -1,12 +1,12 @@
-var forever = require('forever-monitor');
+const forever = require('forever-monitor');
 
-var child = new (forever.Monitor)('app.js', {
+const child = new (forever.Monitor)('app.js', {
   max: 3,
   silent: false,
   args: []
 });
 
-child.on('exit', function () {
+child.on('exit', () => {
   console.log('your-filename.js has exited after 3 restarts');
 });
 
