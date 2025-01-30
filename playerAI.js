@@ -159,6 +159,7 @@ class PlayerAI {
             }
             score = await this.analysisEngine.sendCommand("final_score"); // Wait for each command
             this.score_estimate.push(cleanMove(score[0]));
+            
         }
         await this.analysisEngine.sendCommand(`play ${this.ai_color} ${cleanMove(response[0])}`)
 
