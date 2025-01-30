@@ -6,6 +6,7 @@ const ALL_ITEMS = [
         price: 50,
         shoppable: true,
         category: ["boards", "featured"],
+        dropchance: 10
     },
     {
         title: "Sai",
@@ -15,6 +16,7 @@ const ALL_ITEMS = [
         shoppable: true,
         ai_key:34, // 1800s ai
         category: ["companion"],
+        dropchance: 1000
     },
     {
         title: "Baby Go Bot",
@@ -24,6 +26,7 @@ const ALL_ITEMS = [
         shoppable: true,
         ai_key:38, //20k
         category: ["featured", "companion"],
+        dropchance: 10
     },
     {
         title: "Aya",
@@ -33,6 +36,7 @@ const ALL_ITEMS = [
         shoppable: false,
         ai_key:63,
         category: ["companion"],
+        dropchance: 20
     },
     {
         title: "Dean",
@@ -42,6 +46,7 @@ const ALL_ITEMS = [
         shoppable: true,
         ai_key:36,
         category: ["companion"],
+        dropchance: 15
     },
     {
         title: "Danielle",
@@ -51,6 +56,7 @@ const ALL_ITEMS = [
         shoppable: true,
         ai_key:48,
         category: ["companion"],
+        dropchance: 10
     },
     {
         title: "Slate & Shell Stones",
@@ -59,6 +65,7 @@ const ALL_ITEMS = [
         price: 50,
         shoppable: true,
         category: ["stones", "featured"],
+        dropchance: 50
     }
 ];
 

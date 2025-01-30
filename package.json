@@ -4,7 +4,8 @@
   "description": "Node JS application serving as the backend of a GO playing program",
   "main": "index.js",
   "scripts": {
-    "start": "node --max-old-space-size=2076 app.js"
+    "start": "node --max-old-space-size=2076 app.js",
+    "forever": "node run_forever.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   "homepage": "https://github.com/axyl-casc/GO-AI-backend#readme",
   "dependencies": {
     "express": "^4.21.2",
+    "forever-monitor": "^3.0.3",
     "jsdom": "^25.0.1",
     "shell-quote": "^1.8.2",
     "sqlite3": "^5.1.7",

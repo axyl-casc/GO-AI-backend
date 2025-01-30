@@ -442,6 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return top_moves
                 } else {
                     console.error("AI made an invalid move:", result);
+                    alert("AI attempted invalid move. AI might become unresponsive.")
                 }
             } catch (error) {
                 console.error("Error fetching AI move:", error);

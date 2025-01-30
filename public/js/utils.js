@@ -14,7 +14,7 @@ function showToast(text) {
         return;
     }
 
-    toast.textContent = text;
+    toast.innerHTML = text;
 
     // Show the toast
     toastContainer.classList.remove('hidden');
@@ -40,7 +40,7 @@ function showToastAux(text) {
         return;
     }
 
-    toastAux.textContent = text;
+    toastAux.innerHTML = text;
 
     // Show the toast
     toastContainerAux.classList.remove('hidden');
@@ -133,7 +133,7 @@ function incrementGamesPlayed() {
 function getLevel() {
     if (localStorage.getItem("level") === null) {
         localStorage.setItem("level", JSON.stringify(1));
-        return 0;
+        return 1;
     }
 
     const level = JSON.parse(localStorage.getItem("level"));
@@ -154,7 +154,25 @@ function incrementLevel() {
 
     adjustCurrency(newLevel * 2)
 
+    if(newLevel % 5 === 0){
+        const found_item = getItemDrop(1)
+        addToInventory(found_item);
+        showToastAux(`Leveled up from ${getLevel() - 1} to ${getLevel()}!<br>You found a ${found_item}`)
+    }else{
+        showToastAux(`Leveled up from ${getLevel() - 1} to ${getLevel()}!`)
+    }
+
     return newLevel;
+}
+
+function getItemDrop(rarity){
+    let random_item = ALL_ITEMS[Math.floor(Math.random() * ALL_ITEMS.length)];
+    if(getRandomInt(rarity, random_item.dropchance - rarity) === Math.floor(random_item.dropchance/2)){
+        // item dropped
+        return random_item.title
+    }else{
+        return getItemDrop(rarity)
+    }
 }
 
 
@@ -190,7 +208,6 @@ function incrementExperience(delta) {
     if (newExperience > getLevel() * getLevel() + 5) {
         localStorage.setItem("experience", newExperience - (getLevel() * getLevel() + 5)); // reset experience
         incrementLevel();
-        showToastAux(`Leveled up from ${getLevel() - 1} to ${getLevel()}!`)
     } else {
         showToastAux(`You gained ${delta} experience!`)
     }
