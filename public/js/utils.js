@@ -167,7 +167,7 @@ function incrementLevel() {
 
 function getItemDrop(rarity){
     const random_item = ALL_ITEMS[Math.floor(Math.random() * ALL_ITEMS.length)];
-    if(2 * rarity >= dropchance || getRandomInt(rarity, random_item.dropchance - rarity) === Math.floor(random_item.dropchance/2)){
+    if(2 * rarity >= random_item.dropchance || getRandomInt(rarity, random_item.dropchance - rarity) === Math.floor(random_item.dropchance/2)){
         // item dropped
         return random_item.title
     }else{
