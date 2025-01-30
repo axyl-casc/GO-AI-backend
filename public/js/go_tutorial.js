@@ -54,11 +54,19 @@ function startInteractiveTutorial(topic, boardsize) {
 
     // Create the board and link it to the game
     const board = new WGo.Board(learnboard, {
-        width: 500,
+        width: 600,
         size: boardsize,
+        section: {
+            top: -0.5,
+            left: -0.5,
+            right: -0.5,
+            bottom: -0.5
+        }
     });
     console.log(`Boardsize: ${boardsize}`); // Expected: 5
     console.log(`Boardsize: ${game.size}`); // Expected: 5
+
+    board.addCustomObject(coordinates);
 
     console.log(game.isOnBoard(2, 2)); // Expected: true for a 5x5 board
 
@@ -130,7 +138,7 @@ function startInteractiveTutorial(topic, boardsize) {
 
         case "liberties": {
             board.addObject({ x: stoneX, y: stoneY, c: WGo.B }); // Add black stone
-            game.play(x, y, WGo.B); // Play the black stone
+            game.play(stoneX, stoneY, WGo.B); // Play the black stone
 
             // Define adjacent coordinates and corresponding labels
             const liberties = [
@@ -199,7 +207,13 @@ function startInteractiveTutorial(topic, boardsize) {
                 sgfFile: "./SGF/demo_9x9.sgf", // Path to your SGF file
                 board: {
                     width: 600, // Adjust board size (optional)
-                    starPoints: { 9: [[2, 2], [6, 2], [4, 4], [2, 6], [6, 6]] } // Star points for 9x9
+                    starPoints: { 9: [[2, 2], [6, 2], [4, 4], [2, 6], [6, 6]] }, // Star points for 9x9
+                    section: {
+                        top: -0.5,
+                        left: -0.5,
+                        right: -0.5,
+                        bottom: -0.5
+                    }
                 },
                 layout: {
                     bottom: ["Control", "CommentBox"] // Customizable layout
@@ -208,7 +222,7 @@ function startInteractiveTutorial(topic, boardsize) {
                 enableKeys: true,  // Disable keyboard arrow interaction for navigating moves
             });
 
-
+            player.board.addCustomObject(coordinates);
             createButtonContainer(".wgo-player-control", player);
             lessoninfo.innerHTML = "<br>Explore the loaded 9x9 SGF demo.<br>(right/left arrow key)";
             break;

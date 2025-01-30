@@ -47,8 +47,8 @@ class GoAIInstance {
     });
 
     this.child.on('close', (code) => {
-      const err = new Error(`External process exited with code ${code}`);
-      this.rejectAll(err);
+      console.log("AI exited")
+      this.rejectAll();
     });
   }
 

@@ -45,7 +45,7 @@ function initshop() {
                     data-item-title="${item.title}" 
                     data-item-price="${item.price}"
                 >
-                    ${canAfford ? "Buy Now" : "Can't Afford"}
+                    ${canAfford ? "Purchase" : "Can't Afford"}
                 </button>
             `;
         

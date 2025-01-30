@@ -1,20 +1,7 @@
-import { scanBoardStones } from "./GoAIPlay"
-
-currency (?)
-
-tsumego puzzles =
-2 if wrong
-3 if right
-
-game =
-50 if loss
-100 if win 
-
-lesson =
-10 per lesson
 
 tsumego lesson?
 joseki lesson? pick random from joseki.sgf
+
 
 lose 100 games achievement
 
@@ -32,12 +19,23 @@ fix tsumego board sizing
 add lessons or lesson structure
 modularize lessons to be easier - javascript side
 
-Currency, save to sgf, opening popup
-
 Timeout value for each tsumego so non repating
 
 opening popup - ask for initial rank, explain basic rules
 
 make a different server for database handling, and a different server for AI running
 
-add a marker on atari stones to help newer players understand it
+make range of selected puzzles 1/10 of database size
+
+Character ai to play against - daily missions
+
+record games -> if winrate or score drops significantly on player move, save as a puzzle and set rank to user rating
+
+Consumables - gold pouch, health potion, aged shell stones, default stones
+
+Send error message on ai invalid move or ai full - check by viewing ip using Express methods to end old ai
+
+Loading screen
+
+disable play button when the playing AI slots are full
+

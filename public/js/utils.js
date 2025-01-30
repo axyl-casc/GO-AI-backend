@@ -1,3 +1,6 @@
+const companionToggleButton = document.getElementById('companionToggleButton');
+
+
 function getRandomInt(min, max) {
     const minCeiled = Math.ceil(min);
     const maxFloored = Math.floor(max);
@@ -253,8 +256,9 @@ function getCurrency() {
         localStorage.setItem("currency", JSON.stringify(0));
         return 0;
     }
-    return JSON.parse(localStorage.getItem("currency"));
+    return parseFloat(JSON.parse(localStorage.getItem("currency"))).toFixed(2);
 }
+
 
 function adjustCurrency(delta) {
     const currentCurrency = getCurrency();
@@ -386,3 +390,36 @@ function getCompanion() {
     // Return the equipped companion or null if none is equipped
     return equippedCompanion || null;
 }
+
+const coordinates = {
+    grid: {
+        draw: function(args, board) {
+            let ch, t, xright, xleft, ytop, ybottom;
+            
+            this.fillStyle = "rgba(0,0,0,0.7)";
+            this.textBaseline = "middle";
+            this.textAlign = "center";
+            this.font = board.stoneRadius + "px " + (board.font || "");
+
+            xright = board.getX(-0.75);
+            xleft = board.getX(board.size - 0.25);
+            ytop = board.getY(-0.75);
+            ybottom = board.getY(board.size - 0.25);
+
+            for (let i = 0; i < board.size; i++) {
+                ch = i + "A".charCodeAt(0);
+                if (ch >= "I".charCodeAt(0)) ch++; // Skip 'I' for traditional Go notation
+
+                t = board.getY(i);
+                this.fillText(board.size - i, xright, t);
+                this.fillText(board.size - i, xleft, t);
+
+                t = board.getX(i);
+                this.fillText(String.fromCharCode(ch), t, ytop);
+                this.fillText(String.fromCharCode(ch), t, ybottom);
+            }
+
+            this.fillStyle = "black";
+        }
+    }
+};

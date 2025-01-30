@@ -1,6 +1,209 @@
-(;GM[1]FF[4]CA[UTF-8]AP[Sabaki:0.52.2]KM[6.5]SZ[9]DT[2025-01-21]C[Here there is a blank 9x9 board. Anything could happen. As usual, black will play first. ];B[fe]C[A typical opening on the smaller 9x9 boards. Here black aims to control the right side of the board. ]MA[gc][gd][ge][gf][gg][hg][hf][he][hd][hc];W[de]C[A normal response from white. They aim to control the left side of the board. ]MA[bc][bd][be][bf][bg][cc][cd][ce][cf][cg];B[ec]C[Here black is pressing into whites space, hoping to get a few more points. ];W[ff]C[White responds aggressively, attaching to the black stone (A). ]LB[fe:A];B[cd]C[Black again tries to encroach onto whites space.];W[be]LB[de:A]C[White sets up a simple defence. Ensuring the recent stone is able to connect to the stone on 'A'];B[ge]C[Black is trying to take up a bit more space than white, and say the marked territory is his.]MA[gc][hc][hd][gd][fd][fb][fc][gb][hb][id][ic][ib][ia][ha][ga][fa];W[dd]C[This is a move meant to reduce the territory that black has.];B[ef]MA[ee]C[This is a risky move because of the weak point on 'X' but it puts pressure on the white stone 'A']L[ff];W[fg]C[White needs to try and defend the stones on the right side now.];B[cc]C[Black decides to go back to defend the stones marked and keep them connected to 'A'.]TR[cc][cd]LB[ec:A];W[dc];B[ce];W[cf]
-;B[db]C[This move keeps the stones connected];W[gc]C[White is behind on territory, so they picked a spot with a large enough space to live and invaded. This invasion will determine the outcome of the game. If white can live, then white will win. If black cannot kill white they will not have enough territory to win.];B[df]C[The best defence is a good offence, attacking the marked group is a good call.]MA[dc][dd][de];W[ed]C[If white can link their stones, they might be more likely to win]TR[ed][gc];B[fb]C[[End of commentary\]];W[fd];B[bf];W[cg];B[ee];W[gb];B[bd];W[bg];B[hg];W[af];B[bb]
-;W[hd];B[he];W[gd];B[hh];W[eg];B[dg];W[dh];B[gf];W[eh];B[gh]
-;W[gg];B[fh];W[if];B[ie];W[fa];B[ea];W[ga];B[ei];W[fc];B[ch]
-;W[eb];B[bh];W[da];B[cb];W[ah];B[ca];W[ea];B[id];W[ic];B[di]
-;W[hb];B[];W[ac];B[ad];W[ae];B[ab];W[];B[])
+(;GM[1]FF[4]CA[UTF-8]AP[Sabaki:0.52.2]KM[6.5]SZ[9]DT[2025-01-21]
+C[Here there is a blank 9x9 board. Anything could happen. As usual, black will play first.]
+
+;B[fe]
+C[A typical opening on the smaller 9x9 boards. Here black aims to control the right side of the board.]
+MA[gc][gd][ge][gf][gg][hg][hf][he][hd][hc]
+
+;W[de]
+C[A normal response from white. They aim to control the left side of the board.]
+MA[bc][bd][be][bf][bg][cc][cd][ce][cf][cg]
+
+;B[ec]
+C[Here black is pressing into white's space, hoping to get a few more points.]
+
+;W[ff]
+C[White responds aggressively, attaching to the black stone (A).]
+LB[fe:A]
+
+;B[cd]
+C[Black again tries to encroach onto white's space.]
+
+;W[be]
+LB[de:A]
+C[White sets up a simple defense, ensuring the new stone can connect to the stone at 'A'.]
+
+;B[ge]
+C[Black is trying to take up a bit more space than white, and claim the marked territory as his.]
+MA[gc][hc][hd][gd][fd][fb][fc][gb][hb][id][ic][ib][ia][ha][ga][fa]
+
+;W[dd]
+C[This move is meant to reduce the territory that black has.]
+
+;B[ef]
+MA[ee]
+C[This is a risky move because of the weak point labeled ‘X’, but it puts pressure on the white stone ‘A’.]
+LB[ff:X]
+
+;W[fg]
+C[White needs to defend the stones on the right side now.]
+
+;B[cc]
+C[Black decides to go back to defend the stones marked and keep them connected to 'A'.]
+TR[cc][cd]
+LB[ec:A]
+
+;W[dc]
+;B[ce]
+;W[cf]
+
+;B[db]
+C[This move keeps the stones connected.]
+
+;W[gc]
+C[White is behind on territory, so they invade at gc where they can potentially live. If white lives, white can catch up. If black kills, black will maintain the lead.]
+
+;B[df]
+C[The best defense is a good offense; attacking White's marked group is a good call.]
+MA[dc][dd][de]
+
+;W[ed]
+C[If white can link these stones, white's prospects of winning improve.]
+TR[ed][gc]
+
+;B[fb]
+C[Black extends into the center with fb, aiming to pressure White’s group on the right and strengthen Black’s own framework at the same time. This continues Black’s plan to keep White’s stones separated.]
+
+;W[fd]
+C[White blocks at fd, preventing Black from easily linking up to the upper side. White hopes to create a wall and force Black to defend, giving White time to settle in the center.]
+
+;B[bf]
+C[Black attaches at bf to undermine White’s shape. Every small exchange is critical on a 9x9 board, so Black remains aggressive to limit White’s territory potential.]
+
+;W[cg]
+C[White jumps in at cg, an invasion that aims to connect with the stones on the lower left. Success here would reduce Black’s framework on the left side.]
+
+;B[ee]
+C[Black defends at ee, reinforcing the center and keeping White’s stones split. Black wants to hold onto the valuable middle area.]
+
+;W[gb]
+C[White attaches at gb, probing Black’s shape in the lower-right. This can create forcing moves that might help White’s scattered groups link up.]
+
+;B[bd]
+C[Black solidifies the lower edge with bd, adding stability and limiting White’s incursion potential. This also indirectly pressures the cg stone.]
+
+;W[bg]
+C[White extends at bg, trying to connect the invading stones or secure enough space to live. Living here is crucial for White to stay in the game.]
+
+;B[hg]
+C[Black takes hg on the right side, securing more territory and denying White an easy expansion in that area.]
+
+;W[af]
+C[White pushes out at af, hoping to prevent Black from cleanly sealing the lower side. White also eyes potential connections back to the left-side stones.]
+
+;B[bb]
+C[Black jumps in at bb, pressing down on White’s lower-left corner. Solidifying that corner strengthens Black’s territorial lead and threatens to isolate White’s group.]
+
+;W[hd]
+C[White extends at hd, looking to secure central territory or ensure the group on the right connects and lives. White is behind in territory, so these stones must survive.]
+
+;B[he]
+C[Black pushes at he to reduce White’s shape, aiming to keep White’s groups divided and maintain a steady lead.]
+
+;W[gd]
+C[White reinforces gd, trying to ensure a solid shape or eye space. A successful link-up here would hamper Black’s influence in the center.]
+
+;B[hh]
+C[Black plays hh, capping White’s center group and threatening to surround. On 9x9, surrounding moves can decide the game quickly.]
+
+;W[eg]
+C[White pokes at eg, looking for cutting points or weaknesses in Black’s shape. Even small forcing moves can shift the balance in such a tight board.]
+
+;B[dg]
+C[Black immediately responds at dg, preserving shape and preventing White from exploiting diagonal cuts.]
+
+;W[dh]
+C[White pushes at dh, attempting to press into Black’s territory at the top and possibly connect with the stone at eg.]
+
+;B[gf]
+C[Black cuts off White’s central extension by playing gf. This is key to preventing White from easily linking top and center groups.]
+
+;W[eh]
+C[White extends at eh to keep pushing out. White’s priority is to secure eye space or find a path to connect groups.]
+
+;B[gh]
+C[Black’s hane at gh blocks White’s expansion. Black aims to wedge between White’s stones, keeping White’s final territory limited.]
+
+;W[gg]
+C[White adds a stone at gg to stabilize shape and avoid an easy capture. Holding center influence is vital for White’s survival.]
+
+;B[fh]
+C[Black pushes at fh, securing the boundary and forcing White to keep fighting for life in the center.]
+
+;W[if]
+C[White attaches at if along the top. White hopes to create a weakness in Black’s shape or at least gain time to form eyes.]
+
+;B[ie]
+C[Black calmly responds at ie, denying White extra liberties. This curtails White’s attempts at sabaki (quick settlement) on the top edge.]
+
+;W[fa]
+C[White returns to the lower-left area with fa, pressuring Black’s corner in a bid to increase White’s territory. In 9x9, every point can change the outcome.]
+
+;B[ea]
+C[Black responds at ea, ensuring White doesn’t break in too deeply. This move also keeps Black’s territorial framework on the bottom side intact.]
+
+;W[ga]
+C[White extends at ga, aiming for eye space or territory along the bottom edge. It also helps connect White’s stones along the first rank.]
+
+;B[ei]
+C[Black jumps back to ei in the center to keep White’s groups from linking easily. Timing is key: preventing White’s large-scale connections secures Black’s lead.]
+
+;W[fc]
+C[White plays fc, strengthening the group in the middle-lower side. White balances attacking Black's thin shapes with protecting White’s own groups.]
+
+;B[ch]
+C[Black leans on ch, continuing territorial pressure in the lower-left. This restricts White’s potential expansion in that area.]
+
+;W[eb]
+C[White extends at eb, forming a small connection and aiming for eye shape along the lower edge.]
+
+;B[bh]
+C[Black wedges at bh, cramping White’s shape further. Black’s consistent aggression pays off by limiting White's easy life.]
+
+;W[da]
+C[White secures the corner at da, an important source of points. On a 9x9, corners can make all the difference, especially with komi in mind.]
+
+;B[cb]
+C[Black extends at cb, further fortifying the lower-left. This also keeps White’s space there minimal.]
+
+;W[ah]
+C[White switches to ah on the left side, possibly hoping for last-ditch forcing moves or small reductions in Black’s territory.]
+
+;B[ca]
+C[Black responds solidly at ca, denying White infiltration along the bottom edge. Playing safe and solid preserves Black’s lead.]
+
+;W[ea]
+C[White reinforces again at ea (a repeated coordinate in this record), presumably to ensure no weaknesses remain on the bottom side.]
+
+;B[id]
+C[Black moves at id in the top-right, blocking any attempt by White to break through. This consolidates Black’s right-side territory.]
+
+;W[ic]
+C[White extends to ic, hoping to connect or reduce Black’s influence on the top.]
+
+;B[di]
+C[Black fills at di, linking the central stones and erasing the last bits of aji. Black ensures no sudden White cut can change the outcome.]
+
+;W[hb]
+C[White’s move at hb is a final push in the right-side endgame, trying to secure every last point available.]
+
+;B[]
+C[Black passes, seeing no more big moves to strengthen territory or attack.]
+
+;W[ac]
+C[White fills at ac, possibly a small endgame or dame point in the lower-left corner.]
+
+;B[ad]
+C[Black follows up at ad, taking another small endgame spot.]
+
+;W[ae]
+C[White plays ae, continuing to fill the last gaps along the bottom edge.]
+
+;B[ab]
+C[Black takes ab, closing off the final small space near the lower-left corner. The board is essentially settled now.]
+
+;W[]
+C[White passes. The game is effectively over and ready for counting.]
+
+;B[]
+C[Black passes as well, ending the game.])
