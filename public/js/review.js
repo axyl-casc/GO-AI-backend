@@ -7,8 +7,15 @@ function reviewGame(sgf) {
         document.getElementById('reviewPlayer').innerHTML = ""; // Clear previous instance
 
         player = new WGo.BasicPlayer(document.getElementById("reviewPlayer"), {
-            sgfFile: sgf
-        });
+            sgfFile: sgf,
+            board: {
+                section: {
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: -2
+                }
+        }});
 
     }, 50); // Delay initialization slightly to ensure the dialog is rendered
 

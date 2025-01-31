@@ -33,6 +33,15 @@ async function new_tsumego() {
                 displayHintButton: false, // Disable hint button
                 layout: {
                     bottom: ["CommentBox", "InfoBox"], // Exclude "Control" to remove buttons
+                },
+                board: {
+                    width: 600,
+                    section: {
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 2
+                    }
                 }
             });
 
