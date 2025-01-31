@@ -69,6 +69,16 @@ const ALL_ITEMS = [
 		dropchance: 10,
 	},
 	{
+		title: "Henry",
+		image: "img/henry.png",
+		description: "cheat ai",
+		price: 1,
+		shoppable: true,
+		ai_key: 60, 
+		category: ["companion"],
+		dropchance: 100,
+	},
+	{
 		title: "Aya",
 		image: "img/aya.webp",
 		description: "Aya - the moderately strong GO companion!",
@@ -163,6 +173,28 @@ const ALL_ITEMS = [
 		sgf: "SGF/Mei-1976-1.sgf",
 	},
 ];
+
+
+// Function to equip an item and unequip others in the same category (excluding "featured")
+function equipItem(selectedItem, inventory) {
+    if (!selectedItem) return; // If no item is selected, do nothing
+
+    // Get the categories of the selected item (excluding "featured")
+    const categoriesToCheck = selectedItem.category.filter(cat => cat !== "featured");
+
+    // Unequip all items in the same categories (excluding "featured")
+    inventory.forEach((item) => {
+        if (
+            item !== selectedItem && // Don't unequip the selected item
+            item.category.some(cat => categoriesToCheck.includes(cat)) // Check if the item shares any category
+        ) {
+            item.equipped = false; // Unequip the item
+        }
+    });
+
+    // Equip the selected item
+    selectedItem.equipped = true;
+}
 
 // ability to purchase game SGF demos
 
@@ -340,40 +372,29 @@ function renderInventory() {
 
 	// Add event listeners to the "Equip" buttons
 	const equipButtons = inventoryContainer.querySelectorAll(".equip-button");
-	equipButtons.forEach((button) => {
-		button.addEventListener("click", () => {
-			const itemTitle = button.getAttribute("data-item-title");
+// Add event listeners to equip buttons
+equipButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        const itemTitle = button.getAttribute("data-item-title");
 
-			// Get inventory and update equipped state
-			const inventory = getInventory();
+        // Get inventory and update equipped state
+        const inventory = getInventory();
 
-			// Find the selected item and its category
-			const selectedItem = inventory.find((item) => item.title === itemTitle);
-			if (!selectedItem) {
-				console.error(`Item "${itemTitle}" not found in inventory.`);
-				return;
-			}
-			const selectedCategory = selectedItem.category;
+        // Find the selected item and its category
+        const selectedItem = inventory.find((item) => item.title === itemTitle);
+        if (!selectedItem) {
+            console.error(`Item "${itemTitle}" not found in inventory.`);
+            return;
+        }
 
-			// Update equipped state: only one item per category can be equipped, except for "featured"
-			inventory.forEach((item) => {
-				if (
-					item.category.some((cat) => selectedCategory.includes(cat)) &&
-					!item.category.includes("featured")
-				) {
-					// Unequip all items in the same category (excluding "featured")
-					item.equipped = false;
-				}
-			});
+        // Equip the selected item and unequip others in the same category
+        equipItem(selectedItem, inventory);
 
-			// Equip the selected item
-			selectedItem.equipped = true;
+        // Save updated inventory back to localStorage
+        localStorage.setItem("inventory", JSON.stringify(inventory));
 
-			// Save updated inventory back to localStorage
-			localStorage.setItem("inventory", JSON.stringify(inventory));
-
-			// Re-render the inventory to reflect changes
-			renderInventory();
-		});
-	});
+        // Re-render the inventory to reflect changes
+        renderInventory();
+    });
+});
 }

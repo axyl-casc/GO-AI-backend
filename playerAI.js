@@ -120,7 +120,7 @@ class PlayerAI {
             await i.terminate()
         }
         await this.analysisEngine.sendCommand("quit");
-        await this.analysisEngine.terminate()
+        this.analysisEngine.terminate()
     }
 
 
