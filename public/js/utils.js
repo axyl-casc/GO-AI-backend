@@ -408,7 +408,7 @@ function getBoardImg() {
     const equippedBoard = inventory.find(item => 
         item.category.includes("boards") && item.equipped
     );
-    return equippedBoard || {image:"textures/baseboard.jpg"}
+    return equippedBoard || {image:"textures/wood2.jpg"}
 }
 
 const coordinates = {

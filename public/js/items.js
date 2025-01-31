@@ -1,15 +1,5 @@
 const ALL_ITEMS = [
 	{
-		title: "Elegant Wood Go Board",
-		image: "textures/wood_1024.jpg",
-		description:
-			"Premium wooden Go board with a natural finish and smooth grid lines.",
-		price: 60,
-		shoppable: true,
-		category: ["boards"],
-		dropchance: 8,
-	},
-	{
 		title: "Polished Oak Go Board",
 		image: "textures/wood1.jpg",
 		description:
@@ -18,16 +8,6 @@ const ALL_ITEMS = [
 		shoppable: true,
 		category: ["boards"],
 		dropchance: 12,
-	},
-	{
-		title: "Classic Maple Go Board",
-		image: "textures/wood2.jpg",
-		description:
-			"A traditional maple wood Go board known for its timeless appeal.",
-		price: 55,
-		shoppable: true,
-		category: ["boards"],
-		dropchance: 10,
 	},
 	{
 		title: "Rich Pine Go Board",
