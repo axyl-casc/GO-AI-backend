@@ -233,6 +233,8 @@ app.get('/get-tsumego', async (req, res) => {
     }
 });
 
+let training_timer = null;
+
 async function task() {
     try {
         // Kick off all tasks at the same time.
@@ -250,10 +252,11 @@ async function task() {
         }
 
     } catch (error) {
-        console.error(`Error during training game: ${error.message}`);
+        console.log(`Error during training game: ${error.message}`);
     } finally {
         // Schedule the next execution after these tasks complete
-        setTimeout(task, AI_game_delay_seconds * 1000);
+        console.log("Scheduled next training Game");
+        training_timer = setTimeout(task, AI_game_delay_seconds * 1000);
     }
 }
 
@@ -278,6 +281,9 @@ async function cleanup() {
     } finally {
         // Schedule the cleanup function to run again after 1 minute
         setTimeout(cleanup, 60 * 1000);
+        if(training_timer === null){
+            task();
+        }
     }
 }
 
