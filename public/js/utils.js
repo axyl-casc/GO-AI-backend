@@ -262,8 +262,8 @@ function getCurrency() {
 
 function adjustCurrency(delta) {
     const currentCurrency = getCurrency();
-    const newCurrency = currentCurrency + delta;
-    localStorage.setItem("currency", JSON.stringify(newCurrency));
+    const newCurrency = parseFloat(currentCurrency) + parseFloat(delta);
+    localStorage.setItem("currency", JSON.stringify(parseFloat(newCurrency).toFixed(2)));
 
     return newCurrency;
 }
@@ -389,6 +389,26 @@ function getCompanion() {
 
     // Return the equipped companion or null if none is equipped
     return equippedCompanion || null;
+}
+function getStones() {
+    // Get the user's inventory
+    const inventory = getInventory();
+
+    const equippedStones = inventory.find(item => 
+        item.category.includes("stones") && item.equipped
+    );
+
+    return equippedStones || null
+}
+
+function getBoardImg() {
+    // Get the user's inventory
+    const inventory = getInventory();
+
+    const equippedBoard = inventory.find(item => 
+        item.category.includes("boards") && item.equipped
+    );
+    return equippedBoard || {image:"textures/baseboard.jpg"}
 }
 
 const coordinates = {

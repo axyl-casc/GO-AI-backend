@@ -26,12 +26,17 @@
             },
         };
     </script>
-
+    <link rel="stylesheet" type="text/css" href="wgo/wgo.player.css">
     <link rel="stylesheet" type="text/css" href="extensions/tsumego/tsumego.css">
 </head>
 
 <body class="bg-badukWood font-sans m-0">
-
+    <!-- Dialog Box -->
+    <dialog id="reviewDialog" class="p-5 bg-white rounded-lg shadow-lg w-[700px]">
+        <button onclick="closeReview()" class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded">Close</button>
+        <h2 class="text-xl font-semibold mb-4">Game Review</h2>
+        <div id="reviewPlayer" style="width: 100%;"></div>
+    </dialog>
 <!-- Dialog -->
 <dialog id="welcomeDialog" class="bg-white rounded-lg shadow-lg w-4/5 h-4/5 p-0">
     <!-- Modal Header -->
@@ -478,6 +483,8 @@ goRanks: `
                     <p>Puzzles Correct: <span id="profile-puzzles-correct">0</span></p>
                     <p>Rank: <span id="profile-rank">Unranked</span></p>
                     <br>
+                    <button onclick="reviewGame('SGF/demo_9x9.sgf')" class="m-4 p-2 bg-blue-500 text-white rounded">Review SGF Game</button>
+
                     <button class="btn mt-2 px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg shadow"
                         onclick="resetStats()">Reset Profile</button>
                         <div class="my-8">
@@ -524,7 +531,7 @@ goRanks: `
                         </li>
                         <li
                             class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
-                            <span data-category="themes">Themes</span>
+                            <span data-category="sgf">Historic Games</span>
                         </li>
                     </ul>
                 </div>
@@ -552,6 +559,8 @@ goRanks: `
     <script type="text/javascript" src="wgo/player.editable.js"></script>
     <script type="text/javascript" src="wgo/scoremode.js"></script>
     <script type="text/javascript" src="wgo/player.permalink.js"></script>
+    <script src="js/review.js"></script>
+    <script src="js/stone_draw.js"></script>
     <script src="js/items.js"></script>
     <script src="js/custom_draws.js"></script>
     <script src="./extensions/tsumego/tsumego.js"></script>

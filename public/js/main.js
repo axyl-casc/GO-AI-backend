@@ -24,6 +24,11 @@ let previous_komi = 0
 let ai_hint = false
 let komi = 6.5
 
+// setup custom board stones
+// Load stone images
+const blackStone = new Image();
+const whiteStone = new Image();
+
 document.addEventListener('DOMContentLoaded', () => {
     companionToggleButton.addEventListener('click', handleCompanionToggle);
 
@@ -176,13 +181,45 @@ document.addEventListener('DOMContentLoaded', () => {
         // Hide selectors and show WGo.js board
         selectors.classList.add('hidden');
         wgoBoardDiv.classList.remove('hidden');
+
         // Initialize WGo.js Board
         boardContainer.innerHTML = "";
-        board = new WGo.Board(boardContainer, {
-            size: boardsize, // Board size (e.g., 19 for standard)
-            width: Math.min(window.innerWidth * 0.8, 600), // Responsive width
-            height: Math.min(window.innerHeight * 0.8, 600), // Responsive height
-        });
+        const stones = getStones();
+        console.log(`Stones = ${stones}`)
+        console.log(`Board = ${getBoardImg().image}`)
+        if(stones == null){
+            board = new WGo.Board(boardContainer, {
+                size: boardsize, // Board size (e.g., 19 for standard)
+                width: Math.min(window.innerWidth * 0.8, 600), // Responsive width
+                height: Math.min(window.innerHeight * 0.8, 600), // Responsive height
+                stoneHandler: WGo.Board.drawHandlers.NORMAL,
+                background: `${getBoardImg().image}`
+            });
+        }else if(stones.title.includes("Shell")){
+            board = new WGo.Board(boardContainer, {
+                size: boardsize, // Board size (e.g., 19 for standard)
+                width: Math.min(window.innerWidth * 0.8, 600), // Responsive width
+                height: Math.min(window.innerHeight * 0.8, 600), // Responsive height
+                background: `${getBoardImg().image}`
+            });
+        }else{
+            let stone_handler_temp = null
+            for(const item of ALL_ITEMS){
+                if(item.title === stones.title){
+                    stone_handler_temp = item.stoneHandler
+                }
+            }
+            board = new WGo.Board(boardContainer, {
+                size: boardsize, // Board size (e.g., 19 for standard)
+                width: Math.min(window.innerWidth * 0.8, 600), // Responsive width
+                height: Math.min(window.innerHeight * 0.8, 600), // Responsive height
+                stoneHandler: stone_handler_temp,
+                background: `${getBoardImg().image}`
+            });
+        }
+
+
+
 
         endGameButton.classList.add('hidden');
 

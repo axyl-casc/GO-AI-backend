@@ -24,18 +24,62 @@ function initshop() {
         shopContainer.innerHTML = "";
     
         // Filter items based on the category
-        const filteredItems = shopItems.filter(item => item.category.includes(category))
+        const filteredItems = shopItems.filter(item => item.category.includes(category));
     
         // Generate shop item cards for the filtered items
         filteredItems.forEach(item => {
             const card = document.createElement("div");
             card.className = "bg-white rounded-lg shadow-lg p-4 flex flex-col items-center";
-        
+            userCurrency = getCurrency();
+            currencyContainer.textContent = `Your Balance: $${userCurrency}`;
+
             // Check if the user can afford the item
             const canAfford = userCurrency >= item.price;
         
+            // Create the container for the image or WGo board
+            const displayContainer = document.createElement("div");
+            displayContainer.className = "w-full h-40 flex justify-center items-center mb-4";
+
+            if (item.category.includes("stones") && !item.title.includes("Shell")) {
+                // Create a 1x1 WGo.js board
+                const boardDiv = document.createElement("div");
+                boardDiv.style.width = "80px";  // Adjust size
+                boardDiv.style.height = "80px";
+                
+                // Append to display container
+                displayContainer.appendChild(boardDiv);
+    
+                // Initialize the WGo board
+                setTimeout(() => { // Use timeout to ensure element is in DOM
+                    const board = new WGo.Board(boardDiv, {
+                        width: 128,
+                        size: 2, // 1x1 board
+                        stoneHandler: item.stoneHandler // Custom stone handler from item
+                    });
+    
+                    // Add a stone at (0,0)
+                    board.addObject({
+                        x: 0,
+                        y: 0,
+                        c: WGo.B // Default to black stone, change if needed
+                    });
+                    board.addObject({
+                        x: 1,
+                        y: 1,
+                        c: WGo.W // Default to black stone, change if needed
+                    });
+                }, 0);
+    
+            } else {
+                // Create an image element for non-stone items
+                const img = document.createElement("img");
+                img.src = item.image;
+                img.alt = item.title;
+                img.className = "w-full h-40 object-contain rounded-md";
+                displayContainer.appendChild(img);
+            }
+        
             card.innerHTML = `
-                <img src="${item.image}" alt="${item.title}" class="w-full h-40 object-contain rounded-md mb-4">
                 <h2 class="text-lg font-bold mb-2">${item.title}</h2>
                 <p class="text-gray-700 mb-4 text-center">${item.description}</p>
                 <span class="text-lg font-semibold mb-4">$${item.price}</span>
@@ -49,9 +93,13 @@ function initshop() {
                 </button>
             `;
         
+            // Insert the displayContainer at the top of the card
+            card.insertBefore(displayContainer, card.firstChild);
+    
             shopContainer.appendChild(card);
         });
-        
+    
+    
     
         // Add event listeners to the "Buy Now" buttons
         const buyButtons = shopContainer.querySelectorAll(".buy-button");
@@ -61,6 +109,7 @@ function initshop() {
                 const itemPrice = parseInt(button.getAttribute("data-item-price"), 10);
     
                 // Deduct currency
+                console.log(`Removed ${-itemPrice}`)
                 userCurrency = adjustCurrency(-itemPrice);
     
                 // Add item to inventory
