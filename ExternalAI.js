@@ -2,21 +2,13 @@ const { spawn } = require('child_process');
 const readline = require('readline');
 
 class GoAIInstance {
-  /**
-   * Creates an instance of GoAIInstance.
-   * @param {string} exePath - The path to the executable
-   * @param {Array<string>} [args] - Arguments for the executable
-   */
   constructor(exePath, args = []) {
     this.exePath = exePath;
     this.args = args;
-    this.child = spawn(this.exePath, this.args, {
-      stdio: ['pipe', 'pipe', 'pipe']
-    });
-
+    this.child = spawn(this.exePath, this.args, { stdio: ['pipe', 'pipe', 'pipe'] });
     this.rl = readline.createInterface({ input: this.child.stdout });
     this.pendingRequests = [];
-    this.currentRequest = null; // Track the current request collecting lines
+    this.currentRequest = null;
 
     this.setupListeners();
   }
@@ -26,29 +18,35 @@ class GoAIInstance {
       if (this.currentRequest) {
         this.currentRequest.lines.push(line);
 
-        // Check termination condition:
+        // Check for response termination (empty line)
         if (line.trim() === '') {
-          // Termination based on empty line
-          const { resolve } = this.currentRequest;
-          const allLines = this.currentRequest.lines;
-          this.currentRequest = null;
-          resolve(allLines);
+          const responseLines = this.currentRequest.lines;
+          const { resolve, reject } = this.currentRequest;
+
+          // Check for GTP error response
+          if (responseLines.length > 0 && responseLines[0].startsWith('? ')) {
+            const errorMsg = responseLines[0].substring(2).trim();
+            reject(new Error(`GTP error: ${errorMsg}`));
+          } else {
+            resolve(responseLines);
+          }
+
+          // Process next request
+          this.currentRequest = this.pendingRequests.shift() || null;
         }
       }
     });
 
     this.child.stderr.on('data', (data) => {
-      // Optionally handle stderr
-      // console.error('STDERR:', data.toString());
+      //console.error('AI STDERR:', data.toString());
     });
 
     this.child.on('error', (err) => {
-      this.rejectAll(err);
+      this.rejectAll(new Error(`Process error: ${err.message}`));
     });
 
     this.child.on('close', (code) => {
-      console.log("AI exited")
-      this.rejectAll();
+      this.rejectAll(new Error(`Process exited with code ${code}`));
     });
   }
 
@@ -58,38 +56,28 @@ class GoAIInstance {
       this.currentRequest = null;
     }
     while (this.pendingRequests.length > 0) {
-      const request = this.pendingRequests.shift();
-      request.reject(err);
+      this.pendingRequests.shift().reject(err);
     }
   }
 
   terminate() {
-    if (this.rl) {
-      this.rl.close();
-    }
     if (this.child && !this.child.killed) {
       this.child.stdin.end();
-      this.child.kill('SIGTERM');
+      this.child.kill();
     }
-
-    this.rejectAll(new Error('Instance terminated'));
-
-    this.rl = null;
-    this.child = null;
-    this.pendingRequests = [];
-    this.currentRequest = null;
+    this.rejectAll(new Error('Process terminated'));
   }
 
-  /**
-   * Sends a command and returns a promise that resolves with all lines until termination.
-   *
-   * @param {string} command - Command to send
-   * @param {number} timeout - Timeout in ms, defaults to 60 seconds
-   * @returns {Promise<string[]>} - Promise that resolves with an array of lines
-   */
-  sendCommand(command, timeout = 5 * 60000) {
+  async sendCommand(command, timeout = 30000) {
     return new Promise((resolve, reject) => {
-      const request = { resolve, reject, lines: [] };
+      const request = {
+        resolve,
+        reject,
+        lines: [],
+        timeout: setTimeout(() => {
+          this.handleTimeout(request);
+        }, timeout)
+      };
 
       if (this.currentRequest) {
         this.pendingRequests.push(request);
@@ -97,31 +85,24 @@ class GoAIInstance {
         this.currentRequest = request;
       }
 
-      this.child.stdin.write(command + '\n');
-
-      const timer = setTimeout(() => {
-        if (this.currentRequest === request) {
-          this.currentRequest = null;
-        } else {
-          const idx = this.pendingRequests.indexOf(request);
-          if (idx !== -1) {
-            this.pendingRequests.splice(idx, 1);
-          }
-        }
-        this.terminate();
-      }, timeout);
-      
-
-      const originalResolve = request.resolve;
-      request.resolve = (lines) => {
-        clearTimeout(timer);
-        originalResolve(lines);
-
-        if (this.pendingRequests.length > 0) {
-          this.currentRequest = this.pendingRequests.shift();
-        }
-      };
+      // Send command with proper GTP formatting
+      this.child.stdin.write(`${command}\n`);
     });
+  }
+
+  handleTimeout(request) {
+    const error = new Error(`Command timeout: ${request.lines[0]?.split(' ')[0] || 'unknown'}`);
+    if (this.currentRequest === request) {
+      this.currentRequest = null;
+      request.reject(error);
+      this.terminate(); // Terminate process on timeout
+    } else {
+      const index = this.pendingRequests.indexOf(request);
+      if (index !== -1) {
+        this.pendingRequests.splice(index, 1);
+        request.reject(error);
+      }
+    }
   }
 }
 

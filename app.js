@@ -235,55 +235,51 @@ app.get('/get-tsumego', async (req, res) => {
 
 let training_timer = null;
 
+let isTaskRunning = false; // Add this line at the top with other variables
+
 async function task() {
+    if (isTaskRunning) {
+        console.log('Task is already running. Skipping...');
+        return;
+    }
+    isTaskRunning = true;
     try {
-        // Kick off all tasks at the same time.
-        // Promise.all waits until they all complete (or fail on any error).
-        if(Object.keys(aiInstances).length < 4){
+        if (Object.keys(aiInstances).length < 4) {
             console.log(`Training game started at ${new Date().toISOString()}`);
-
-            await trainingGame(sql, 9)
-            await trainingGame(sql, 13)
-            await trainingGame(sql, 19)
-
+            await trainingGame(sql, 9);
+            await trainingGame(sql, 13);
+            await trainingGame(sql, 19);
             console.log(`Training game completed at ${new Date().toISOString()}`);
-        }else{
-            console.log(`Skipped training...\nLIVE games -> ${Object.keys(aiInstances).length}`)
+        } else {
+            console.log(`Skipped training...\nLIVE games -> ${Object.keys(aiInstances).length}`);
         }
-
     } catch (error) {
         console.log(`Error during training game: ${error.message}`);
     } finally {
-        // Schedule the next execution after these tasks complete
-        console.log("Scheduled next training Game");
+        isTaskRunning = false;
+        // Schedule next task after the delay
         training_timer = setTimeout(task, AI_game_delay_seconds * 1000);
     }
 }
 
-
+// Modify the cleanup function's finally block
 async function cleanup() {
     try {
-        const min_5 = 5 * 60 * 1000; // 5 minutes in milliseconds
-        const now = Date.now(); // Current timestamp in milliseconds
+        const min_5 = 5 * 60 * 1000;
+        const now = Date.now();
 
         for (const key in aiInstances) {
             const aiInstance = aiInstances[key];
-
-            // Check if the instance's last move time is older than 5 minutes
             if (now - aiInstance.ai.last_move_time > min_5) {
                 console.log(`Terminating AI instance: ${key}`);
-                await aiInstance.ai.terminate(); // Call terminate method
-                delete aiInstances[key]; // Remove the instance from the collection
+                await aiInstance.ai.terminate();
+                delete aiInstances[key];
             }
         }
     } catch (error) {
         console.error(`Error during cleanup: ${error.message}`);
     } finally {
-        // Schedule the cleanup function to run again after 1 minute
-        setTimeout(cleanup, 60 * 1000);
-        if(training_timer === null){
-            task();
-        }
+        setTimeout(cleanup, 60 * 1000); // Remove the task() call from here
     }
 }
 
