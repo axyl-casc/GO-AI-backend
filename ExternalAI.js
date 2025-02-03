@@ -60,12 +60,11 @@ class GoAIInstance {
     }
   }
 
-  terminate() {
-    if (this.child && !this.child.killed) {
-      this.child.stdin.end();
-      this.child.kill();
-    }
-    this.rejectAll(new Error('Process terminated'));
+  async terminate() {
+
+    this.child.stdin.end();
+    this.child.kill();
+
   }
 
   async sendCommand(command, timeout = 30000) {
