@@ -8,7 +8,11 @@ function initshop() {
             shopItems.push(item);
         }
     }
-
+    const itemRotation = ALL_ITEMS[Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000) % ALL_ITEMS.length]
+    console.log(`Item on Rotation => ${itemRotation.title}`)
+    if(itemRotation.shoppable === false){
+        shopItems.push(itemRotation);
+    }
     const shopContainer = document.getElementById("shop-items");
     const currencyContainer = document.getElementById("currency");
     const categorySelector = document.getElementById("category-selector");

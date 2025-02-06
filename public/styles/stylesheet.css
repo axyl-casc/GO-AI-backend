@@ -4,5 +4,54 @@ dialog:not([open]) {
     display: none;
   }
   
+  .wgo-board {
+    max-width: 80vw;
+    /* Maximum width at 95% of the viewport width */
+    max-height: 80vh;
+    /* Maximum height at 95% of the viewport height */
+}
 
-  
+img {
+    pointer-events: none;
+}
+
+html {
+    transform: scale(1);
+    transform-origin: 0 0;
+    zoom: 1;
+}
+
+
+body {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    /* Optimizes rendering on high-DPI screens */
+}
+
+@media (min-resolution: 2dppx) {
+    .wgo-board {
+        transform: scale(0.75);
+        /* Scale down for high-DPI screens */
+    }
+}
+
+.equip-button .hover-text {
+display: none;
+}
+
+.equip-button:hover .default-text {
+display: none;
+}
+
+.equip-button:hover .hover-text {
+display: inline;
+}
+
+/* Special case for non-equipped items */
+.equip-button:not(.bg-green-500):hover .default-text {
+display: inline;
+}
+
+.equip-button:not(.bg-green-500):hover .hover-text {
+display: none;
+}

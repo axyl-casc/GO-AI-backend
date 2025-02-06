@@ -69,16 +69,6 @@ const ALL_ITEMS = [
 		dropchance: 10,
 	},
 	{
-		title: "Henry",
-		image: "img/henry.png",
-		description: "cheat ai",
-		price: 1,
-		shoppable: true,
-		ai_key: 60, 
-		category: ["companion"],
-		dropchance: 100,
-	},
-	{
 		title: "Aya",
 		image: "img/aya.webp",
 		description: "Aya - the moderately strong GO companion!",
@@ -133,7 +123,7 @@ const ALL_ITEMS = [
 		price: 500,
 		shoppable: false,
 		category: ["stones", "featured"],
-		dropchance: 1000,
+		dropchance: 100,
 	},
 	{
 		title: "Painted Stones",
@@ -307,26 +297,27 @@ function renderInventory() {
 			}
 
 			card.innerHTML = `
-                <h2 class="text-lg font-bold mb-2">${item.title}</h2>
-                <p class="text-gray-700 mb-4 text-center">${item.description}</p>
-                <span class="text-lg font-semibold mb-2">Quantity: ${item.quantity}</span>
-                <span class="text-sm text-gray-500 mb-4">Price: $${item.price}</span>
-                <div class="flex gap-4">
-                    <button 
-                        class="sell-button px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                        data-item-title="${item.title}"
-                        data-item-price="${item.price}"
-                    >
-                        Sell for $${(item.price / 2).toFixed(2)}
-                    </button>
-                    <button 
-                        class="equip-button px-4 py-2 ${item.equipped ? "bg-green-500 text-white" : "bg-gray-500 text-white hover:bg-gray-600"} rounded transition"
-                        data-item-title="${item.title}"
-                    >
-                        ${item.equipped ? "Equipped" : "Equip"}
-                    </button>
-                </div>
-            `;
+			<h2 class="text-lg font-bold mb-2">${item.title}</h2>
+			<p class="text-gray-700 mb-4 text-center">${item.description}</p>
+			<span class="text-lg font-semibold mb-2">Quantity: ${item.quantity}</span>
+			<span class="text-sm text-gray-500 mb-4">Price: $${item.price}</span>
+			<div class="flex gap-4">
+				<button 
+					class="sell-button px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+					data-item-title="${item.title}"
+					data-item-price="${item.price}"
+				>
+					Sell for $${(item.price / 2).toFixed(2)}
+				</button>
+    <button 
+        class="equip-button px-4 py-2 ${item.equipped ? "bg-green-500 text-white" : "bg-gray-500 text-white hover:bg-gray-600"} rounded transition"
+        data-item-title="${item.title}"
+    >
+        <span class="default-text">${item.equipped ? "Equipped" : "Equip"}</span>
+        <span class="hover-text">${item.equipped ? "Unequip" : "Equip"}</span>
+    </button>
+			</div>
+		`;
 
 			// Insert the displayContainer at the top of the card **ONLY if it has content**
 			if (displayContainer.hasChildNodes()) {
@@ -372,28 +363,27 @@ function renderInventory() {
 
 	// Add event listeners to the "Equip" buttons
 	const equipButtons = inventoryContainer.querySelectorAll(".equip-button");
-// Add event listeners to equip buttons
 equipButtons.forEach((button) => {
     button.addEventListener("click", () => {
         const itemTitle = button.getAttribute("data-item-title");
-
-        // Get inventory and update equipped state
         const inventory = getInventory();
-
-        // Find the selected item and its category
         const selectedItem = inventory.find((item) => item.title === itemTitle);
+
         if (!selectedItem) {
             console.error(`Item "${itemTitle}" not found in inventory.`);
             return;
         }
 
-        // Equip the selected item and unequip others in the same category
-        equipItem(selectedItem, inventory);
+        // Toggle equipped state
+        if (selectedItem.equipped) {
+            // Directly unequip if already equipped
+            selectedItem.equipped = false;
+        } else {
+            // Equip this item and unequip others in category
+            equipItem(selectedItem, inventory);
+        }
 
-        // Save updated inventory back to localStorage
         localStorage.setItem("inventory", JSON.stringify(inventory));
-
-        // Re-render the inventory to reflect changes
         renderInventory();
     });
 });
