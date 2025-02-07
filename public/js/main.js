@@ -23,6 +23,7 @@ let previous_boardsize = 0
 let previous_komi = 0
 let ai_hint = false
 let komi = 6.5
+let has_passed = false
 window.is_game_loading = true
 
 // setup custom board stones
@@ -132,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
     rungame()
 
     async function rungame() {
+        has_passed = false;
         window.is_game_loading = true;
         document.getElementById("rankspan").innerHTML = getDisplayRank()
         boardsize = parseInt(document.getElementById('boardSize').value, 10)
@@ -244,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let game_type = "normal"
         let handicap_stones = 0
 
-        if (getRandomInt(1, 10) === 2) {
+        if (getRandomInt(1, 5) === 2) {
             game_type = "chinese" // 10% chance of playing chinese gamemode
         }
 
@@ -411,9 +413,18 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector("#movecountspan").textContent = move_count
 
 
-            if (move_count > boardsize * boardsize / 3) {
-                endGameButton.classList.remove('hidden');
+            if (move_count > boardsize * boardsize / 3 && parseInt(document.querySelector("#scorespan").textContent[0]) !== 0) { // around 50 moves on 13x13
+                if(parseInt(document.querySelector("#scorespan").textContent.split("+")[1]) > 30 && game_type !== "handicap"){
+                    endGameButton.classList.remove('hidden'); // when difference in score is greater than 30
+                }else{
+                    // handicap games get to go longer since W can do funnky magic to live
+                    if (move_count > boardsize * boardsize / (3 / 2)) { // around 100 moves on 13x13
+                        endGameButton.classList.remove('hidden'); // for when difference in score is less than 30
+                    }
+                }
             }
+
+
             let error_flag = false
             const result_gamestate = restore_gamestate(game, move_history)
             error_flag = result_gamestate[1]
@@ -431,7 +442,9 @@ document.addEventListener('DOMContentLoaded', () => {
             clearBoardMarkers(board, game)
 
             ai_hint = await handleAIMove(playerMove, board);
-
+            if(has_passed){
+                endGameButton.classList.remove('hidden'); // always remove if the AI has passed
+            }
             if (has_ai_hint && companionToggleButton.classList.contains('bg-blue-500')) {
                 show_ai_hints(game, board, ai_hint)
             }
@@ -456,6 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(top_moves)
                 console.log(`AI move: ${ai_move}`);
                 if (ai_move === 'pass') {
+                    has_passed = true
                     showToast("AI passed!")
                     move_count++; // Switch turns
                     game.pass()
@@ -486,6 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     console.error("AI made an invalid move:", result);
                     showToast("AI passed!")
+                    has_passed = true
                     move_count++; // Switch turns
                     game.pass()
                     document.querySelector("#movecountspan").textContent = move_count

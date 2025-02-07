@@ -26,6 +26,13 @@ const is_train = true
 // seconds per hour = 3600
 // seconds per minute = 60
 
+function getRandomInt(min, max) {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    return Math.floor(Math.random() * (maxFloored - minCeiled + 1)) + minCeiled; // The maximum is inclusive and the minimum is inclusive
+}
+
+
 const generateAiTable = async (dbConnection, boardSize) => {
     const sql = `SELECT path, level_${boardSize} FROM AI;`;
 
@@ -244,7 +251,7 @@ async function task() {
     }
     isTaskRunning = true;
     try {
-        if (Object.keys(aiInstances).length < 2) {
+        if (Object.keys(aiInstances).length < 1) {
             console.log(`Training game started at ${new Date().toISOString()}`);
             await trainingGame(sql, 13);
             await trainingGame(sql, 19);
@@ -343,12 +350,16 @@ app.get("/create-game", async (req, res) => {
 });
 
 
-// Endpoint to make a move
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 app.get("/move", async (req, res) => {
     const { id, move } = req.query;
-    console.log("?GOT MOVE REQUEST:")
-    console.log(id)
-    console.log(move)
+    console.log("?GOT MOVE REQUEST:");
+    console.log(id);
+    console.log(move);
+
     if (!id || !move) {
         return res.status(400).json({ error: "Game ID and move are required." });
     }
@@ -359,16 +370,39 @@ app.get("/move", async (req, res) => {
     }
 
     try {
-        console.log("Playing the move B")
+        console.log("Playing the move B");
+
+        // Start timing
+        const startTime = performance.now();
+
         // Send the player's move to the AI
         const { response, score, hint } = await game.ai.play(move);
 
-        res.json({ aiResponse: response, aiScore: score, hint: hint });
+        // End timing
+        const endTime = performance.now();
+        const moveTime = ((endTime - startTime) / 1000); // Convert ms to seconds
+        console.log(`Move generation time: ${moveTime.toFixed(3)} seconds`);
+
+        // Determine the total time the request should take
+        const upper_time = 5
+        const lower_time = 2
+        const totalTime = getRandomInt(lower_time, upper_time)
+        const sleepTime = Math.max(totalTime - moveTime, 0); // Ensure it's not negative
+
+        console.log(`Sleeping for ${sleepTime.toFixed(3)} seconds to meet delay target...`);
+        await sleep(sleepTime * 1000); // Convert to milliseconds
+
+        res.json({ 
+            aiResponse: response, 
+            aiScore: score, 
+            hint: hint
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message });
     }
 });
+
 
 cleanup()
 
