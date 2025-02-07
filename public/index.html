@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>Go Baduk with WGo.js</title>
+    <title>Beginner GO</title>
     <!-- Tailwind CSS -->
     <script src="./js/tailwind.js"></script>
     <!-- Custom Tailwind Configuration -->
@@ -227,7 +227,7 @@ goRanks: `
     <header class="sticky fixed top-0 left-0 right-0 bg-badukBlack shadow-md z-50">
         <nav class="flex border-b border-gray-300">
             <button class="flex-1 text-white py-4 px-2 focus:outline-none active-tab border-b-4 border-badukAccent"
-                data-tab="play">
+                data-tab="play" id="play-tab">
                 Play
             </button>
             <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="puzzles">
@@ -252,10 +252,10 @@ goRanks: `
             <div id="play" class="sticky top-0 tab-content block bg-badukWhite overflow-auto">
                 <!-- Main Container -->
                 <div
-                    class="flex flex-col lg:flex-row justify-center items-start w-full max-w-screen-xl mx-auto py-16 space-y-8 lg:space-y-0 lg:space-x-8">
+                    class="flex flex-col lg:flex-row justify-center items-start w-full max-w-screen-xl mx-auto">
 
                     <!-- Companion Container -->
-                    <div id="companion-display" class="w-full lg:w-1/3 flex flex-col items-center space-y-4">
+                    <div id="companion-display" class="w-full lg:w-1/3 flex flex-col items-center space-y-4 p-12">
                         <div id="companion" class="bg-gray-100 p-4 rounded shadow w-full">
                             <img src="companion-placeholder.jpg" alt="Companion"
                                 class="w-full max-w-xs mx-auto rounded">
@@ -278,7 +278,7 @@ goRanks: `
                     </div>
 
                     <!-- Game Area -->
-                    <div class="w-full lg:w-2/3">
+                    <div class="w-full">
                         <!-- Selectors -->
                         <div id="selectors" class="space-y-4">
                             <div>
@@ -501,7 +501,7 @@ goRanks: `
             <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 shadow"
                 onclick="adjustRank(1)">Increase Rank</button>
             <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 shadow"
-                onclick="adjustRank(-1)">Decrease Rank</button>
+                onclick="adjustRank(-1);updateBelt()">Decrease Rank</button>
                 <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-b-lg shadow"
                 onclick="incrementExperience(2)">Increase Experience (2)</button>
         </div>
@@ -599,12 +599,18 @@ goRanks: `
 
         </div>
     </main>
-
+    <div class="sticky bottom-8 left-0 w-[80%] h-16 mx-auto">
+        <div class="w-full bg-gray-300 rounded-lg h-6 overflow-hidden">
+            <div id="progress-bar" class="bg-blue-500 h-full transition-all duration-300"></div>
+        </div>
+    </div>
+    
     <!-- Bottom Color Bar (Sticky at Bottom) -->
     <div id="colorBar" class="sticky bottom-0 left-0 w-full h-16 bg-yellow-400">
         <!-- Vertical Stripe (Inside the Bottom Bar) -->
         <div id="stripe" class="absolute left-[4rem] w-32 h-full bg-red-500"></div>
     </div>
+    
 
     <!-- Script -->
     <script type="text/javascript" src="wgo/wgo.js"></script>

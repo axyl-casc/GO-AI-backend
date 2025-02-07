@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 9x9
             const intermediate = convertKyuDanToLevel("20k")
             // 13x13
-            const advanced = convertKyuDanToLevel("14k")
+            const advanced = convertKyuDanToLevel("10k")
             // 19x19
 
             // spread
@@ -531,7 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setHasLost(true);
             adjustCurrency((Math.floor(move_count / 2) + getLevel()) / 2)
             adjustRank(-1) // decrease rank by 1 on loss
-            if (convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")) {
+            if (convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("20k")) {
                 adjustRank(-1)
             }
         }
@@ -651,6 +651,12 @@ FF[4]GM[1]SZ[${boardsize}]KM[${komi}]\n`; // SGF header with board size and komi
 
     // reset the belt display
     updateBelt();
+    updateProgressBar(getExperience(), getExperienceRequired());
+    testDiv.scrollIntoView({
+        behavior: "auto",
+        block: "center",
+        inline: "center",
+    });
 });
 
 

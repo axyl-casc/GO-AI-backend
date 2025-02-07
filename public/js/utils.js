@@ -246,18 +246,32 @@ function getExperience() {
     }
     return JSON.parse(localStorage.getItem("experience"));
 }
+function updateProgressBar(numerator, denominator) {
+    let percentage = (numerator / denominator) * 100;
+    percentage = Math.min(99, Math.max(0, percentage)); // Clamp between 0 and 100
+    document.getElementById("progress-bar").style.width = percentage + "%";
+}
+
+function getExperienceRequired(){
+    if(getLevel() >= 10){
+        return 105 + 2 * getLevel()
+    }
+    // make the level increase fast until level 10, then slow down
+    return 10 * getLevel() + 5
+}
 
 function incrementExperience(delta) {
     const currentExperience = getExperience();
     const newExperience = currentExperience + delta;
     localStorage.setItem("experience", JSON.stringify(newExperience));
     // check if level up using x^2 + 5 formula
-    if (newExperience > getLevel() * getLevel() + 5) {
-        localStorage.setItem("experience", newExperience - (getLevel() * getLevel() + 5)); // reset experience
+    if (newExperience > getExperienceRequired()) {
+        localStorage.setItem("experience", newExperience - getExperienceRequired()); // reset experience
         incrementLevel();
     } else {
         showToastAux(`You gained ${delta} experience!`)
     }
+    updateProgressBar(getExperience(), 10 * getLevel() + 5);
     return newExperience;
 }
 

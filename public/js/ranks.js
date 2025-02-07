@@ -44,7 +44,7 @@ function getDisplayRank() {
 		"Grandmaster of Go", // Level 100 (final)
 	];
 
-	if (convertKyuDanToLevel(getRank()) > convertKyuDanToLevel("15k")) {
+	if (convertKyuDanToLevel(getRank()) > convertKyuDanToLevel("18k")) {
 		return `${levelTitles[Math.min(Math.floor((getLevel() - 1) / 5), levelTitles.length - 1)]} (${getRank()})`;
 	}
 
