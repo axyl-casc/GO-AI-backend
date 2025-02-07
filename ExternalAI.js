@@ -1,6 +1,11 @@
+const { getAvailableVRAM } = require("./gfxtst");
+
+
 const { spawn } = require('child_process');
 const { warn } = require('console');
 const readline = require('readline');
+
+
 
 class GoAIInstance {
   constructor(exePath, args = []) {
@@ -16,6 +21,9 @@ class GoAIInstance {
   }
 
   initializeProcess() {
+    // for slow computer
+    this.exePath = this.exePath.replace("/katago/", "/katago_cpu/")
+    console.log(`Running :: ${this.exePath}`)
     this.child = spawn(this.exePath, this.args, { 
         stdio: ['pipe', 'pipe', 'pipe'], 
         windowsHide: true, 

@@ -24,6 +24,7 @@
     "jsdom": "^25.0.1",
     "shell-quote": "^1.8.2",
     "sqlite3": "^5.1.7",
+    "systeminformation": "^5.25.11",
     "tenuki": "^0.3.1",
     "uuid": "^11.0.3"
   },

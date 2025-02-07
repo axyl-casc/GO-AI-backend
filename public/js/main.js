@@ -31,7 +31,7 @@ window.is_game_loading = true
 const blackStone = new Image();
 const whiteStone = new Image();
 
-const client_id = generateClientId() + getRank()
+const client_id = generateClientId()
 
 document.addEventListener('DOMContentLoaded', () => {
     companionToggleButton.addEventListener('click', handleCompanionToggle);
@@ -460,7 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const AI_COLOR = WGo.W
 
                 // Fetch AI move, passing player's move as a parameter
-                const response = await fetchData(`/move?id=${game_id}&move=${playerMove}`);
+                const response = await fetchData(`/move?id=${game_id}&move=${playerMove}&boardsize=${boardsize}`);
                 console.log(response)
                 const score = response.aiScore[0]
                 const ai_move = await response.aiResponse; // Example: "D4"
@@ -538,10 +538,10 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast("You won!")
             incrementPlayerWins();
             adjustRank(1) // increase rank by 1 on win
-            incrementExperience(Math.floor(move_count / 4))
+            incrementExperience(Math.floor(move_count / 4) + getRandomInt(1,10))
             adjustCurrency(Math.floor(move_count / 2) + getLevel()) // increase money earned by your level
         } else if (move_count !== 0) {
-            incrementExperience(Math.floor(move_count / 8))
+            incrementExperience(Math.floor(move_count / 8) + getRandomInt(1,5))
             showToast("You lost!")
             setHasLost(true);
             adjustCurrency((Math.floor(move_count / 2) + getLevel()) / 2)

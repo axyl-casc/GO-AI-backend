@@ -1,5 +1,6 @@
 // npm start
 // to run
+const { getAvailableVRAM } = require("./gfxtst");
 
 const { SqlConnection, TsumegoConnection } = require('./sql_connection');
 const { trainingGame } = require('./train_database');
@@ -19,7 +20,7 @@ const aiInstances = {};
 
 
 const AI_game_delay_seconds = 10
-const is_train = true
+let is_train = true
 
 // seconds per week = 604800
 // seconds per day = 86400
@@ -355,10 +356,11 @@ function sleep(ms) {
 }
 
 app.get("/move", async (req, res) => {
-    const { id, move } = req.query;
+    const { id, move, boardsize } = req.query;
     console.log("?GOT MOVE REQUEST:");
-    console.log(id);
+    console.log(`Game id = ${id}`);
     console.log(move);
+    console.log(`Boardsize: ${boardsize}`)
 
     if (!id || !move) {
         return res.status(400).json({ error: "Game ID and move are required." });
@@ -384,7 +386,7 @@ app.get("/move", async (req, res) => {
         console.log(`Move generation time: ${moveTime.toFixed(3)} seconds`);
 
         // Determine the total time the request should take
-        const upper_time = 5
+        const upper_time = Math.floor(boardsize / 2)
         const lower_time = 2
         const totalTime = getRandomInt(lower_time, upper_time)
         const sleepTime = Math.max(totalTime - moveTime, 0); // Ensure it's not negative
@@ -406,6 +408,7 @@ app.get("/move", async (req, res) => {
 
 cleanup()
 
+is_train = false;
 if(is_train){
     task()
 }

@@ -86,7 +86,7 @@ class PlayerAI {
 
         }
         for (const ai of this.instances) {
-            ai.sendCommand(`komi ${komi}`)
+            await ai.sendCommand(`komi ${komi}`)
         }
         await this.analysisEngine.sendCommand(`komi ${komi}`);
 
