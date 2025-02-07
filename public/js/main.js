@@ -23,11 +23,14 @@ let previous_boardsize = 0
 let previous_komi = 0
 let ai_hint = false
 let komi = 6.5
+window.is_game_loading = true
 
 // setup custom board stones
 // Load stone images
 const blackStone = new Image();
 const whiteStone = new Image();
+
+const client_id = generateClientId() + getRank()
 
 document.addEventListener('DOMContentLoaded', () => {
     companionToggleButton.addEventListener('click', handleCompanionToggle);
@@ -51,6 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 element.style.display = "none"; // Properly hides the elements
             });
             if (targetTab === "play") {
+                window.is_game_loading = true
+                updateLoadingSpinner()
                 const startGameButton = document.getElementById('startGame');
 
                 // Check if the button exists and trigger the click event
@@ -127,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     rungame()
 
     async function rungame() {
+        window.is_game_loading = true;
         document.getElementById("rankspan").innerHTML = getDisplayRank()
         boardsize = parseInt(document.getElementById('boardSize').value, 10)
         let rank = document.getElementById('playerRank').value
@@ -345,19 +351,18 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById("companion-moves").classList.add("hidden")
             companion_display.innerHTML = ""
             companion_display.classList.add("hidden")
-            game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}`);
+            game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}&client_id=${client_id}`);
         } else {
             document.getElementById("companion-moves").classList.remove("hidden")
             console.log("Companion")
             companion_key = getCompanion().ai_key
             companion_display.innerHTML = `<img src="${getCompanion().image}" class="w-2/10 max-w-[50%] h-auto"><br><h3>Companion: </h3>${getCompanion().title}`
             companion_display.classList.remove("hidden")
-            game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}`);
+            game_id = await fetchData(`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}&client_id=${client_id}`);
         }
 
         game_id = game_id.gameId
         console.log(game_id);
-
         if (game_type === "handicap") {
             move_count++;
             await handleAIMove('pass', board);
@@ -480,7 +485,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     return top_moves
                 } else {
                     console.error("AI made an invalid move:", result);
-                    alert("AI attempted invalid move. AI might become unresponsive.")
+                    showToast("AI passed!")
+                    move_count++; // Switch turns
+                    game.pass()
+                    document.querySelector("#movecountspan").textContent = move_count
+                    document.querySelector("#scorespan").textContent = score
+                    return;
                 }
             } catch (error) {
                 console.error("Error fetching AI move:", error);
@@ -492,6 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const letters = "ABCDEFGHJKLMNOPQRSTUVWXYZ"; // Skips 'I'
             return `${letters[x]}${y + 1}`;
         }
+        window.is_game_loading = false
 
     };
 
@@ -638,6 +649,8 @@ FF[4]GM[1]SZ[${boardsize}]KM[${komi}]\n`; // SGF header with board size and komi
         document.querySelector('#welcomeDialog').showModal()
     }
 
+    // reset the belt display
+    updateBelt();
 });
 
 

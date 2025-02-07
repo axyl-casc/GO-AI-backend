@@ -286,37 +286,63 @@ async function cleanup() {
 app.use(express.static(path.join(__dirname, 'public')));
 
 // AI move creation / game creation
+// Global mappings to keep track of games per client_id
+const clientGameMap = {}; // Maps client_id to gameId
 
 // Endpoint to create a new game
 app.get("/create-game", async (req, res) => {
-    let { companion_key = 38, komi = 6.5, handicap = 0, rank = "30k", boardsize = 13, ai_color = "white", type = "normal" } =
-        req.query;
+    let {
+        companion_key = 38,
+        komi = 6.5,
+        handicap = 0,
+        rank = "30k",
+        boardsize = 13,
+        ai_color = "white",
+        type = "normal",
+        client_id // expect client_id to be provided as a query parameter
+    } = req.query;
 
-    console.log(req.query)
-    // games types
-    // normal -> standard game
-    // handicap -> game with handicap stones
-    // chinese -> place stones on opposing corners
+    // Validate that the client_id is provided
+    if (!client_id) {
+        return res.status(400).json({ error: "Missing 'client_id' query parameter." });
+    }
 
-    komi = parseInt(komi)
-    handicap = parseInt(handicap)
-    boardsize = parseInt(boardsize)
+    console.log("Query parameters:", req.query);
 
+    // Convert values to proper types
+    // If komi needs to be a decimal, consider using parseFloat instead of parseInt.
+    komi = parseInt(komi);
+    handicap = parseInt(handicap);
+    boardsize = parseInt(boardsize);
+
+    // If this client_id already has a game, remove the previous instance
+    if (clientGameMap[client_id]) {
+        console.log("Deleted old game...")
+        const oldGameId = clientGameMap[client_id];
+        aiInstances[oldGameId].ai.terminate()
+        delete aiInstances[oldGameId];
+    }
+
+    // Create a new game
     const gameId = uuidv4();
-
     const pAI = new PlayerAI();
 
     await pAI.create(sql, komi, boardsize, handicap, rank, ai_color, type, companion_key);
 
+    // Store the new AI instance and update the mapping for this client_id
     aiInstances[gameId] = {
         ai: pAI,
         komi: komi,
         handicap: handicap,
-        rank: rank
+        rank: rank,
+        client_id: client_id
     };
+
+    clientGameMap[client_id] = gameId;
 
     res.json({ gameId });
 });
+
 
 // Endpoint to make a move
 app.get("/move", async (req, res) => {

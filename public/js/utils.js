@@ -1,5 +1,15 @@
 const companionToggleButton = document.getElementById('companionToggleButton');
 
+function generateClientId(length = 8) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let clientId = '';
+    for (let i = 0; i < length; i++) {
+        clientId += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return clientId;
+}
+
+
 
 function getRandomInt(min, max) {
     const minCeiled = Math.ceil(min);
@@ -99,6 +109,7 @@ function resetStats() {
         localStorage.removeItem("level");
         localStorage.removeItem("currency");
         clearInventory();
+        updateBelt();
         alert("Statistics have been reset.");
         location.reload(); // Reloads the current page
 

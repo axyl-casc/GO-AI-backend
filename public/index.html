@@ -14,7 +14,7 @@
                 extend: {
                     colors: {
                         badukBlack: '#333333',
-                        badukWhite: '#f5f5f5',
+                        badukWhite: '#fff7e0',
                         badukWood: '#D2B48C',
                         badukAccent: '#DAA520',
                         grayBorder: '#CCCCCC',
@@ -484,8 +484,64 @@ goRanks: `
                     <p>Puzzles Correct: <span id="profile-puzzles-correct">0</span></p>
                     <p>Rank: <span id="profile-rank">Unranked</span></p>
                     <br>
-                    <button class="btn mt-2 px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg shadow"
-                        onclick="resetStats()">Reset Profile</button>
+    <!-- Dropdown Container -->
+    <div class="relative inline-block">
+        <!-- Dropdown Toggle Button -->
+        <button id="dropdownBtn" class="px-4 py-2 bg-gray-700 text-white rounded-lg shadow-md flex items-center">
+            Cheat Menu
+            <svg id="arrowIcon" class="w-5 h-5 ml-2 transition-transform duration-300 transform" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="dropdownMenu" class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 scale-95 transform transition-all duration-300 pointer-events-none">
+            <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-t-lg shadow"
+                onclick="resetStats()">Reset Profile</button>
+            <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 shadow"
+                onclick="adjustRank(1)">Increase Rank</button>
+            <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 shadow"
+                onclick="adjustRank(-1)">Decrease Rank</button>
+                <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-b-lg shadow"
+                onclick="incrementExperience(2)">Increase Experience (2)</button>
+        </div>
+    </div>
+
+    <script>
+        const dropdownBtn = document.getElementById("dropdownBtn");
+        const dropdownMenu = document.getElementById("dropdownMenu");
+        const arrowIcon = document.getElementById("arrowIcon");
+
+        dropdownBtn.addEventListener("click", () => {
+            const isOpen = dropdownMenu.classList.contains("opacity-100");
+            
+            if (isOpen) {
+                closeDropdown();
+            } else {
+                openDropdown();
+            }
+        });
+
+        function openDropdown() {
+            dropdownMenu.classList.add("opacity-100", "scale-100");
+            dropdownMenu.classList.remove("opacity-0", "scale-95", "pointer-events-none");
+            arrowIcon.classList.add("rotate-180"); // Rotate arrow down
+        }
+
+        function closeDropdown() {
+            dropdownMenu.classList.remove("opacity-100", "scale-100");
+            dropdownMenu.classList.add("opacity-0", "scale-95", "pointer-events-none");
+            arrowIcon.classList.remove("rotate-180"); // Rotate arrow up
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", (event) => {
+            if (!dropdownBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                closeDropdown();
+            }
+        });
+
+    </script>
                         <div class="my-8">
                             <p>Notification History:</p>
                             <div class="my-4 w-80 h-96 border border-gray-300 rounded-lg shadow-lg bg-white p-2 overflow-y-auto" id="scrollableList">
@@ -544,6 +600,11 @@ goRanks: `
         </div>
     </main>
 
+    <!-- Bottom Color Bar (Sticky at Bottom) -->
+    <div id="colorBar" class="sticky bottom-0 left-0 w-full h-16 bg-yellow-400">
+        <!-- Vertical Stripe (Inside the Bottom Bar) -->
+        <div id="stripe" class="absolute left-[4rem] w-32 h-full bg-red-500"></div>
+    </div>
 
     <!-- Script -->
     <script type="text/javascript" src="wgo/wgo.js"></script>
@@ -585,7 +646,32 @@ goRanks: `
         });
 
     </script>
+<!-- Add this at the end of your body -->
+<div id="loadingSpinner" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <div class="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  </div>
+  
+  <script>
+    window.is_game_loading = true
 
+    function updateLoadingSpinner() {
+        const spinner = document.getElementById('loadingSpinner');
+        if (window.is_game_loading) {
+            spinner.classList.remove('hidden');
+            setTimeout(updateLoadingSpinner, 500);
+        } else {
+            spinner.classList.add('hidden');
+            setTimeout(updateLoadingSpinner, 2000);
+        }
+    }
+
+    updateLoadingSpinner()
+    // Simulate loading state change
+    setTimeout(updateLoadingSpinner, 2000);
+
+</script>
 </body>
 
 </html>

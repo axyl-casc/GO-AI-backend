@@ -1,4 +1,5 @@
 const { spawn } = require('child_process');
+const { warn } = require('console');
 const readline = require('readline');
 
 class GoAIInstance {
