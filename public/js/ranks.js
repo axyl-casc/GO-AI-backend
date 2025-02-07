@@ -14,42 +14,54 @@ const ALL_RANKS = (() => {
 })();
 
 function getDisplayRank() {
-	const levelTitles = [
-		"Novice Adventurer I", // Level 1-4
-		"Novice Adventurer II", // Level 5-9
-		"Novice Adventurer III", // Level 10-14
-
-		"Aspiring Student I", // Level 15-19
-		"Aspiring Student II", // Level 20-24
-		"Aspiring Student III", // Level 25-29
-
-		"Rising Strategist I", // Level 30-34
-		"Rising Strategist II", // Level 35-39
-		"Rising Strategist III", // Level 40-44
-
-		"Tactical Adept I", // Level 45-49
-		"Tactical Adept II", // Level 50-54
-		"Tactical Adept III", // Level 55-59
-
-		"Shape Master I", // Level 60-64
-		"Shape Master II", // Level 65-69
-		"Shape Master III", // Level 70-74
-
-		"Fuseki Scholar I", // Level 75-79
-		"Fuseki Scholar II", // Level 80-84
-		"Fuseki Scholar III", // Level 85-89
-
-		"Honinbo Contender I", // Level 90-94
-		"Honinbo Contender II", // Level 95-99
-		"Grandmaster of Go", // Level 100 (final)
-	];
-
+    const levelTitles = [ 
+        "Novice Adventurer",
+        "Aspiring Student",
+        "Rising Strategist",
+        "Tactical Adept",
+        "Shape Master",
+        "Fuseki Scholar",
+        "Joseki Explorer",
+        "Sabaki Artist",
+        "Tenuki Wanderer",
+        "Endgame Virtuoso",
+        "Territory Architect",
+        "Ko Trickster",
+        "Judan Aspirant",
+        "Kisei Visionary",
+        "Tengen Mystic",
+        "Tanuki Gambler",
+        "Honinbo Contender",
+        "Meijin Challenger",
+        "Kitsune Deceiver",
+        "Oni of Influence",
+        "Tatsu of the Board",
+        "Grandmaster of Go"
+    ];
+    
+    const expandedRanks = [];
+    
+    for (const title of levelTitles) {
+        expandedRanks.push(`${title} I`);
+        expandedRanks.push(`${title} II`);
+        expandedRanks.push(`${title} III`);
+        expandedRanks.push(`${title} IV`);
+        expandedRanks.push(`${title} V`);
+        expandedRanks.push(`${title} VI`);
+        expandedRanks.push(`${title} VII`);
+        expandedRanks.push(`${title} VIII`);
+        expandedRanks.push(`${title} IX`);
+        expandedRanks.push(`${title} X`);
+        expandedRanks.push(`The ${title}`);
+    }
+    
+    console.log(`Named rank count: ${expandedRanks.length}`)
 	if (convertKyuDanToLevel(getRank()) > convertKyuDanToLevel("18k")) {
-		return `${levelTitles[Math.min(Math.floor((getLevel() - 1) / 5), levelTitles.length - 1)]} (${getRank()})`;
+		return `${expandedRanks[Math.min(Math.floor((getLevel() - 1)), expandedRanks.length - 1)]} (${getRank()})`;
 	}
 
-	return levelTitles[
-		Math.min(Math.floor((getLevel() - 1) / 5), levelTitles.length - 1)
+	return expandedRanks[
+		Math.min(Math.floor((getLevel() - 1)), expandedRanks.length - 1)
 	];
 }
 
