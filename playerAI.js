@@ -49,7 +49,7 @@ class PlayerAI {
         const [exe, args] = parseCommand(analysis_engine_path)
         this.analysisEngine = new GoAIInstance(exe, args)
         for (const ai of this.instances) {
-            ai.sendCommand(`boardsize ${boardsize}`)
+            await ai.sendCommand(`boardsize ${boardsize}`)
         }
         await this.analysisEngine.sendCommand(`boardsize ${boardsize}`);
         if (type === "handicap") {

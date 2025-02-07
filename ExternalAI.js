@@ -16,10 +16,16 @@ class GoAIInstance {
   }
 
   initializeProcess() {
-    this.child = spawn(this.exePath, this.args, { stdio: ['pipe', 'pipe', 'pipe'] });
+    this.child = spawn(this.exePath, this.args, { 
+        stdio: ['pipe', 'pipe', 'pipe'], 
+        windowsHide: true, 
+        detached: true 
+    });
+
     this.rl = readline.createInterface({ input: this.child.stdout });
     this.setupListeners();
-  }
+}
+
 
   setupListeners() {
     this.rl.on('line', (line) => {
@@ -74,6 +80,7 @@ class GoAIInstance {
 
     this.initializeProcess();
     warn('Process restarted successfully');
+    this.terminate()
   }
 
   rejectAll(err) {
