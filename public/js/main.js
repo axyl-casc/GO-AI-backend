@@ -429,11 +429,16 @@ document.addEventListener("DOMContentLoaded", () => {
 			// Add the player's stone to the board
 			board.addObject({ x: x, y: y, c: stoneColor });
 			addMarker(x, y, board, stoneColor); // Update the marker for the player's move
+            playPlaceSound()
 
 			// Remove captured stones
-			result.forEach((captured) =>
-				board.removeObjectsAt(captured.x, captured.y),
+            let caps = 0
+			result.forEach((captured) =>{
+                board.removeObjectsAt(captured.x, captured.y)
+                caps++;
+                }
 			);
+            playCapSound(caps)
 
 			// Convert move to Go notation (e.g., "D4")
 			const playerMove = convertToCoords(x, y);
@@ -481,7 +486,12 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 			clearBoardMarkers(board, game);
 
+            if(getRandomInt(1,10) === 4 && boardsize >= 13){
+                playThinkSound()
+            }
+
 			ai_hint = await handleAIMove(playerMove, board);
+
 			if (has_passed) {
 				endGameButton.classList.remove("hidden"); // always remove if the AI has passed
 			}
@@ -521,13 +531,14 @@ document.addEventListener("DOMContentLoaded", () => {
 					document.querySelector("#scorespan").textContent = score;
 					return;
 				}
-
+                
 				// Convert AI move to coordinates
 				const ai_x =
 					ai_move[0].charCodeAt(0) -
 					"A".charCodeAt(0) -
 					(ai_move[0] >= "J" ? 1 : 0);
 				const ai_y = parseInt(ai_move.slice(1)) - 1;
+                playPlaceSound()
 
 				// Play AI's move using WGo.Game
 				const result = game.play(ai_x, ai_y, AI_COLOR); // AI is White
@@ -537,9 +548,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 					move_history.push({ x: ai_x, y: ai_y, c: AI_COLOR });
 					// Remove captured stones
-					result.forEach((captured) =>
-						board.removeObjectsAt(captured.x, captured.y),
+                    let caps = 0
+					result.forEach((captured) => {
+                        board.removeObjectsAt(captured.x, captured.y);
+                        caps++;
+                        }
 					);
+                    playCapSound(caps)
 					addMarker(ai_x, ai_y, board, AI_COLOR); // Update the marker for the AI's move
 					console.log(`AI placed: ${ai_move}`);
 					move_count++; // Switch turns
@@ -579,6 +594,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		rankSelector.classList.add("hidden");
 	});
 	endGameButton.addEventListener("click", async () => {
+        playEndGame()
 		incrementGamesPlayed();
 		game_id = "0";
 		const score = document.querySelector("#scorespan").textContent;

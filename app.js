@@ -25,7 +25,7 @@ const aiInstances = {};
 
 const AI_game_delay_seconds = 10
 let is_train = true
-const DEBUG = true
+const DEBUG = false
 
 
 // app.js
@@ -357,7 +357,7 @@ app.get("/create-game", async (req, res) => {
     const gameId = uuidv4();
     const pAI = new PlayerAI();
 
-    await pAI.create(sql, komi, boardsize, handicap, rank, ai_color, type, companion_key, db.getValues().AIDelta);
+    await pAI.create(sql, komi, boardsize, handicap, rank, ai_color, type, companion_key, await db.getValues().AIDelta);
 
     // Store the new AI instance and update the mapping for this client_id
     aiInstances[gameId] = {

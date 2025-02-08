@@ -701,6 +701,13 @@ beltInfo:`<h3 class="text-xl font-semibold mb-4">Belt Color Progression</h3>
     <script type="text/javascript" src="wgo/player.editable.js"></script>
     <script type="text/javascript" src="wgo/scoremode.js"></script>
     <script type="text/javascript" src="wgo/player.permalink.js"></script>
+    <script>
+        function getRandomInt(min, max) {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    return Math.floor(Math.random() * (maxFloored - minCeiled + 1)) + minCeiled; // The maximum is inclusive and the minimum is inclusive
+}
+    </script>
     <script src="js/sound.js"></script>
     <script src="js/particles.js"></script>
     <script src="js/review.js"></script>

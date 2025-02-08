@@ -9,15 +9,6 @@ function generateClientId(length = 8) {
     return clientId;
 }
 
-
-
-function getRandomInt(min, max) {
-    const minCeiled = Math.ceil(min);
-    const maxFloored = Math.floor(max);
-    return Math.floor(Math.random() * (maxFloored - minCeiled + 1)) + minCeiled; // The maximum is inclusive and the minimum is inclusive
-}
-
-
 const toastHistory = []
 
 function showToast(text) {
@@ -89,7 +80,7 @@ function populateNotifications() {
     toastHistory.slice().reverse().forEach(text => {
         const div = document.createElement("div");
         div.className = "p-2 border-b last:border-none text-gray-700";
-        div.textContent = text;
+        div.innerHTML = text;
         listContainer.prepend(div); // Prepend to maintain correct order
     });
 
