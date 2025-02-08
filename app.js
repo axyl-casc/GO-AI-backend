@@ -28,9 +28,14 @@ let is_train = true
 const args = process.argv.slice(2);
 
 console.log("app.js received parameters:");
-console.log(`Total RAM: ${args[0]} GB`);
-console.log(`Total VRAM: ${args[1]} GB`);
 
+const VRAM = parseInt(args[1])
+const RAM = parseInt(args[0])
+console.log(`Total RAM: ${RAM} GB`);
+console.log(`Total VRAM: ${VRAM} GB`);
+if(VRAM < 4 || RAM < 12){
+    is_train = false
+}
 
 // seconds per week = 604800
 // seconds per day = 86400
@@ -171,7 +176,7 @@ setTimeout(() => {
 
 // Express server setup
 const app = express();
-const PORT = 3001;
+const PORT = 3006;
 
 // Route to serve the AI table
 app.get('/ai-table', async (req, res) => {

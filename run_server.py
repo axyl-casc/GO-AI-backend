@@ -3,6 +3,7 @@ import psutil
 import GPUtil
 import os
 import signal
+import sys
 
 def get_ram_info():
     """Returns total system RAM in GB."""
@@ -24,32 +25,14 @@ def main():
     print(f"Total RAM: {ram} GB")
     print(f"Total VRAM: {vram} GB")
 
-    # Pass RAM and VRAM as arguments to forever.js
     print("\nRunning 'node forever.js' with parameters...\n")
 
     try:
-        if os.name == "nt":
-            # Windows: Use CREATE_NEW_PROCESS_GROUP to manage the subprocess
-            process = subprocess.Popen(
-                ["node", "forever.js", ram, vram],
-                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP
-            )
-        else:
-            # Linux/macOS: Use setsid to manage the subprocess
-            process = subprocess.Popen(
-                ["node", "forever.js", ram, vram],
-                preexec_fn=os.setsid
-            )
-
-        # Wait for the Python script to exit
-        process.wait()
-    finally:
-        # Ensure the Node.js process terminates when Python exits
-        print("Python process exiting. Killing Node.js process...")
-        if os.name == "nt":
-            subprocess.call(["taskkill", "/F", "/T", "/PID", str(process.pid)])
-        else:
-            os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+        # Run Node.js in the same terminal space
+        subprocess.run(["node", "forever.js", ram, vram], check=True)
+    except KeyboardInterrupt:
+        print("\nCtrl+C detected. Terminating...")
+        sys.exit(0)
 
 if __name__ == "__main__":
     main()
