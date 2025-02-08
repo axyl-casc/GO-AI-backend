@@ -227,6 +227,34 @@ function startInteractiveTutorial(topic, boardsize) {
             lessoninfo.innerHTML = "<br>Explore the loaded 9x9 SGF demo.<br>(right/left arrow key)";
             break;
         }
+        case "shapedemo": {
+            // Replace the interactive board with the SGF player
+            learnboard.innerHTML = ""; // Clear the existing board for the player
+
+            const player = new WGo.BasicPlayer(learnboard, {
+                sgfFile: "./SGF/shapes.sgf", // Path to your SGF file
+                board: {
+                    width: 600, // Adjust board size (optional)
+                    starPoints: { 9: [[2, 2], [6, 2], [4, 4], [2, 6], [6, 6]] }, // Star points for 9x9
+                    section: {
+                        top: -0.5,
+                        left: -0.5,
+                        right: -0.5,
+                        bottom: -0.5
+                    }
+                },
+                layout: {
+                    bottom: ["Control","CommentBox"]                },
+                enableWheel: false, // Proper setting to disable mouse wheel scrolling for move navigation
+                enableKeys: true,  // Disable keyboard arrow interaction for navigating moves
+            });
+            
+            player.board.addCustomObject(coordinates);
+            createButtonContainer(".wgo-player-control", player);
+            lessoninfo.innerHTML = "<br>Explore the loaded 9x9 SGF demo.<br>(right/left arrow key)";
+
+            break;
+        }
         case 'empty_triangle':
             board.addObject({ x: 1, y: 1, c: WGo.B });
             board.addObject({ x: 1, y: 2, c: WGo.B });
@@ -256,6 +284,9 @@ function startInteractiveTutorial(topic, boardsize) {
             <p>
                 While sometimes an empty triangle might be unavoidable in specific tactical situations, it is generally a shape to be avoided in most positions. Recognizing and avoiding bad shapes like this is an important step in improving your play and developing a sense for good shape in Go.
             </p>
+                            <br><button
+                                class="btn mt-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow"
+                                onclick="startInteractiveTutorial('shapedemo', 9)">Learn more shapes</button>
         `;
 
             break;

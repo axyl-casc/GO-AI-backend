@@ -1,0 +1,24 @@
+(;GM[1]FF[4]CA[UTF-8]AP[CGoban:3]ST[2]
+RU[Japanese]SZ[9]KM[0.00]
+PW[White]PB[Black]LB[ee:A]C[In this lesson, you will learn a few fundamental shapes in Go and gain an understanding of some essential terminology.
+
+Each shape has specific characteristics and strategic uses in Go. Some are used to extend a group’s liberties, some for connection, and others for efficient movement across the board.
+
+Play on A to continue.]
+;B[ee]LB[fb:F][cd:E][fe:A][ge:B][he:C][df:D]C[Good work. You just played on the middle of the board, known as tengen. This central position can influence the whole board and is often used in handicap games.
+
+Now, let's explore some common shapes in Go. Click any letter to view details:
+- **A: Nobi** (Extension) - Strengthens the connection of a stone by extending directly.
+- **B: Ikken Tobi** (One-Space Jump) - A quick, light move used for development.
+- **C: Nikken-hiraki** (Two-Space Extension) - Spreads influence efficiently while maintaining connection.
+- **D: Kosumi** (Diagonal Move) - Helps maintain stability and defend against attacks.
+- **E: Keima** (Knight's Move) - A flexible move that balances attack and defense.
+- **F: Ogeima** (Large Knight’s Move) - Covers more distance but can be cut more easily.
+
+Each of these moves has advantages and is used in different board situations.]
+(;B[fe]LB[ed:1][fd:2][de:6][ge:3][ef:5][ff:4]C[**Nobi (Extension)** - This is a simple yet powerful move. It connects to an existing stone directly, increasing the group's liberties. While it may seem slow, it provides stability and helps a group avoid being cut apart.])
+(;B[ge]CR[fe]LB[ed:3][gd:4][de:1][he:5][ef:2][gf:6]C[**Ikken Tobi (One-Space Jump)** - A light move that helps a stone advance while maintaining flexibility. The numbered locations indicate important liberties to watch out for, while the circled spot marks a potential weakness where an opponent might cut. This move is often used to escape or expand.])
+(;B[he]CR[fe][ge]LB[ed:1][hd:6][de:2][ie:5][ef:3][hf:4]C[**Nikken-hiraki (Two-Space Extension)** - This move spreads influence across the board while maintaining reasonable stability. It is commonly used in the opening to stake out territory while staying connected.])
+(;B[df]CR[de][ef]LB[ed:3][fe:4][cf:2][dg:1]C[**Kosumi (Diagonal Move)** - A defensive shape that helps reinforce a stone and reduce weaknesses. It is often used to make a position more solid and prevent cuts. However, it is not as fast as jumping forward.])
+(;B[cd]CR[dd][de]LB[cc:4][bd:5][ed:3][ce:6][fe:2][ef:1]C[**Keima (Knight’s Move)** - A flexible move that creates space while still maintaining a connection to the original stone. The keima is an important shape in both attack and defense, often used in invasions. However, it has a cutting point that an opponent may exploit.])
+(;B[fb]CR[eb][ec][fc][ed][fd][fe]LB[fa:4][gb:3][de:1][ef:2]C[**Ogeima (Large Knight’s Move)** - This move covers more distance than a regular knight’s move but is more vulnerable to being cut. It is useful for rapid expansion but must be played with caution.]))
