@@ -25,7 +25,10 @@ class PlayerAI {
     /**
      * Initializes the AI with game settings.
      */
-    async create(sql, komi, boardsize, handicap, target_level, ai_color, type, companion_key) {
+    async create(sql, komi, boardsize, handicap, target_level, ai_color, type, companion_key, delta) {
+
+        target_level = convertLevelToKyuDan(convertKyuDanToLevel(target_level) + delta)
+
         let ai_between = await sql.getBetween(boardsize, target_level)
         console.log(ai_between)
         this.ai_count = ai_between.length

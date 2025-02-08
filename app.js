@@ -1,6 +1,5 @@
 // npm start
 // to run
-const { getAvailableVRAM } = require("./gfxtst");
 
 const { SqlConnection, TsumegoConnection } = require('./sql_connection');
 const { trainingGame } = require('./train_database');
@@ -13,6 +12,11 @@ const { v4: uuidv4 } = require("uuid"); // For generating unique game IDs
 
 
 const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
+const db = require('./jsondb'); // Import JSON database
+const feedbackdb = require("./jsondb_static")
+
 
 const sql = new SqlConnection("./AI_Data.db")
 const tsumego_sql = new TsumegoConnection("./tsumego_sets.db")
@@ -21,6 +25,8 @@ const aiInstances = {};
 
 const AI_game_delay_seconds = 10
 let is_train = true
+
+
 
 // app.js
 
@@ -243,7 +249,7 @@ app.get('/get-tsumego', async (req, res) => {
     }
 
     try {
-        const puzzle = await generateTsumego(difficulty, type, tsumego_sql);
+        const puzzle = await generateTsumego(difficulty, type, tsumego_sql, db.getValues().puzzleDelta);
 
         if (!puzzle) {
             return res.status(404).json({ error: 'Puzzle not found or failed to generate.' });
@@ -349,7 +355,7 @@ app.get("/create-game", async (req, res) => {
     const gameId = uuidv4();
     const pAI = new PlayerAI();
 
-    await pAI.create(sql, komi, boardsize, handicap, rank, ai_color, type, companion_key);
+    await pAI.create(sql, komi, boardsize, handicap, rank, ai_color, type, companion_key, db.getValues().AIDelta);
 
     // Store the new AI instance and update the mapping for this client_id
     aiInstances[gameId] = {
@@ -420,6 +426,55 @@ app.get("/move", async (req, res) => {
     }
 });
 
+// Middleware to parse JSON and form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+// Submit feedback and adjust AI and puzzle difficulty
+app.post('/submit-feedback', (req, res) => {
+    const feedback = req.body;
+
+    if (!feedback) {
+        return res.status(400).json({ error: 'Invalid feedback data' });
+    }
+    feedbackdb.add('feedback', feedback); // Store feedback in feedback.json
+
+    console.log('Received Feedback:', feedback);
+
+    // Adjust AI difficulty
+    if (feedback.ai_difficulty === 'too_easy') {
+        db.increment('AIDelta');
+    } else if (feedback.ai_difficulty === 'too_hard') {
+        db.decrement('AIDelta');
+    }
+
+    // Adjust puzzle difficulty
+    if (feedback.puzzle_difficulty === 'too_easy') {
+        db.increment('puzzleDelta');
+    } else if (feedback.puzzle_difficulty === 'too_hard') {
+        db.decrement('puzzleDelta');
+    }
+
+    res.status(200).json({
+        message: 'Feedback stored successfully',
+        adjustments: db.getValues() // Return updated values
+    });
+});
+
+// Get all feedback entries
+app.get('/view-feedback', (req, res) => {
+    res.json(feedbackdb.get('feedback'));
+});
+
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/index.html'));
+  });
+
+  app.get('/feedback', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/feedback.html'));
+  });
 
 cleanup()
 

@@ -468,3 +468,11 @@ const coordinates = {
         }
     }
 };
+
+
+function openFeedbackTab() {
+    const newTab = window.open(window.location.origin + '/feedback', '_blank');
+    if (newTab) {
+        newTab.focus();
+    }
+}

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Website Feedback</title>
+    <script src="./js/tailwind.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        badukBlack: '#333333',
+                        badukWhite: '#fff7e0',
+                        badukWood: '#D2B48C',
+                        badukAccent: '#DAA520',
+                        grayBorder: '#CCCCCC',
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans KR"', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="bg-badukWhite font-sans text-badukBlack p-6">
+    <div class="max-w-2xl mx-auto bg-badukWood p-6 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold text-badukBlack mb-4">Feedback for Go Website</h1>
+        <form id="feedbackForm" class="space-y-4">
+            <div>
+                <label class="block font-semibold">Is the AI too hard?</label>
+                <div class="flex space-x-4">
+                    <label><input type="radio" name="ai_difficulty" value="too_easy"> Too Easy</label>
+                    <label><input type="radio" name="ai_difficulty" value="just_right"> Just Right</label>
+                    <label><input type="radio" name="ai_difficulty" value="too_hard"> Too Hard</label>
+                </div>
+            </div>
+            
+            <div>
+                <label class="block font-semibold">Are the puzzles too difficult?</label>
+                <div class="flex space-x-4">
+                    <label><input type="radio" name="puzzle_difficulty" value="too_easy"> Too Easy</label>
+                    <label><input type="radio" name="puzzle_difficulty" value="just_right"> Just Right</label>
+                    <label><input type="radio" name="puzzle_difficulty" value="too_hard"> Too Hard</label>
+                </div>
+            </div>
+            
+            <div>
+                <label class="block font-semibold">What features would you like to see?</label>
+                <div class="flex flex-col">
+                    <label><input type="checkbox" name="features" value="more_puzzles"> More Puzzles</label>
+                    <label><input type="checkbox" name="features" value="stronger_ai"> Stronger AI</label>
+                    <label><input type="checkbox" name="features" value="easier_ai"> Easier AI</label>
+                    <label><input type="checkbox" name="features" value="better_tutorials"> Better Tutorials</label>
+                </div>
+            </div>
+            
+            <div>
+                <label class="block font-semibold">Other Suggestions</label>
+                <textarea name="suggestions" class="w-full p-2 border border-grayBorder rounded"></textarea>
+            </div>
+            
+            <button type="submit" class="bg-badukAccent text-white p-2 rounded">Submit Feedback</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('feedbackForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(this);
+            const feedback = Object.fromEntries(formData.entries());
+            feedback.features = formData.getAll('features');
+            
+            const response = await fetch('/submit-feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(feedback)
+            });
+            
+            if (response.ok) {
+                alert('Thank you for your feedback!');
+                window.close()
+            } else {
+                alert('Failed to submit feedback. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

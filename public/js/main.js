@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Auto game started...")
 
             // 7x7
-            const beginner = convertKyuDanToLevel("35k")
+            const beginner = convertKyuDanToLevel("30k")
             // 9x9
             const intermediate = convertKyuDanToLevel("20k")
             // 13x13
@@ -153,20 +153,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // spread
             const rndSpread = 2;
-            let playerlevel = convertKyuDanToLevel(getRank()) + getRandomInt(-rndSpread, rndSpread);
+            let playerlevel = convertKyuDanToLevel(getRank()) + getRandomInt(-(rndSpread + 1), rndSpread);
 
             // add a bit of randomness to the player level
 
             if (playerlevel < beginner) {
                 boardsize = 7
-                komi = 0.5
+                if(getGamesPlayed() < 100){
+                    komi = 0.5
+                }
             } else if (playerlevel < intermediate) {
                 boardsize = 9
+                if(getGamesPlayed() < 100){
+                    komi = 0.5
+                }
             } else if (playerlevel < advanced) {
                 boardsize = 13
             } else {
                 boardsize = 19
             }
+
+
             playerlevel = convertKyuDanToLevel(getRank())
 
         }

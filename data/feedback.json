@@ -1,0 +1,50 @@
+[
+  {
+    "ai_difficulty": "just_right",
+    "puzzle_difficulty": "just_right",
+    "features": [
+      "more_puzzles",
+      "easier_ai"
+    ],
+    "suggestions": "Nice"
+  },
+  {
+    "ai_difficulty": "just_right",
+    "puzzle_difficulty": "too_hard",
+    "features": [
+      "better_tutorials"
+    ],
+    "suggestions": ""
+  },
+  {
+    "ai_difficulty": "too_easy",
+    "suggestions": "",
+    "features": []
+  },
+  {
+    "ai_difficulty": "too_easy",
+    "suggestions": "",
+    "features": []
+  },
+  {
+    "ai_difficulty": "too_hard",
+    "suggestions": "",
+    "features": []
+  },
+  {
+    "suggestions": "",
+    "features": []
+  },
+  {
+    "ai_difficulty": "just_right",
+    "puzzle_difficulty": "just_right",
+    "features": [
+      "better_tutorials"
+    ],
+    "suggestions": ""
+  },
+  {
+    "suggestions": "",
+    "features": []
+  }
+]

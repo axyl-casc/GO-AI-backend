@@ -83,7 +83,7 @@ async function parseSGFAndAddVW(sgf) {
  * Generates a random Tsumego (Go problem) from the "puzzles" directory.
  * @returns {string|null} - The content of a randomly selected Tsumego file, or null if the directory is empty.
  */
-async function generateTsumego(difficulty, type, tsumego_sql) {
+async function generateTsumego(difficulty, type, tsumego_sql, delta) {
   try {
     // Directory containing the Tsumego puzzles
     const puzzlesDir = path.join(__dirname, 'puzzles');
@@ -97,7 +97,8 @@ async function generateTsumego(difficulty, type, tsumego_sql) {
     }
 
     // Convert difficulty to ELO level
-    const elo = await convertKyuDanToLevel(difficulty);
+    let elo = await convertKyuDanToLevel(difficulty);
+    elo = elo + delta
     console.log(`Requested difficulty: ${difficulty} -> ELO: ${elo}`);
     const puzzle = await tsumego_sql.getRandomPuzzle(elo);
 
