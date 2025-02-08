@@ -44,7 +44,7 @@ function showToast(text) {
         setTimeout(() => {
             toastContainer.classList.add('hidden');
         }, 500);
-    }, 2000);
+    }, 3000);
 }
 
 function showToastAux(text) {
@@ -70,7 +70,7 @@ function showToastAux(text) {
         setTimeout(() => {
             toastContainerAux.classList.add('hidden');
         }, 500);
-    }, 1500);
+    }, 3000);
 }
 
 function isNewAccount(){
@@ -199,8 +199,10 @@ function incrementLevel() {
         const found_item = getItemDrop(getLevel())
         addToInventory(found_item);
         showToastAux(`Leveled up from ${getLevel() - 1} to ${getLevel()}!<br>You found a ${found_item}`)
+        createParticles(50)
     }else{
         showToastAux(`Leveled up from ${getLevel() - 1} to ${getLevel()}!`)
+        createParticles(25)
     }
 
     return newLevel;
@@ -235,6 +237,7 @@ function getPlayerWins() {
 function incrementPlayerWins() {
     const currentWins = getPlayerWins();
     const newWins = currentWins + 1;
+    createParticles(100)
     localStorage.setItem("playerWins", JSON.stringify(newWins));
     return newWins;
 }
@@ -325,6 +328,7 @@ function getPuzzlesCorrect() {
 function incrementPuzzlesCorrect() {
     const currentPuzzlesCorrect = getPuzzlesCorrect();
     const newPuzzlesCorrect = currentPuzzlesCorrect + 1;
+    createParticles(25)
     localStorage.setItem("puzzlesCorrect", JSON.stringify(newPuzzlesCorrect));
     return newPuzzlesCorrect;
 }

@@ -22,8 +22,7 @@ function initshop() {
     currencyContainer.textContent = `Your Balance: $${userCurrency}`;
 
     function renderItems(category) {
-        window.is_game_loading = true
-        updateLoadingSpinner()
+
         // Clear existing items
         shopContainer.innerHTML = "";
 
@@ -126,12 +125,14 @@ function initshop() {
                 addToInventory(itemTitle, 1);
 
                 showToast(`Bought ${itemTitle}!`);
+                createParticles(10)
+
 
                 // Re-render items to update the buttons' states
                 renderItems(category);
             });
         });
-        window.is_game_loading = false
+
     }
 
 // Updated event listener for category selection

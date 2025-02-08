@@ -55,3 +55,17 @@ display: inline;
 .equip-button:not(.bg-green-500):hover .hover-text {
 display: none;
 }
+/* Add this CSS somewhere in your styles */
+
+@keyframes explode {
+    0% {
+      transform: translate(-50%, -50%) scale(0.5);
+      opacity: 1;
+    }
+    100% {
+      /* Move outward from center using var(--tx) and var(--ty) */
+      transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1);
+      opacity: 0;
+    }
+  }
+  

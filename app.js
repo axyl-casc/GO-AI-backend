@@ -25,15 +25,13 @@ const aiInstances = {};
 
 const AI_game_delay_seconds = 10
 let is_train = true
-
+const DEBUG = true
 
 
 // app.js
 
 // Read arguments (excluding 'node' and 'app.js')
 const args = process.argv.slice(2);
-
-console.log("app.js received parameters:");
 
 global.VRAM = parseInt(args[1])
 global.RAM = parseInt(args[0])
@@ -347,7 +345,11 @@ app.get("/create-game", async (req, res) => {
     if (clientGameMap[client_id]) {
         console.log("Deleted old game...")
         const oldGameId = clientGameMap[client_id];
-        aiInstances[oldGameId].ai.terminate()
+        try {
+            aiInstances[oldGameId].ai.terminate()
+        } catch (error) {
+            console.log(error)
+        }
         delete aiInstances[oldGameId];
     }
 
@@ -412,7 +414,7 @@ app.get("/move", async (req, res) => {
         const totalTime = getRandomInt(lower_time, upper_time) + db.getValues().AIPlayspeedDelta
         const sleepTime = Math.max(totalTime - moveTime, 0); // Ensure it's not negative
 
-        if(game.ai.moveCount > 2 && sleepTime > 0){
+        if(game.ai.moveCount > 2 && sleepTime > 0 && !DEBUG){
             console.log(`Sleeping for ${sleepTime.toFixed(3)} seconds to meet delay target...`);
             await sleep(sleepTime * 1000); // Convert to milliseconds
         }
