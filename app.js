@@ -29,11 +29,11 @@ const args = process.argv.slice(2);
 
 console.log("app.js received parameters:");
 
-const VRAM = parseInt(args[1])
-const RAM = parseInt(args[0])
-console.log(`Total RAM: ${RAM} GB`);
-console.log(`Total VRAM: ${VRAM} GB`);
-if(VRAM < 4 || RAM < 12){
+global.VRAM = parseInt(args[1])
+global.RAM = parseInt(args[0])
+console.log(`Total RAM: ${global.RAM} GB`);
+console.log(`Total VRAM: ${global.VRAM} GB`);
+if(global.VRAM < 4 || global.RAM < 12){
     is_train = false
 }
 
@@ -176,7 +176,7 @@ setTimeout(() => {
 
 // Express server setup
 const app = express();
-const PORT = 3006;
+const PORT = 3001;
 
 // Route to serve the AI table
 app.get('/ai-table', async (req, res) => {
@@ -423,7 +423,6 @@ app.get("/move", async (req, res) => {
 
 cleanup()
 
-is_train = false;
 if(is_train){
     task()
 }

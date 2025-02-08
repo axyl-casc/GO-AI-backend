@@ -22,7 +22,10 @@ class GoAIInstance {
 
   initializeProcess() {
     // for slow computer
-    this.exePath = this.exePath.replace("/katago/", "/katago_cpu/")
+    if(global.VRAM < 4){
+      this.exePath = this.exePath.replace("/katago/", "/katago_cpu/")
+    }
+
     console.log(`Running :: ${this.exePath}`)
     this.child = spawn(this.exePath, this.args, { 
         stdio: ['pipe', 'pipe', 'pipe'], 
