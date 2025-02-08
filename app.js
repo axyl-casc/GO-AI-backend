@@ -391,7 +391,7 @@ app.get("/move", async (req, res) => {
     if (!game) {
         return res.status(404).json({ error: "Game not found." });
     }
-
+    //AIPlayspeedDelta
     try {
         console.log("Playing the move B");
 
@@ -409,11 +409,13 @@ app.get("/move", async (req, res) => {
         // Determine the total time the request should take
         const upper_time = Math.floor(boardsize / 2)
         const lower_time = 2
-        const totalTime = getRandomInt(lower_time, upper_time)
+        const totalTime = getRandomInt(lower_time, upper_time) + db.getValues().AIPlayspeedDelta
         const sleepTime = Math.max(totalTime - moveTime, 0); // Ensure it's not negative
 
-        console.log(`Sleeping for ${sleepTime.toFixed(3)} seconds to meet delay target...`);
-        await sleep(sleepTime * 1000); // Convert to milliseconds
+        if(game.ai.moveCount > 2 && sleepTime > 0){
+            console.log(`Sleeping for ${sleepTime.toFixed(3)} seconds to meet delay target...`);
+            await sleep(sleepTime * 1000); // Convert to milliseconds
+        }
 
         res.json({ 
             aiResponse: response, 
@@ -454,6 +456,12 @@ app.post('/submit-feedback', (req, res) => {
         db.increment('puzzleDelta');
     } else if (feedback.puzzle_difficulty === 'too_hard') {
         db.decrement('puzzleDelta');
+    }
+    // Adjust ai speed
+    if (feedback.ai_speed === 'too_fast') {
+        db.increment('AIPlayspeedDelta');
+    } else if (feedback.ai_speed === 'too_slow') {
+        db.decrement('AIPlayspeedDelta');
     }
 
     res.status(200).json({

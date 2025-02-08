@@ -250,6 +250,10 @@ function updateProgressBar(numerator, denominator) {
     let percentage = (numerator / denominator) * 100;
     percentage = Math.min(99, Math.max(0, percentage)); // Clamp between 0 and 100
     document.getElementById("progress-bar").style.width = percentage + "%";
+    const leftNumber = document.getElementById('left-number');
+    const rightNumber = document.getElementById('right-number');
+    leftNumber.textContent = getLevel()
+    rightNumber.textContent = getLevel() + 1
 }
 
 function getExperienceRequired(){

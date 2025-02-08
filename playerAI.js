@@ -173,7 +173,8 @@ class PlayerAI {
         //console.log(this.getTopMoves(analysis_moves, 3))
         response = cleanMove(response[0])
         const test = await this.analysisEngine.sendCommand("showboard");
-        console.log(test);
+        console.log(`AI response: ${response}\nAnalysis: \n`);
+        console.log(test)
         return { response: response, score: this.score_estimate, hint: analysis_moves };
     }
 

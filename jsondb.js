@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const MAX_ADJUSTMENT = 3
+
 class JSONDatabase {
     constructor(filePath) {
         this.filePath = filePath;
@@ -31,7 +33,7 @@ class JSONDatabase {
 increment(field) {
     // biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
     if (this.data.hasOwnProperty(field)) {
-        if (this.data[field] < 10) { // Prevent increasing beyond 10
+        if (this.data[field] < MAX_ADJUSTMENT) { // Prevent increasing beyond 10
             this.data[field]++;
             this.saveFile();
         }
@@ -44,7 +46,7 @@ increment(field) {
 decrement(field) {
     // biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
     if (this.data.hasOwnProperty(field)) {
-        if (this.data[field] > -10) { // Prevent decreasing beyond -10
+        if (this.data[field] > -MAX_ADJUSTMENT) { 
             this.data[field]--;
             this.saveFile();
         }
