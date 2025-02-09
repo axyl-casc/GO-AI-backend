@@ -36,7 +36,8 @@ const proverbs = [
     "When approaching the enemy corner, choose your approach height wisely. Explanation: Low approaches secure territory, while high approaches aim for influence.",
     "Coordinate your stones to support each other. Explanation: Moves that work together create synergy, strengthening your overall position.",
     "Avoid playing deep invasions in the early fuseki. Explanation: Invading too soon can lead to weak groups with limited escape routes.",
-    "Review your opponent’s framework before expanding. Explanation: Adapt to or counter their fuseki to avoid falling behind."
+    "Review your opponent’s framework before expanding. Explanation: Adapt to or counter their fuseki to avoid falling behind.",
+    "Keep track of how many liberties all of your groups have, and know how many liberties your opponents groups have. Remember, knowledge is the key to victory. "
   ];
 
 // Glossary of Key Go Terms
@@ -84,7 +85,8 @@ const definitions = {
     "Approaches": "Moves that challenge an opponent's corner position by placing a stone nearby. Approaches can be high (4th line) for influence or low (3rd line) for secure territory.",
     "Weak Group": "A group of stones without two eyes or a stable connection to another strong group. Weak groups are vulnerable to attack and must either run, connect, or create life.",
     "Strong Group": "A group of stones that has two eyes, is well-connected, or is thick enough to resist attacks. Strong groups exert influence and can be used to attack weak groups.",
-    "Flexible": "A position or shape that can adapt to different board situations. Flexible stones can respond dynamically to an opponent's moves rather than being rigid or over-concentrated."
+    "Flexible": "A position or shape that can adapt to different board situations. Flexible stones can respond dynamically to an opponent's moves rather than being rigid or over-concentrated.",
+    "Liberties": "Free or empty spaces that surround your stone, or group of stones. Important to track when dealing with life and death situations."
 };
 
 function getAdvice(topic) {
