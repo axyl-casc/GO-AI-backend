@@ -24,7 +24,7 @@ const aiInstances = {};
 
 
 const AI_game_delay_seconds = 20
-let is_train = false
+let is_train = true
 const DEBUG = false
 
 

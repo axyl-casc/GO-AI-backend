@@ -1,5 +1,5 @@
 
-function generateClientId(length = 8) {
+function generateClientId(length = 16) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let clientId = '';
     for (let i = 0; i < length; i++) {

@@ -370,9 +370,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("30k")) {
 			requested_komi = 0.5;
 		}
-
 		let companion_key = 38; // default for 20k
-		console.log(getCompanion());
+		console.log(await getCompanion());
 		const companion_display = document.getElementById("companion");
 		if (getCompanion() == null) {
 			console.log("No Companion");
@@ -504,8 +503,17 @@ document.addEventListener("DOMContentLoaded", () => {
 				companionToggleButton.classList.contains("bg-blue-500")
 			) {
 				show_ai_hints(game, board, ai_hint);
+				if(move_count % 10 === 0){
+					document.querySelector("#adviceDisplay").innerHTML = ""
+					if(move_count < 20){
+						document.querySelector("#adviceDisplay").appendChild(getAdvice("opening"))
+					}else{
+						document.querySelector("#adviceDisplay").appendChild(getAdvice("none"))
+
+					}
+				}
 			}else{
-				if(convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("25k")){
+				if(convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("20k")){
 					updateAtariMarkers(game, board);
 					if(move_count % 10 === 0 || move_count <= 2){
 						document.querySelector("#adviceDisplay").innerHTML = ""
@@ -949,8 +957,7 @@ function show_ai_hints(game, board, ai_hint) {
 	if (!ai_hint) {
 		return;
 	}
-	document.querySelector("#adviceDisplay").innerHTML = ""
-	document.querySelector("#adviceDisplay").appendChild(getAdvice())
+
 	updateAtariMarkers(game, board);
 	ai_hint.forEach((ai_move) => {
 		console.log(ai_move.move);
