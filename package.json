@@ -4,7 +4,7 @@
   "description": "Node JS application serving as the backend of a GO playing program",
   "main": "index.js",
   "scripts": {
-    "start": "node --max-old-space-size=2076 app.js",
+    "start": "electron .",
     "forever": "node run_forever.js"
   },
   "repository": {

@@ -1,37 +1,63 @@
-import subprocess
-import psutil
-import GPUtil
 import os
-import signal
 import sys
+import time
+import subprocess
+from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile
+from PyQt5.QtCore import QUrl
 
-def get_ram_info():
-    """Returns total system RAM in GB."""
-    ram = psutil.virtual_memory().total / (1024 ** 3)
-    return f"{ram:.2f}"
+# ✅ Fix 2: Enable GPU acceleration
+os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--ignore-gpu-blocklist --enable-gpu-rasterization --enable-zero-copy"
 
-def get_vram_info():
-    """Returns total VRAM of the primary GPU in GB."""
-    gpus = GPUtil.getGPUs()
-    if gpus:
-        vram = gpus[0].memoryTotal / 1024  # Convert MB to GB
-        return f"{vram:.2f}"
-    return "0"
+class FullScreenBrowser(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        # Create the web view
+        self.browser = QWebEngineView()
+
+        # ✅ Fix 1: Set a modern Chrome user-agent
+        profile = QWebEngineProfile.defaultProfile()
+        profile.setHttpUserAgent(
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+        )
+
+        # ✅ Fix 4: Force desktop view
+        self.browser.page().runJavaScript("""
+            document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1920, initial-scale=1.0');
+        """)
+
+        # Load the website
+        url = QUrl("http://localhost:3003")
+        self.browser.setUrl(url)
+
+        self.setCentralWidget(self.browser)
+        self.showMaximized()  # Use Maximized instead of Full-Screen
+
+def start_server():
+    """Start the Node.js server in the background."""
+    print("\nStarting 'node forever.js'...\n")
+
+    process = subprocess.Popen(["node", "forever.js"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    
+    # Wait for the server to start
+    time.sleep(2)
+
+    return process
 
 def main():
-    ram = get_ram_info()
-    vram = get_vram_info()
+    process = start_server()
 
-    print(f"Total RAM: {ram} GB")
-    print(f"Total VRAM: {vram} GB")
-
-    print("\nRunning 'node forever.js' with parameters...\n")
+    # Start PyQt application
+    app = QApplication(sys.argv)
+    window = FullScreenBrowser()
+    window.show()
 
     try:
-        # Run Node.js in the same terminal space
-        subprocess.run(["node", "forever.js", ram, vram], check=True)
+        sys.exit(app.exec_())
     except KeyboardInterrupt:
         print("\nCtrl+C detected. Terminating...")
+        process.terminate()
         sys.exit(0)
 
 if __name__ == "__main__":
