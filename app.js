@@ -23,8 +23,8 @@ const tsumego_sql = new TsumegoConnection("./tsumego_sets.db")
 const aiInstances = {};
 
 
-const AI_game_delay_seconds = 10
-let is_train = true
+const AI_game_delay_seconds = 20
+let is_train = false
 const DEBUG = false
 
 
@@ -273,6 +273,8 @@ async function task() {
     try {
         if (Object.keys(aiInstances).length < 1) {
             console.log(`Training game started at ${new Date().toISOString()}`);
+            await trainingGame(sql, 7);
+            await trainingGame(sql, 9);
             await trainingGame(sql, 13);
             await trainingGame(sql, 19);
             console.log(`Training game completed at ${new Date().toISOString()}`);
@@ -291,12 +293,13 @@ async function task() {
 // Modify the cleanup function's finally block
 async function cleanup() {
     try {
-        const min_5 = 5 * 60 * 1000;
+        const min = 15 * 60 * 1000;
         const now = Date.now();
 
         for (const key in aiInstances) {
             const aiInstance = aiInstances[key];
-            if (now - aiInstance.ai.last_move_time > min_5) {
+            console.log(aiInstance.ai.last_move_time)
+            if (now - aiInstance.ai.last_move_time > min) {
                 console.log(`Terminating AI instance: ${key}`);
                 await aiInstance.ai.terminate();
                 delete aiInstances[key];
@@ -311,9 +314,6 @@ async function cleanup() {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// AI move creation / game creation
-// Global mappings to keep track of games per client_id
-const clientGameMap = {}; // Maps client_id to gameId
 
 // Endpoint to create a new game
 app.get("/create-game", async (req, res) => {
@@ -341,24 +341,24 @@ app.get("/create-game", async (req, res) => {
     handicap = parseInt(handicap);
     boardsize = parseInt(boardsize);
 
-    // If this client_id already has a game, remove the previous instance
-    if (clientGameMap[client_id]) {
-        console.log("Deleted old game...")
-        const oldGameId = clientGameMap[client_id];
-        try {
-            aiInstances[oldGameId].ai.terminate()
-        } catch (error) {
-            console.log(error)
-        }
-        delete aiInstances[oldGameId];
-    }
-
     // Create a new game
     const gameId = uuidv4();
     const pAI = new PlayerAI();
 
     await pAI.create(sql, komi, boardsize, handicap, rank, ai_color, type, companion_key, await db.getValues().AIDelta);
 
+
+    for (const key in aiInstances) {
+        if (aiInstances[key].client_id === client_id) {
+            // Terminate the existing AI instance
+            if (typeof aiInstances[key].ai.terminate === "function") {
+                aiInstances[key].ai.terminate(); // Assuming the AI instance has a terminate method
+            }
+            delete aiInstances[key]; // Remove it from the mapping
+            break; // Exit loop once found and terminated
+        }
+    }
+    
     // Store the new AI instance and update the mapping for this client_id
     aiInstances[gameId] = {
         ai: pAI,
@@ -367,8 +367,8 @@ app.get("/create-game", async (req, res) => {
         rank: rank,
         client_id: client_id
     };
+    
 
-    clientGameMap[client_id] = gameId;
 
     res.json({ gameId });
 });

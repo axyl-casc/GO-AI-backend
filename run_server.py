@@ -6,8 +6,6 @@ import signal
 import sys
 import webbrowser
 
-
-
 def get_ram_info():
     """Returns total system RAM in GB."""
     ram = psutil.virtual_memory().total / (1024 ** 3)

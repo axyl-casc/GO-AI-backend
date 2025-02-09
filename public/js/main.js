@@ -1,3 +1,4 @@
+
 async function fetchData(url) {
 	try {
 		const response = await fetch(url);
@@ -75,13 +76,14 @@ document.addEventListener("DOMContentLoaded", () => {
 					block: "center",
 					inline: "center",
 				});
-			}else{
-                const modal = document.getElementById("newGameModal");
-                modal.classList.add("hidden");
-            }
+			} else {
+				const modal = document.getElementById("newGameModal");
+				modal.classList.add("hidden");
+			}
 
 			if (targetTab === "learn") {
 				document.querySelector("#learninfo").innerHTML = "";
+				document.querySelector("#learninfo").appendChild(getAdvice("none"));
 				document.querySelector("#learnboard").innerHTML = "";
 				updateLessonsVisibility();
 			}
@@ -151,8 +153,9 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (Number.isNaN(boardsize)) {
 			console.log("Auto game started...");
 
+			const very_beginner = convertKyuDanToLevel("30k");
 			// 7x7
-			const beginner = convertKyuDanToLevel("30k");
+			const beginner = convertKyuDanToLevel("25k");
 			// 9x9
 			const intermediate = convertKyuDanToLevel("20k");
 			// 13x13
@@ -166,8 +169,10 @@ document.addEventListener("DOMContentLoaded", () => {
 				getRandomInt(-(rndSpread + 1), rndSpread);
 
 			// add a bit of randomness to the player level
-
-			if (playerlevel < beginner) {
+			if (playerlevel < very_beginner) {
+				boardsize = 5;
+				komi = 0.5
+			}else if (playerlevel < beginner) {
 				boardsize = 7;
 				if (getGamesPlayed() < 100) {
 					komi = 0.5;
@@ -429,16 +434,15 @@ document.addEventListener("DOMContentLoaded", () => {
 			// Add the player's stone to the board
 			board.addObject({ x: x, y: y, c: stoneColor });
 			addMarker(x, y, board, stoneColor); // Update the marker for the player's move
-            playPlaceSound()
+			playPlaceSound();
 
 			// Remove captured stones
-            let caps = 0
-			result.forEach((captured) =>{
-                board.removeObjectsAt(captured.x, captured.y)
-                caps++;
-                }
-			);
-            playCapSound(caps)
+			let caps = 0;
+			result.forEach((captured) => {
+				board.removeObjectsAt(captured.x, captured.y);
+				caps++;
+			});
+			playCapSound(caps);
 
 			// Convert move to Go notation (e.g., "D4")
 			const playerMove = convertToCoords(x, y);
@@ -486,9 +490,9 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 			clearBoardMarkers(board, game);
 
-            if(getRandomInt(1,10) === 4 && boardsize >= 13){
-                playThinkSound()
-            }
+			if (getRandomInt(1, 10) === 4 && boardsize >= 13) {
+				playThinkSound();
+			}
 
 			ai_hint = await handleAIMove(playerMove, board);
 
@@ -500,7 +504,21 @@ document.addEventListener("DOMContentLoaded", () => {
 				companionToggleButton.classList.contains("bg-blue-500")
 			) {
 				show_ai_hints(game, board, ai_hint);
+			}else{
+				if(convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("25k")){
+					updateAtariMarkers(game, board);
+					if(move_count % 10 === 0 || move_count <= 2){
+						document.querySelector("#adviceDisplay").innerHTML = ""
+						if(move_count < 15){
+							document.querySelector("#adviceDisplay").appendChild(getAdvice("opening"))
+						}else{
+							document.querySelector("#adviceDisplay").appendChild(getAdvice("none"))
+						}
+
+					}
+				}
 			}
+
 		});
 
 		// Function to handle AI's move
@@ -531,14 +549,14 @@ document.addEventListener("DOMContentLoaded", () => {
 					document.querySelector("#scorespan").textContent = score;
 					return;
 				}
-                
+
 				// Convert AI move to coordinates
 				const ai_x =
 					ai_move[0].charCodeAt(0) -
 					"A".charCodeAt(0) -
 					(ai_move[0] >= "J" ? 1 : 0);
 				const ai_y = parseInt(ai_move.slice(1)) - 1;
-                playPlaceSound()
+				playPlaceSound();
 
 				// Play AI's move using WGo.Game
 				const result = game.play(ai_x, ai_y, AI_COLOR); // AI is White
@@ -548,13 +566,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 					move_history.push({ x: ai_x, y: ai_y, c: AI_COLOR });
 					// Remove captured stones
-                    let caps = 0
+					let caps = 0;
 					result.forEach((captured) => {
-                        board.removeObjectsAt(captured.x, captured.y);
-                        caps++;
-                        }
-					);
-                    playCapSound(caps)
+						board.removeObjectsAt(captured.x, captured.y);
+						caps++;
+					});
+					playCapSound(caps);
 					addMarker(ai_x, ai_y, board, AI_COLOR); // Update the marker for the AI's move
 					console.log(`AI placed: ${ai_move}`);
 					move_count++; // Switch turns
@@ -594,7 +611,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		rankSelector.classList.add("hidden");
 	});
 	endGameButton.addEventListener("click", async () => {
-        playEndGame()
+		playEndGame();
 		incrementGamesPlayed();
 		game_id = "0";
 		const score = document.querySelector("#scorespan").textContent;
@@ -932,6 +949,8 @@ function show_ai_hints(game, board, ai_hint) {
 	if (!ai_hint) {
 		return;
 	}
+	document.querySelector("#adviceDisplay").innerHTML = ""
+	document.querySelector("#adviceDisplay").appendChild(getAdvice())
 	updateAtariMarkers(game, board);
 	ai_hint.forEach((ai_move) => {
 		console.log(ai_move.move);

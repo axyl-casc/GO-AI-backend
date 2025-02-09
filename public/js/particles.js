@@ -16,14 +16,14 @@ function createParticles(celebration_percent) {
       const distance = Math.random() * 800 + 50;
       
       // Random properties
-      const size = Math.random() * 6 + 3;
+      const size = Math.random() * 6 + 6;
       const color = colors[Math.floor(Math.random() * colors.length)];
       // Calculate final x/y offsets
       const tx = Math.cos(angle) * distance + 'px';
       const ty = Math.sin(angle) * distance + 'px';
       // Random delay and duration for more natural look
       const delay = Math.random() * 0.3;
-      const duration = Math.random() * 0.7 + 1.5;
+      const duration = Math.random() * 0.7 + 3.5;
   
       // Apply Tailwind color + "particle" style class
       particle.className = `particle ${color}`;

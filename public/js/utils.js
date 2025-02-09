@@ -1,4 +1,3 @@
-const companionToggleButton = document.getElementById('companionToggleButton');
 
 function generateClientId(length = 8) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -228,7 +227,7 @@ function getPlayerWins() {
 function incrementPlayerWins() {
     const currentWins = getPlayerWins();
     const newWins = currentWins + 1;
-    createParticles(100)
+    createParticles(200)
     localStorage.setItem("playerWins", JSON.stringify(newWins));
     return newWins;
 }
@@ -402,18 +401,7 @@ function properCase(str) {
         .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-function getCompanion() {
-    // Get the user's inventory
-    const inventory = getInventory();
 
-    // Find the equipped companion in the inventory
-    const equippedCompanion = inventory.find(item => 
-        item.category.includes("companion") && item.equipped
-    );
-
-    // Return the equipped companion or null if none is equipped
-    return equippedCompanion || null;
-}
 function getStones() {
     // Get the user's inventory
     const inventory = getInventory();
