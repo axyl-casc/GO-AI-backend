@@ -433,7 +433,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			// Add the player's stone to the board
 			board.addObject({ x: x, y: y, c: stoneColor });
 			addMarker(x, y, board, stoneColor); // Update the marker for the player's move
-			playPlaceSound();
 
 			// Remove captured stones
 			let caps = 0;
@@ -441,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				board.removeObjectsAt(captured.x, captured.y);
 				caps++;
 			});
-			playCapSound(caps);
+
 
 			// Convert move to Go notation (e.g., "D4")
 			const playerMove = convertToCoords(x, y);
@@ -492,7 +491,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (getRandomInt(1, 10) === 4 && boardsize >= 13) {
 				playThinkSound();
 			}
-
+			playPlaceSound();
+			playCapSound(caps);
 			ai_hint = await handleAIMove(playerMove, board);
 
 			if (has_passed) {
@@ -513,7 +513,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					}
 				}
 			}else{
-				if(convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("20k")){
+				if(convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("10k")){
 					updateAtariMarkers(game, board);
 					if(move_count % 10 === 0 || move_count <= 2){
 						document.querySelector("#adviceDisplay").innerHTML = ""
