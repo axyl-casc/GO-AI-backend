@@ -643,7 +643,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.getElementById("endgameModalYes").addEventListener("click", () => {
 			hideNewGameModal();
 			setTimeout(() => {
-				document.querySelector('[data-tab="play"]').click();
+				//document.querySelector('[data-tab="play"]').click();
+				window.location.reload()
 			}, 300);
 		});
 		function hideNewGameModal() {
