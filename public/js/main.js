@@ -750,12 +750,16 @@ document.addEventListener("DOMContentLoaded", () => {
 			const modal = document.getElementById("newGameModal");
 			modal.classList.add("hidden");
 		}
+		
 		function showNewGameModal() {
 			const modal = document.getElementById("newGameModal");
 			modal.classList.remove("hidden");
 			if(convertKyuDanToLevel("29k") <= convertKyuDanToLevel(getRank())){
 				// if user is stronger than 25k then custom games allowed
-				document.getElementById("challengeGame").classList.remove("hidden")
+				if(getRandomInt(0,5) === 2){
+					// make it so challenge mode appears randomly
+					document.getElementById("challengeGame").classList.remove("hidden");
+				}
 			}else{
 				document.getElementById("challengeGame").classList.add("hidden")
 			}
