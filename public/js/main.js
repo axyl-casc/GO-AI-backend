@@ -24,6 +24,13 @@ let previous_komi = 0;
 let ai_hint = false;
 let komi = 6.5;
 let has_passed = false;
+
+const urlParams = new URLSearchParams(window.location.search);
+const challenge = parseInt(urlParams.get("challenge"), 10);
+
+console.log(`Custom Challenge => ${challenge}`);
+
+
 window.is_game_loading = true;
 
 // setup custom board stones
@@ -644,7 +651,16 @@ document.addEventListener("DOMContentLoaded", () => {
 			hideNewGameModal();
 			setTimeout(() => {
 				//document.querySelector('[data-tab="play"]').click();
+				// maybe send signal to server to kill the process ?
 				window.location.reload()
+			}, 300);
+		});
+		document.getElementById("challengeGame").addEventListener("click", () => {
+			hideNewGameModal();
+			setTimeout(() => {
+				//document.querySelector('[data-tab="play"]').click();
+				//window.location.reload()
+				window.location.replace(`${window.location.href}?challenge=${getRandomInt(1,3)}`)
 			}, 300);
 		});
 		function hideNewGameModal() {
@@ -654,6 +670,12 @@ document.addEventListener("DOMContentLoaded", () => {
 		function showNewGameModal() {
 			const modal = document.getElementById("newGameModal");
 			modal.classList.remove("hidden");
+			if(convertKyuDanToLevel("25k") <= convertKyuDanToLevel(getRank())){
+				// if user is stronger than 25k then custom games allowed
+				document.getElementById("challengeGame").classList.remove("hidden")
+			}else{
+				document.getElementById("challengeGame").classList.add("hidden")
+			}
 		}
 		move_count = 0;
 		showNewGameModal();

@@ -35,7 +35,17 @@ Consumables - gold pouch, health potion, aged shell stones, default stones
 
 Send error message on ai invalid move or ai full - check by viewing ip using Express methods to end old ai
 
-Loading screen
-
 disable play button when the playing AI slots are full
 
+
+challenge game modes
+-------------------------
+1 - 5x5 game 0 komi against stronger AI
+2 - same color GO - slightly weaker AI
+3 - GO against high level opponent with high negative komi
+4 - 17x17 board - normal game
+5 - You play W in handicap game - might have to rework a lot
+6 - Disappearing stones - the last stone placed disappears
+7 - swap colors randomly
+8 - simultainious stone placement with AI and player
+9 - time limit go - player has a time limit for their moves. 30s per move ?
