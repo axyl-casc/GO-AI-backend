@@ -28,8 +28,11 @@ class PlayerAI {
     async create(sql, komi, boardsize, handicap, target_level, ai_color, type, companion_key, delta) {
 
         target_level = convertLevelToKyuDan(convertKyuDanToLevel(target_level) + delta)
-
-        let ai_between = await sql.getBetween(boardsize, target_level)
+        let search_boardsize = 19
+        if(boardsize === 19 || boardsize === 13 || boardsize === 9){
+            search_boardsize = boardsize
+        }
+        let ai_between = await sql.getBetween(search_boardsize, target_level)
         console.log(ai_between)
         this.ai_count = ai_between.length
         if (this.ai_count === 1) {

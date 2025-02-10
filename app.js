@@ -252,7 +252,6 @@ app.get('/get-tsumego', async (req, res) => {
         if (!puzzle) {
             return res.status(404).json({ error: 'Puzzle not found or failed to generate.' });
         }
-
         res.status(200).json({ puzzle: puzzle.sgf, id: puzzle.id });
     } catch (err) {
         console.error('Error handling /get-tsumego request:', err);

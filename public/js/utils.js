@@ -98,6 +98,7 @@ function resetStats() {
         localStorage.removeItem("experience");
         localStorage.removeItem("level");
         localStorage.removeItem("currency");
+        localStorage.removeItem("challenge");
         clearInventory();
         updateBelt();
         alert("Statistics have been reset.");
@@ -313,6 +314,15 @@ function getPuzzlesCorrect() {
         return 0;
     }
     return JSON.parse(localStorage.getItem("puzzlesCorrect"));
+}
+// For managing the "challenge" key in localStorage
+function getChallenge() {
+    const challenge = localStorage.getItem("challenge");
+    return challenge !== null ? JSON.parse(challenge) : 0;
+}
+
+function setChallenge(value) {
+    localStorage.setItem("challenge", JSON.stringify(value));
 }
 
 function incrementPuzzlesCorrect() {

@@ -286,6 +286,7 @@ class SqlConnection {
     this.reader.close();
   }
 }
+
 class TsumegoConnection {
   constructor(filePath, debug = false) {
     const fullPath = path.resolve(filePath);

@@ -15,8 +15,9 @@ async function new_tsumego() {
 
     try {
         // Fetch tsumego data from the server
-        const response = await fetch(`${window.location.href}get-tsumego?difficulty=${rank}&type=${type}`);
-
+        const baseUrl = window.location.origin + window.location.pathname;
+        const response = await fetch(`${baseUrl}get-tsumego?difficulty=${rank}&type=${type}`);
+        
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
