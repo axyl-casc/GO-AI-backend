@@ -23,8 +23,7 @@ let previous_boardsize = 0;
 let previous_komi = 0;
 let ai_hint = false;
 let komi = 6.5;
-let has_passed = false;
-
+let has_passed = false
 
 
 window.is_game_loading = true;
@@ -175,10 +174,6 @@ document.addEventListener("DOMContentLoaded", () => {
 				}
 			}
 		}
-		if(challenge === 4){
-			requested_rank = convertKyuDanToLevel(getRank()) - 2
-			requested_rank = convertLevelToKyuDan(requested_rank)
-		}
 		if(challenge === 2){
 			if(convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")){
 				boardsize = 9
@@ -245,6 +240,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 
 			playerlevel = convertKyuDanToLevel(getRank());
+		}
+		if(challenge === 4){
+			requested_rank = convertKyuDanToLevel(getRank()) - Math.floor(boardsize / 2)
+			requested_rank = convertLevelToKyuDan(requested_rank)
 		}
 
 		// shift + alt + f
@@ -750,7 +749,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			const modal = document.getElementById("newGameModal");
 			modal.classList.add("hidden");
 		}
-		
+
 		function showNewGameModal() {
 			const modal = document.getElementById("newGameModal");
 			modal.classList.remove("hidden");

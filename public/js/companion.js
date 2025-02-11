@@ -37,7 +37,47 @@ const proverbs = [
     "Coordinate your stones to support each other. Explanation: Moves that work together create synergy, strengthening your overall position.",
     "Avoid playing deep invasions in the early fuseki. Explanation: Invading too soon can lead to weak groups with limited escape routes.",
     "Review your opponent’s framework before expanding. Explanation: Adapt to or counter their fuseki to avoid falling behind.",
-    "Keep track of how many liberties all of your groups have, and know how many liberties your opponents groups have. Remember, knowledge is the key to victory. "
+    "Keep track of how many liberties all of your groups have, and know how many liberties your opponents groups have. Remember, knowledge is the key to victory. ",
+    "Don’t go fishing while your house is on fire. Tip: Prioritize urgent threats over speculative gains.",
+    "Never trust your opponent. Tip: Always verify their moves and potential traps before playing.",
+    "Give your opponent what they want. Tip: If an opponent's threat isn't actually that dangerous, your plan is worth more than trying to prevent theirs.",
+    "Make a fist before you strike. Tip: Strengthen your own position before launching an attack.",
+    "Don’t try to win in the opening. Tip: Avoid overextending to punish early mistakes—focus on a balanced setup instead.",
+    "Don’t use influence to make territory. Tip: Influence is best used for attacking, reducing, or supporting your groups rather than directly securing points.",
+    "Don’t make 20 points inside your moyo—threaten to make 50. Tip: Encourage your opponent to invade by making your framework appear even larger, so you can attack profitably.",
+    "People in glass houses shouldn’t throw stones. Tip: Don't start fights if your own groups are weak.",
+    "Six die but eight live. Tip: A group with six stones in a straight line often dies, while a group of eight has better chances of survival.",
+    "Four die but six live. Tip: Small groups in confined spaces need at least six liberties or extensions to survive.",
+    "Don’t play good stones to save dead stones. Tip: Avoid wasting moves on groups that are already lost.",
+    "Never play the first line without a good reason. Tip: The first line is typically inefficient unless it's a crucial endgame move.",
+    "Force the enemy towards your thickness. Tip: Guide your opponent into a strong area of your own influence, where they will struggle.",
+    "Play away from thickness. Tip: Avoid playing in areas where your opponent already has a strong position.",
+    "Two stones die, but three live. Tip: Many formations need at least three stones to ensure stability.",
+    "Do not attach to strong stones unless you have a clear purpose. Tip: Attaching carelessly can reinforce your opponent instead of weakening them.",
+    "Play the shape move. Tip: Good shape makes your stones more efficient and flexible.",
+    "Sacrificing a few stones can lead to a bigger gain. Tip: Sometimes, giving up small groups creates better overall results.",
+    "A weak group running makes your whole board weak. Tip: Strengthen weak groups early to avoid giving your opponent momentum.",
+    "The enemy’s vital point is your vital point. Tip: Key intersections are often just as important for both sides.",
+    "A peep forces the opponent to respond and can set up future attacks. Tip: Small forcing moves like peeps create opportunities for future gains.",
+    "Do not push from behind; instead, extend and build influence. Tip: Avoid strengthening your opponent by pushing them into a solid shape.",
+    "The monkey jump late in the game can be devastating. Tip: Use the monkey jump in the endgame to reduce your opponent’s territory efficiently.",
+    "If your opponent has an unsettled group, attack it before defending your own weak group. Tip: Take the initiative whenever possible.",
+    "Make forcing moves before committing to a major decision. Tip: Keep sente and test your opponent’s responses before choosing a direction.",
+    "Always count liberties in capturing races. Tip: Understanding the liberty count is crucial in fights.",
+    "An empty triangle is usually inefficient. Tip: Avoid bad shape that wastes moves.",
+    "Control the center to influence multiple areas at once. Tip: A strong presence in the center helps coordinate attacks.",
+    "If you don’t know where to play, make a move near the biggest open area. Tip: Prioritize big moves over small ones.",
+    "Balance territory and influence. Tip: Overcommitting to one leaves weaknesses in the other.",
+    "When approaching the enemy corner, choose your approach height wisely. Tip: Low approaches secure territory, while high approaches build influence.",
+    "Avoid over-concentration; spread your stones efficiently. Tip: A well-balanced position is stronger than a clustered one.",
+    "Coordinate your stones to support each other. Tip: Stones working together create a solid foundation for future play.",
+    "The best defense is an attack. Tip: Strengthening your own position often comes from putting pressure on your opponent.",
+    "Big moves before small moves. Tip: Play the largest point available before considering minor moves.",
+    "Never start a ko you cannot win. Tip: Entering a ko fight without enough threats can be disastrous.",
+    "Don’t respond to every threat; assess if it’s really dangerous. Tip: Sometimes ignoring a threat and playing elsewhere is better.",
+    "Play to maximize your future possibilities. Tip: Moves should provide flexibility rather than locking you into rigid plans.",
+    "Don’t let your groups become lonely. Tip: Isolated groups are easier to attack and harder to save.",
+    "The first move in the corner is often the most valuable. Tip: The corners are the most efficient places to secure territory."
   ];
 
 // Glossary of Key Go Terms
@@ -86,7 +126,13 @@ const definitions = {
     "Weak Group": "A group of stones without two eyes or a stable connection to another strong group. Weak groups are vulnerable to attack and must either run, connect, or create life.",
     "Strong Group": "A group of stones that has two eyes, is well-connected, or is thick enough to resist attacks. Strong groups exert influence and can be used to attack weak groups.",
     "Flexible": "A position or shape that can adapt to different board situations. Flexible stones can respond dynamically to an opponent's moves rather than being rigid or over-concentrated.",
-    "Liberties": "Free or empty spaces that surround your stone, or group of stones. Important to track when dealing with life and death situations."
+    "Liberties": "Free or empty spaces that surround your stone, or group of stones. Important to track when dealing with life and death situations.",
+    "Life": "A group of stones is alive if it has at least two separate eyes, making it impossible to be captured.",
+    "Death": "A group of stones is dead if it cannot form two eyes or escape capture, meaning it will inevitably be removed from the board.",
+    "Influence": "The potential control a group of stones exerts over an area, often used to support future expansions or limit an opponent’s options.",
+    "Liberty": "A free or empty point adjacent to a stone or group of stones. Keeping track of liberties is crucial in capturing races and life-and-death situations.",
+    "Territory": "An area of the board controlled by a player, surrounded by their stones and free of the opponent’s influence.",
+    "Threat": "A move or sequence that forces an opponent to respond, often used to gain an advantage or set up a future attack."
 };
 
 function getAdvice(topic) {
@@ -147,6 +193,7 @@ function getAdvice(topic) {
     const proverbEl = document.createElement('p');
     proverbEl.textContent = selectedProverb;
     proverbEl.style.fontStyle = 'italic'; // Italic styling
+    proverbEl.style.fontSize = '20px'; // Adjust size as needed
     
     container.appendChild(proverbEl);
 
