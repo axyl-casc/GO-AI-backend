@@ -56,7 +56,7 @@ function getDisplayRank() {
     }
     
     console.log(`Named rank count: ${expandedRanks.length}`)
-	if (convertKyuDanToLevel(getRank()) > convertKyuDanToLevel("18k")) {
+	if (convertKyuDanToLevel(getHighestRank()) > convertKyuDanToLevel("18k")) {
 		return `${expandedRanks[Math.min(Math.floor((getLevel() - 1)), expandedRanks.length - 1)]} (${getRank()})`;
 	}
 
@@ -89,9 +89,18 @@ function getRank() {
 
 	return localRank;
 }
+// Local storage rank management
+function getHighestRank() {
+	let localRank = localStorage.getItem("highest_rank");
+	if (!localRank) {
+		localRank = getRank();
+		localStorage.setItem("highest_rank", localRank);
+	}
 
+	return localRank;
+}
 function updateBelt() {
-	const user_elo = convertKyuDanToLevel(getRank());
+	const user_elo = convertKyuDanToLevel(getHighestRank());
 	const starting_elo = convertKyuDanToLevel(DEFAULT_RANK);
 	const danThreshold = convertKyuDanToLevel("1d");
 	let delta = user_elo - starting_elo;
@@ -168,6 +177,16 @@ function setRank(newRank) {
 	console.log(`New rank -> ${getRank()}`);
 }
 
+function setHighestRank(newRank) {
+	if (ALL_RANKS.includes(newRank)) {
+		localStorage.setItem("highest_rank", newRank);
+	} else {
+		console.error(`Invalid rank: ${newRank}`);
+	}
+	console.log(`New rank -> ${getRank()}`);
+
+}
+
 function adjustRank(amount) {
 	const currentRank = getRank();
 	const currentLevel = convertKyuDanToLevel(currentRank);
@@ -192,7 +211,10 @@ function adjustRank(amount) {
 
     // if you go up in rank then update belt
     if(amount > 0){
-        updateBelt();
+		if(convertKyuDanToLevel(newRank) > convertKyuDanToLevel(getHighestRank())){
+			setHighestRank(newRank)
+		}
     }
+	updateBelt()
 	return newRank;
 }
