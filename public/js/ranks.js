@@ -175,6 +175,10 @@ function setRank(newRank) {
 		console.error(`Invalid rank: ${newRank}`);
 	}
 	console.log(`New rank -> ${getRank()}`);
+	if(convertKyuDanToLevel(newRank) > convertKyuDanToLevel(getHighestRank())){
+		setHighestRank(newRank)
+		createParticles(25) // celebrate when a new milestone is achieved
+	}
 }
 
 function setHighestRank(newRank) {
@@ -209,12 +213,6 @@ function adjustRank(amount) {
 
 	setRank(newRank);
 
-    // if you go up in rank then update belt
-    if(amount > 0){
-		if(convertKyuDanToLevel(newRank) > convertKyuDanToLevel(getHighestRank())){
-			setHighestRank(newRank)
-		}
-    }
 	updateBelt()
 	return newRank;
 }

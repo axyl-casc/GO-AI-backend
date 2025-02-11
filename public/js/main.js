@@ -708,12 +708,13 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 	endGameButton.addEventListener("click", async () => {
 		playEndGame();
-		incrementGamesPlayed();
 		game_id = "0";
 		const score = document.querySelector("#scorespan").textContent;
 		if (score[0] === "B" && move_count !== 0) {
 			showToast("You won!");
 			incrementPlayerWins();
+			incrementGamesPlayed();
+
 			adjustRank(1); // increase rank by 1 on win
 			incrementExperience(Math.floor(move_count / 4) + getRandomInt(1, 10));
 			adjustCurrency(Math.floor(move_count / 2) + getLevel()); // increase money earned by your level
@@ -726,6 +727,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")) {
 				adjustRank(-1);
 			}
+			incrementGamesPlayed();
+
 		}
 		// Modal button handlers
 		document.getElementById("endgameModalYes").addEventListener("click", () => {

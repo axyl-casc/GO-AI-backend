@@ -327,7 +327,7 @@ class TsumegoConnection {
 
   async getPuzzleCount() {
     const sql = "SELECT COUNT(*) AS count FROM puzzles;";
-    const result = await this._send(sql);
+    const result = await this._send(sql, {single: true});
     return result.count;
   }
 
@@ -369,12 +369,13 @@ class TsumegoConnection {
   }
 
   async getRandomPuzzle(rating) {
+    const puzzlecount = await this.getPuzzleCount()
     const sql = `
           WITH Nearest AS (
             SELECT *, ABS(rating - ${rating}) AS diff
             FROM puzzles
             ORDER BY 10 * diff - happy_score, attempts ASC
-            LIMIT 15
+            LIMIT ${Math.max(Math.floor(puzzlecount / 10), 50)}
           )
           SELECT * FROM Nearest;
       `;
