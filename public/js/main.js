@@ -110,6 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				document.getElementById("profile-puzzles-correct").textContent =
 					getPuzzlesCorrect();
 				document.getElementById("profile-currency").textContent = getCurrency();
+				document.getElementById("profile-highestrank").textContent = getHighestRank();
 				renderInventory();
 				populateNotifications();
 			}

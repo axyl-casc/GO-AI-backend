@@ -169,16 +169,42 @@ function updateBelt() {
 }
 
 function setRank(newRank) {
-	if (ALL_RANKS.includes(newRank)) {
-		localStorage.setItem("local_rank", newRank);
-	} else {
-		console.error(`Invalid rank: ${newRank}`);
-	}
-	console.log(`New rank -> ${getRank()}`);
-	if(convertKyuDanToLevel(newRank) > convertKyuDanToLevel(getHighestRank())){
-		setHighestRank(newRank)
-		createParticles(25) // celebrate when a new milestone is achieved
-	}
+    if (ALL_RANKS.includes(newRank)) {
+        localStorage.setItem("local_rank", newRank);
+    } else {
+        console.error(`Invalid rank: ${newRank}`);
+        return;
+    }
+
+    console.log(`New rank -> ${getRank()}`);
+
+    if (convertKyuDanToLevel(newRank) > convertKyuDanToLevel(getHighestRank())) {
+        setHighestRank(newRank);
+        createParticles(25); // Celebrate milestone
+    }
+	setRankHistory(newRank);
+}
+
+/**
+ * Stores the user's rank history in localStorage with a daily entry.
+ * If an entry exists for today, it overwrites the previous value.
+ */
+function setRankHistory(rank) {
+	const today = getCurrentDate()
+    localStorage.setItem(`rankhistory_${today}`, rank);
+}
+function getCurrentDate(){
+    const today = new Date().toISOString().split("T")[0]; // Format YYYY-MM-DD
+	return today
+}
+
+/**
+ * Retrieves the rank history for a given date.
+ * @param {string} date - The date in YYYY-MM-DD format.
+ * @returns {string|null} - The rank on that date, or null if not found.
+ */
+function getRankHistory(date) {
+    return localStorage.getItem(`rankhistory_${date}`);
 }
 
 function setHighestRank(newRank) {
