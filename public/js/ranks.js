@@ -56,7 +56,7 @@ function getDisplayRank() {
     }
     
     console.log(`Named rank count: ${expandedRanks.length}`)
-	if (convertKyuDanToLevel(getHighestRank()) > convertKyuDanToLevel("18k")) {
+	if (convertKyuDanToLevel(getHighestRank()) >= convertKyuDanToLevel("25k")) {
 		return `${expandedRanks[Math.min(Math.floor((getLevel() - 1)), expandedRanks.length - 1)]} (${getRank()})`;
 	}
 
