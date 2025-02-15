@@ -108,6 +108,7 @@ function resetStats() {
 		localStorage.removeItem("level");
 		localStorage.removeItem("currency");
 		localStorage.removeItem("challenge");
+        localStorage.removeItem("highest_rank");
 		clearInventory();
 		updateBelt();
 		alert("Statistics have been reset.");

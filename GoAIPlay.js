@@ -31,6 +31,11 @@ async function playGame(
 	const colors = ["black", "white"];
 	let turn_counter = 0;
 
+    if(boardsize < 9){
+        handicap_stone_count = 0
+        komi += 6
+    }
+
 	// Initialize Tenuki game
 	const game = new Game({
 		scoring: "area",
