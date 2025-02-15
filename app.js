@@ -1,44 +1,43 @@
 // npm start
 // to run
 
-const { SqlConnection, TsumegoConnection } = require('./sql_connection');
-const { trainingGame } = require('./train_database');
-const { generateTsumego } = require('./tsumego_gen.js');
-const { PlayerAI } = require('./playerAI');
+const { SqlConnection, TsumegoConnection } = require("./sql_connection");
+const { trainingGame } = require("./train_database");
+const { generateTsumego } = require("./tsumego_gen.js");
+const { PlayerAI } = require("./playerAI");
 
-const { convertKyuDanToLevel, convertLevelToKyuDan } = require('./rank_conversion');
-const path = require('path');
+const {
+	convertKyuDanToLevel,
+	convertLevelToKyuDan,
+} = require("./rank_conversion");
+const path = require("path");
 const { v4: uuidv4 } = require("uuid"); // For generating unique game IDs
 
+const express = require("express");
+const cors = require("cors");
+const fs = require("fs");
+const db = require("./jsondb"); // Import JSON database
+const feedbackdb = require("./jsondb_static");
 
-const express = require('express');
-const cors = require('cors');
-const fs = require('fs');
-const db = require('./jsondb'); // Import JSON database
-const feedbackdb = require("./jsondb_static")
-
-
-const sql = new SqlConnection("./AI_Data.db")
-const tsumego_sql = new TsumegoConnection("./tsumego_sets.db")
+const sql = new SqlConnection("./AI_Data.db");
+const tsumego_sql = new TsumegoConnection("./tsumego_sets.db");
 const aiInstances = {};
 
-
-const AI_game_delay_seconds = 20
-let is_train = false
-const DEBUG = false
-
+const AI_game_delay_seconds = 20;
+let is_train = true;
+const DEBUG = false;
 
 // app.js
 
 // Read arguments (excluding 'node' and 'app.js')
 const args = process.argv.slice(2);
 
-global.VRAM = parseInt(args[1])
-global.RAM = parseInt(args[0])
+global.VRAM = parseInt(args[1]);
+global.RAM = parseInt(args[0]);
 console.log(`Total RAM: ${global.RAM} GB`);
 console.log(`Total VRAM: ${global.VRAM} GB`);
-if(global.VRAM < 4 || global.RAM < 12){
-    is_train = false
+if (global.VRAM < 4 || global.RAM < 12) {
+	is_train = false;
 }
 
 // seconds per week = 604800
@@ -47,32 +46,30 @@ if(global.VRAM < 4 || global.RAM < 12){
 // seconds per minute = 60
 
 function getRandomInt(min, max) {
-    const minCeiled = Math.ceil(min);
-    const maxFloored = Math.floor(max);
-    return Math.floor(Math.random() * (maxFloored - minCeiled + 1)) + minCeiled; // The maximum is inclusive and the minimum is inclusive
+	const minCeiled = Math.ceil(min);
+	const maxFloored = Math.floor(max);
+	return Math.floor(Math.random() * (maxFloored - minCeiled + 1)) + minCeiled; // The maximum is inclusive and the minimum is inclusive
 }
 
-
 const generateAiTable = async (dbConnection, boardSize) => {
-    const sql = `SELECT path, level_${boardSize} FROM AI;`;
+	const sql = `SELECT path, level_${boardSize} FROM AI;`;
 
-    let rows;
-    try {
-        // Fetch multiple rows (default behavior, as `single` is false)
-        rows = await dbConnection._send(sql, { single: false });
-        console.log(rows); // Will log an array of rows
-    } catch (err) {
-        console.error("Error fetching data from the database:", err);
-        throw err;
-    }
+	let rows;
+	try {
+		// Fetch multiple rows (default behavior, as `single` is false)
+		rows = await dbConnection._send(sql, { single: false });
+		console.log(rows); // Will log an array of rows
+	} catch (err) {
+		console.error("Error fetching data from the database:", err);
+		throw err;
+	}
 
+	if (!Array.isArray(rows)) {
+		throw new Error("Query result is not an array.");
+	}
 
-    if (!Array.isArray(rows)) {
-        throw new Error("Query result is not an array.");
-    }
-
-    // Start constructing the HTML
-    let html = `
+	// Start constructing the HTML
+	let html = `
     <html>
     <head>
         <style>
@@ -147,16 +144,16 @@ function sortTable(n) {
             <tbody>
     `;
 
-    // Add rows to the table
-    rows.forEach(row => {
-        const path = row.path;
-        const rank = row[`level_${boardSize}`];
-        const convertedRank = convertLevelToKyuDan(rank); // Implement this function
-        html += `<tr><td>${path}</td><td data-key="${rank}">${convertedRank}</td></tr>\n`;
-    });
+	// Add rows to the table
+	rows.forEach((row) => {
+		const path = row.path;
+		const rank = row[`level_${boardSize}`];
+		const convertedRank = convertLevelToKyuDan(rank); // Implement this function
+		html += `<tr><td>${path}</td><td data-key="${rank}">${convertedRank}</td></tr>\n`;
+	});
 
-    // Close the table and HTML structure
-    html += `
+	// Close the table and HTML structure
+	html += `
             </tbody>
         </table>
     
@@ -174,89 +171,96 @@ setTimeout(() => {
     </html>
     `;
 
-    return html;
+	return html;
 };
-
 
 // Express server setup
 const app = express();
 const PORT = 3001;
 
 // Route to serve the AI table
-app.get('/ai-table', async (req, res) => {
-    const boardSize = parseInt(req.query.boardsize) || 19; // Default to 19 if not provided
+app.get("/ai-table", async (req, res) => {
+	const boardSize = parseInt(req.query.boardsize) || 19; // Default to 19 if not provided
 
-    try {
-        const html = await generateAiTable(sql, boardSize);
-        res.send(html);
-    } catch (error) {
-        res.status(500).send("Error generating AI table.<br>" + error);
-    }
+	try {
+		const html = await generateAiTable(sql, boardSize);
+		res.send(html);
+	} catch (error) {
+		res.status(500).send("Error generating AI table.<br>" + error);
+	}
 });
-app.get('/tsumego-rate', async (req, res) => {
-    // Extract query parameters
-    const { puzzle_id, delta } = req.query; // 1 for like, -1 for dislike
+app.get("/tsumego-rate", async (req, res) => {
+	// Extract query parameters
+	const { puzzle_id, delta } = req.query; // 1 for like, -1 for dislike
 
-    console.log("Tsumego like Data:");
-    console.log(`  Puzzle ID: ${puzzle_id}`);
-    console.log(`  Delta: ${delta}`);
+	console.log("Tsumego like Data:");
+	console.log(`  Puzzle ID: ${puzzle_id}`);
+	console.log(`  Delta: ${delta}`);
 
-    await tsumego_sql.adjustHappyScore(puzzle_id, delta);
+	await tsumego_sql.adjustHappyScore(puzzle_id, delta);
 
-    // Send a simple response back
-    res.send('Tsumego rating data logged to the console.');
+	// Send a simple response back
+	res.send("Tsumego rating data logged to the console.");
 });
-app.get('/tsumego-complete', async (req, res) => {
-    // Extract query parameters
-    const { is_correct, puzzle_id, user_rank } = req.query;
+app.get("/tsumego-complete", async (req, res) => {
+	// Extract query parameters
+	const { is_correct, puzzle_id, user_rank } = req.query;
 
-    // Log the parameters to the console
-    console.log("Tsumego Completion Data:");
-    console.log(`  Is Correct: ${is_correct}`);
-    console.log(`  Puzzle ID: ${puzzle_id}`);
-    console.log(`  User Rank: ${user_rank}`);
+	// Log the parameters to the console
+	console.log("Tsumego Completion Data:");
+	console.log(`  Is Correct: ${is_correct}`);
+	console.log(`  Puzzle ID: ${puzzle_id}`);
+	console.log(`  User Rank: ${user_rank}`);
 
-    const puzzle_rating = await tsumego_sql.getPuzzleRatingById(puzzle_id);
-    const user_rating = await convertKyuDanToLevel(user_rank);
+	const puzzle_rating = await tsumego_sql.getPuzzleRatingById(puzzle_id);
+	const user_rating = await convertKyuDanToLevel(user_rank);
 
-    if (Math.abs(puzzle_rating - user_rating) <= 4) {
-        if (is_correct === 'true') {
-            console.log("Correct")
-            await tsumego_sql.adjustRating(puzzle_id, -1)
-            await tsumego_sql.markPuzzleAsSolved(puzzle_id)
-        } else {
-            console.log("Incorrect")
-            await tsumego_sql.adjustRating(puzzle_id, 1)
-        }
-    }
+	if (Math.abs(puzzle_rating - user_rating) <= 4) {
+		if (is_correct === "true") {
+			console.log("Correct");
+			await tsumego_sql.adjustRating(puzzle_id, -1);
+			await tsumego_sql.markPuzzleAsSolved(puzzle_id);
+		} else {
+			console.log("Incorrect");
+			await tsumego_sql.adjustRating(puzzle_id, 1);
+		}
+	}
 
-    // Send a simple response back
-    res.send('Tsumego completion data logged to the console.');
+	// Send a simple response back
+	res.send("Tsumego completion data logged to the console.");
 });
-
 
 // get requests
 
 // for tsumego puzzles
-app.get('/get-tsumego', async (req, res) => {
-    const { difficulty, type } = req.query;
+app.get("/get-tsumego", async (req, res) => {
+	const { difficulty, type } = req.query;
 
-    // Validate the parameters
-    if (!difficulty || !type) {
-        return res.status(400).json({ error: 'Missing required parameters: difficulty and type' });
-    }
+	// Validate the parameters
+	if (!difficulty || !type) {
+		return res
+			.status(400)
+			.json({ error: "Missing required parameters: difficulty and type" });
+	}
 
-    try {
-        const puzzle = await generateTsumego(difficulty, type, tsumego_sql, db.getValues().puzzleDelta);
+	try {
+		const puzzle = await generateTsumego(
+			difficulty,
+			type,
+			tsumego_sql,
+			db.getValues().puzzleDelta,
+		);
 
-        if (!puzzle) {
-            return res.status(404).json({ error: 'Puzzle not found or failed to generate.' });
-        }
-        res.status(200).json({ puzzle: puzzle.sgf, id: puzzle.id });
-    } catch (err) {
-        console.error('Error handling /get-tsumego request:', err);
-        res.status(500).json({ error: 'Internal server error.' });
-    }
+		if (!puzzle) {
+			return res
+				.status(404)
+				.json({ error: "Puzzle not found or failed to generate." });
+		}
+		res.status(200).json({ puzzle: puzzle.sgf, id: puzzle.id });
+	} catch (err) {
+		console.error("Error handling /get-tsumego request:", err);
+		res.status(500).json({ error: "Internal server error." });
+	}
 });
 
 let training_timer = null;
@@ -264,235 +268,245 @@ let training_timer = null;
 let isTaskRunning = false; // Add this line at the top with other variables
 
 async function task() {
-    if (isTaskRunning) {
-        console.log('Task is already running. Skipping...');
-        return;
-    }
-    isTaskRunning = true;
-    try {
-        if (Object.keys(aiInstances).length < 1) {
-            console.log(`Training game started at ${new Date().toISOString()}`);
-            await trainingGame(sql, 7);
-            await trainingGame(sql, 9);
-            await trainingGame(sql, 13);
-            await trainingGame(sql, 19);
-            console.log(`Training game completed at ${new Date().toISOString()}`);
-        } else {
-            console.log(`Skipped training...\nLIVE games -> ${Object.keys(aiInstances).length}`);
-        }
-    } catch (error) {
-        console.log(`Error during training game: ${error.message}`);
-    } finally {
-        isTaskRunning = false;
-        // Schedule next task after the delay
-        training_timer = setTimeout(task, AI_game_delay_seconds * 1000);
-    }
+	if (isTaskRunning) {
+		console.log("Task is already running. Skipping...");
+		return;
+	}
+	isTaskRunning = true;
+	try {
+		if (Object.keys(aiInstances).length < 1) {
+			console.log(`Training game started at ${new Date().toISOString()}`);
+			await trainingGame(sql, 7);
+			await trainingGame(sql, 9);
+			await trainingGame(sql, 13);
+			await trainingGame(sql, 19);
+			console.log(`Training game completed at ${new Date().toISOString()}`);
+		} else {
+			console.log(
+				`Skipped training...\nLIVE games -> ${Object.keys(aiInstances).length}`,
+			);
+		}
+	} catch (error) {
+		console.log(`Error during training game: ${error.message}`);
+	} finally {
+		isTaskRunning = false;
+		// Schedule next task after the delay
+		training_timer = setTimeout(task, AI_game_delay_seconds * 1000);
+	}
 }
 
 // Modify the cleanup function's finally block
 async function cleanup() {
-    try {
-        const min = 15 * 60 * 1000;
-        const now = Date.now();
+	try {
+		const min = 15 * 60 * 1000;
+		const now = Date.now();
 
-        for (const key in aiInstances) {
-            const aiInstance = aiInstances[key];
-            console.log(aiInstance.ai.last_move_time)
-            if (now - aiInstance.ai.last_move_time > min) {
-                console.log(`Terminating AI instance: ${key}`);
-                await aiInstance.ai.terminate();
-                delete aiInstances[key];
-            }
-        }
-    } catch (error) {
-        console.error(`Error during cleanup: ${error.message}`);
-    } finally {
-        setTimeout(cleanup, 60 * 1000); // Remove the task() call from here
-    }
+		for (const key in aiInstances) {
+			const aiInstance = aiInstances[key];
+			console.log(aiInstance.ai.last_move_time);
+			if (now - aiInstance.ai.last_move_time > min) {
+				console.log(`Terminating AI instance: ${key}`);
+				await aiInstance.ai.terminate();
+				delete aiInstances[key];
+			}
+		}
+	} catch (error) {
+		console.error(`Error during cleanup: ${error.message}`);
+	} finally {
+		setTimeout(cleanup, 60 * 1000); // Remove the task() call from here
+	}
 }
 
-app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static(path.join(__dirname, "public")));
 
 // Endpoint to create a new game
 app.get("/create-game", async (req, res) => {
-    let {
-        companion_key = 38,
-        komi = 6.5,
-        handicap = 0,
-        rank = "30k",
-        boardsize = 13,
-        ai_color = "white",
-        type = "normal",
-        client_id // expect client_id to be provided as a query parameter
-    } = req.query;
+	let {
+		companion_key = 38,
+		komi = 6.5,
+		handicap = 0,
+		rank = "30k",
+		boardsize = 13,
+		ai_color = "white",
+		type = "normal",
+		client_id, // expect client_id to be provided as a query parameter
+	} = req.query;
 
-    // Validate that the client_id is provided
-    if (!client_id) {
-        return res.status(400).json({ error: "Missing 'client_id' query parameter." });
-    }
+	// Validate that the client_id is provided
+	if (!client_id) {
+		return res
+			.status(400)
+			.json({ error: "Missing 'client_id' query parameter." });
+	}
 
-    console.log("Query parameters:", req.query);
+	console.log("Query parameters:", req.query);
 
-    // Convert values to proper types
-    // If komi needs to be a decimal, consider using parseFloat instead of parseInt.
-    komi = parseInt(komi);
-    handicap = parseInt(handicap);
-    boardsize = parseInt(boardsize);
+	// Convert values to proper types
+	// If komi needs to be a decimal, consider using parseFloat instead of parseInt.
+	komi = parseInt(komi);
+	handicap = parseInt(handicap);
+	boardsize = parseInt(boardsize);
 
-    // Create a new game
-    const gameId = uuidv4();
-    const pAI = new PlayerAI();
+	// Create a new game
+	const gameId = uuidv4();
+	const pAI = new PlayerAI();
 
-    await pAI.create(sql, komi, boardsize, handicap, rank, ai_color, type, companion_key, await db.getValues().AIDelta);
+	await pAI.create(
+		sql,
+		komi,
+		boardsize,
+		handicap,
+		rank,
+		ai_color,
+		type,
+		companion_key,
+		await db.getValues().AIDelta,
+	);
 
+	for (const key in aiInstances) {
+		if (aiInstances[key].client_id === client_id) {
+			// Terminate the existing AI instance
+			if (typeof aiInstances[key].ai.terminate === "function") {
+				aiInstances[key].ai.terminate(); // Assuming the AI instance has a terminate method
+			}
+			delete aiInstances[key]; // Remove it from the mapping
+			break; // Exit loop once found and terminated
+		}
+	}
 
-    for (const key in aiInstances) {
-        if (aiInstances[key].client_id === client_id) {
-            // Terminate the existing AI instance
-            if (typeof aiInstances[key].ai.terminate === "function") {
-                aiInstances[key].ai.terminate(); // Assuming the AI instance has a terminate method
-            }
-            delete aiInstances[key]; // Remove it from the mapping
-            break; // Exit loop once found and terminated
-        }
-    }
-    
-    // Store the new AI instance and update the mapping for this client_id
-    aiInstances[gameId] = {
-        ai: pAI,
-        komi: komi,
-        handicap: handicap,
-        rank: rank,
-        client_id: client_id
-    };
-    
+	// Store the new AI instance and update the mapping for this client_id
+	aiInstances[gameId] = {
+		ai: pAI,
+		komi: komi,
+		handicap: handicap,
+		rank: rank,
+		client_id: client_id,
+	};
 
-
-    res.json({ gameId });
+	res.json({ gameId });
 });
 
-
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 app.get("/move", async (req, res) => {
-    const { id, move, boardsize } = req.query;
-    console.log("?GOT MOVE REQUEST:");
-    console.log(`Game id = ${id}`);
-    console.log(move);
-    console.log(`Boardsize: ${boardsize}`)
+	const { id, move, boardsize } = req.query;
+	console.log("?GOT MOVE REQUEST:");
+	console.log(`Game id = ${id}`);
+	console.log(move);
+	console.log(`Boardsize: ${boardsize}`);
 
-    if (!id || !move) {
-        return res.status(400).json({ error: "Game ID and move are required." });
-    }
+	if (!id || !move) {
+		return res.status(400).json({ error: "Game ID and move are required." });
+	}
 
-    const game = aiInstances[id];
-    if (!game) {
-        return res.status(404).json({ error: "Game not found." });
-    }
-    //AIPlayspeedDelta
-    try {
-        console.log("Playing the move B");
+	const game = aiInstances[id];
+	if (!game) {
+		return res.status(404).json({ error: "Game not found." });
+	}
+	//AIPlayspeedDelta
+	try {
+		console.log("Playing the move B");
 
-        // Start timing
-        const startTime = performance.now();
+		// Start timing
+		const startTime = performance.now();
 
-        // Send the player's move to the AI
-        const { response, score, hint } = await game.ai.play(move);
+		// Send the player's move to the AI
+		const { response, score, hint } = await game.ai.play(move);
 
-        // End timing
-        const endTime = performance.now();
-        const moveTime = ((endTime - startTime) / 1000); // Convert ms to seconds
-        console.log(`Move generation time: ${moveTime.toFixed(3)} seconds`);
+		// End timing
+		const endTime = performance.now();
+		const moveTime = (endTime - startTime) / 1000; // Convert ms to seconds
+		console.log(`Move generation time: ${moveTime.toFixed(3)} seconds`);
 
-        // Determine the total time the request should take
-        const upper_time = Math.floor(boardsize / 2)
-        const lower_time = 2
-        const totalTime = getRandomInt(lower_time, upper_time) + db.getValues().AIPlayspeedDelta
-        const sleepTime = Math.max(totalTime - moveTime, 0); // Ensure it's not negative
+		// Determine the total time the request should take
+		const upper_time = Math.floor(boardsize / 2);
+		const lower_time = 2;
+		const totalTime =
+			getRandomInt(lower_time, upper_time) + db.getValues().AIPlayspeedDelta;
+		const sleepTime = Math.max(totalTime - moveTime, 0); // Ensure it's not negative
 
-        if(game.ai.moveCount > 2 && sleepTime > 0 && !DEBUG){
-            console.log(`Sleeping for ${sleepTime.toFixed(3)} seconds to meet delay target...`);
-            await sleep(sleepTime * 1000); // Convert to milliseconds
-        }
+		if (game.ai.moveCount > 2 && sleepTime > 0 && !DEBUG) {
+			console.log(
+				`Sleeping for ${sleepTime.toFixed(3)} seconds to meet delay target...`,
+			);
+			await sleep(sleepTime * 1000); // Convert to milliseconds
+		}
 
-        res.json({ 
-            aiResponse: response, 
-            aiScore: score, 
-            hint: hint
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: err.message });
-    }
+		res.json({
+			aiResponse: response,
+			aiScore: score,
+			hint: hint,
+		});
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ error: err.message });
+	}
 });
 
 // Middleware to parse JSON and form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 // Submit feedback and adjust AI and puzzle difficulty
-app.post('/submit-feedback', (req, res) => {
-    const feedback = req.body;
+app.post("/submit-feedback", (req, res) => {
+	const feedback = req.body;
 
-    if (!feedback) {
-        return res.status(400).json({ error: 'Invalid feedback data' });
-    }
-    feedbackdb.add('feedback', feedback); // Store feedback in feedback.json
+	if (!feedback) {
+		return res.status(400).json({ error: "Invalid feedback data" });
+	}
+	feedbackdb.add("feedback", feedback); // Store feedback in feedback.json
 
-    console.log('Received Feedback:', feedback);
+	console.log("Received Feedback:", feedback);
 
-    // Adjust AI difficulty
-    if (feedback.ai_difficulty === 'too_easy') {
-        db.increment('AIDelta');
-    } else if (feedback.ai_difficulty === 'too_hard') {
-        db.decrement('AIDelta');
-    }
+	// Adjust AI difficulty
+	if (feedback.ai_difficulty === "too_easy") {
+		db.increment("AIDelta");
+	} else if (feedback.ai_difficulty === "too_hard") {
+		db.decrement("AIDelta");
+	}
 
-    // Adjust puzzle difficulty
-    if (feedback.puzzle_difficulty === 'too_easy') {
-        db.increment('puzzleDelta');
-    } else if (feedback.puzzle_difficulty === 'too_hard') {
-        db.decrement('puzzleDelta');
-    }
-    // Adjust ai speed
-    if (feedback.ai_speed === 'too_fast') {
-        db.increment('AIPlayspeedDelta');
-    } else if (feedback.ai_speed === 'too_slow') {
-        db.decrement('AIPlayspeedDelta');
-    }
+	// Adjust puzzle difficulty
+	if (feedback.puzzle_difficulty === "too_easy") {
+		db.increment("puzzleDelta");
+	} else if (feedback.puzzle_difficulty === "too_hard") {
+		db.decrement("puzzleDelta");
+	}
+	// Adjust ai speed
+	if (feedback.ai_speed === "too_fast") {
+		db.increment("AIPlayspeedDelta");
+	} else if (feedback.ai_speed === "too_slow") {
+		db.decrement("AIPlayspeedDelta");
+	}
 
-    res.status(200).json({
-        message: 'Feedback stored successfully',
-        adjustments: db.getValues() // Return updated values
-    });
+	res.status(200).json({
+		message: "Feedback stored successfully",
+		adjustments: db.getValues(), // Return updated values
+	});
 });
 
 // Get all feedback entries
-app.get('/view-feedback', (req, res) => {
-    res.json(feedbackdb.get('feedback'));
+app.get("/view-feedback", (req, res) => {
+	res.json(feedbackdb.get("feedback"));
 });
 
+app.get("/", (req, res) => {
+	res.sendFile(path.join(__dirname, "/public/index.html"));
+});
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/index.html'));
-  });
+app.get("/feedback", (req, res) => {
+	res.sendFile(path.join(__dirname, "/public/feedback.html"));
+});
 
-  app.get('/feedback', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/feedback.html'));
-  });
+cleanup();
 
-cleanup()
-
-if(is_train){
-    task()
+if (is_train) {
+	task();
 }
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+	console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 // End of file

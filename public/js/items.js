@@ -164,26 +164,27 @@ const ALL_ITEMS = [
 	},
 ];
 
-
 // Function to equip an item and unequip others in the same category (excluding "featured")
 function equipItem(selectedItem, inventory) {
-    if (!selectedItem) return; // If no item is selected, do nothing
+	if (!selectedItem) return; // If no item is selected, do nothing
 
-    // Get the categories of the selected item (excluding "featured")
-    const categoriesToCheck = selectedItem.category.filter(cat => cat !== "featured");
+	// Get the categories of the selected item (excluding "featured")
+	const categoriesToCheck = selectedItem.category.filter(
+		(cat) => cat !== "featured",
+	);
 
-    // Unequip all items in the same categories (excluding "featured")
-    inventory.forEach((item) => {
-        if (
-            item !== selectedItem && // Don't unequip the selected item
-            item.category.some(cat => categoriesToCheck.includes(cat)) // Check if the item shares any category
-        ) {
-            item.equipped = false; // Unequip the item
-        }
-    });
+	// Unequip all items in the same categories (excluding "featured")
+	inventory.forEach((item) => {
+		if (
+			item !== selectedItem && // Don't unequip the selected item
+			item.category.some((cat) => categoriesToCheck.includes(cat)) // Check if the item shares any category
+		) {
+			item.equipped = false; // Unequip the item
+		}
+	});
 
-    // Equip the selected item
-    selectedItem.equipped = true;
+	// Equip the selected item
+	selectedItem.equipped = true;
 }
 
 // ability to purchase game SGF demos
@@ -363,28 +364,28 @@ function renderInventory() {
 
 	// Add event listeners to the "Equip" buttons
 	const equipButtons = inventoryContainer.querySelectorAll(".equip-button");
-equipButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-        const itemTitle = button.getAttribute("data-item-title");
-        const inventory = getInventory();
-        const selectedItem = inventory.find((item) => item.title === itemTitle);
+	equipButtons.forEach((button) => {
+		button.addEventListener("click", () => {
+			const itemTitle = button.getAttribute("data-item-title");
+			const inventory = getInventory();
+			const selectedItem = inventory.find((item) => item.title === itemTitle);
 
-        if (!selectedItem) {
-            console.error(`Item "${itemTitle}" not found in inventory.`);
-            return;
-        }
+			if (!selectedItem) {
+				console.error(`Item "${itemTitle}" not found in inventory.`);
+				return;
+			}
 
-        // Toggle equipped state
-        if (selectedItem.equipped) {
-            // Directly unequip if already equipped
-            selectedItem.equipped = false;
-        } else {
-            // Equip this item and unequip others in category
-            equipItem(selectedItem, inventory);
-        }
+			// Toggle equipped state
+			if (selectedItem.equipped) {
+				// Directly unequip if already equipped
+				selectedItem.equipped = false;
+			} else {
+				// Equip this item and unequip others in category
+				equipItem(selectedItem, inventory);
+			}
 
-        localStorage.setItem("inventory", JSON.stringify(inventory));
-        renderInventory();
-    });
-});
+			localStorage.setItem("inventory", JSON.stringify(inventory));
+			renderInventory();
+		});
+	});
 }

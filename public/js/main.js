@@ -1,4 +1,3 @@
-
 async function fetchData(url) {
 	try {
 		const response = await fetch(url);
@@ -23,8 +22,7 @@ let previous_boardsize = 0;
 let previous_komi = 0;
 let ai_hint = false;
 let komi = 6.5;
-let has_passed = false
-
+let has_passed = false;
 
 window.is_game_loading = true;
 
@@ -110,7 +108,8 @@ document.addEventListener("DOMContentLoaded", () => {
 				document.getElementById("profile-puzzles-correct").textContent =
 					getPuzzlesCorrect();
 				document.getElementById("profile-currency").textContent = getCurrency();
-				document.getElementById("profile-highestrank").textContent = getHighestRank();
+				document.getElementById("profile-highestrank").textContent =
+					getHighestRank();
 				renderInventory();
 				populateNotifications();
 			}
@@ -158,49 +157,48 @@ document.addEventListener("DOMContentLoaded", () => {
 		rank = getRank();
 
 		// set normal gametype if the challenge is enabled
-		let challenge = getChallenge()
-		if(challenge > 0){
-			game_type = "normal"
-			komi = 6.5
+		let challenge = getChallenge();
+		if (challenge > 0) {
+			game_type = "normal";
+			komi = 6.5;
 		}
 
-
 		// set up for challenge game
-		if(challenge === 3){
-			boardsize = 17
-			if(convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("17k")){
-				challenge = getRandomInt(1,4)
-				if(challenge === 3){
-					challenge = 4
+		if (challenge === 3) {
+			boardsize = 17;
+			if (convertKyuDanToLevel(getRank()) < convertKyuDanToLevel("17k")) {
+				challenge = getRandomInt(1, 4);
+				if (challenge === 3) {
+					challenge = 4;
 				}
 			}
 		}
-		if(challenge === 2){
-			if(convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")){
-				boardsize = 9
-				requested_rank = convertKyuDanToLevel(getRank()) - 2
-				requested_rank = convertLevelToKyuDan(requested_rank)
-				requested_komi = 12.5
-				komi = 12.5
-			}else{
-				boardsize = 13
-				requested_rank = convertKyuDanToLevel(getRank()) - 2
-				requested_rank = convertLevelToKyuDan(requested_rank)
-				requested_komi = 20.5
-				komi = 20.5
+		if (challenge === 2) {
+			if (convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")) {
+				boardsize = 9;
+				requested_rank = convertKyuDanToLevel(getRank()) - 2;
+				requested_rank = convertLevelToKyuDan(requested_rank);
+				requested_komi = 12.5;
+				komi = 12.5;
+			} else {
+				boardsize = 13;
+				requested_rank = convertKyuDanToLevel(getRank()) - 2;
+				requested_rank = convertLevelToKyuDan(requested_rank);
+				requested_komi = 20.5;
+				komi = 20.5;
 			}
 		}
-		if(challenge === 1){
-			requested_komi = 1.5
-			komi = requested_komi
-			boardsize = 5
-			requested_rank = convertKyuDanToLevel(getRank()) + 50 // max level AI
-			requested_rank = convertLevelToKyuDan(requested_rank)
-			if(convertKyuDanToLevel(getRank()) >= convertKyuDanToLevel("20k")){
-				boardsize = 7
+		if (challenge === 1) {
+			requested_komi = 1.5;
+			komi = requested_komi;
+			boardsize = 5;
+			requested_rank = convertKyuDanToLevel(getRank()) + 50; // max level AI
+			requested_rank = convertLevelToKyuDan(requested_rank);
+			if (convertKyuDanToLevel(getRank()) >= convertKyuDanToLevel("20k")) {
+				boardsize = 7;
 			}
 		}
-		setChallenge(challenge)
+		setChallenge(challenge);
 
 		if (Number.isNaN(boardsize)) {
 			console.log("Auto game started...");
@@ -223,8 +221,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			// add a bit of randomness to the player level
 			if (playerlevel < very_beginner) {
 				boardsize = 5;
-				komi = 0.5
-			}else if (playerlevel < beginner) {
+				komi = 0.5;
+			} else if (playerlevel < beginner) {
 				boardsize = 7;
 				if (getGamesPlayed() < 100) {
 					komi = 0.5;
@@ -242,9 +240,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			playerlevel = convertKyuDanToLevel(getRank());
 		}
-		if(challenge === 4){
-			requested_rank = convertKyuDanToLevel(getRank()) - Math.floor(boardsize / 2)
-			requested_rank = convertLevelToKyuDan(requested_rank)
+		if (challenge === 4) {
+			requested_rank =
+				convertKyuDanToLevel(getRank()) - Math.floor(boardsize / 2);
+			requested_rank = convertLevelToKyuDan(requested_rank);
 		}
 
 		// shift + alt + f
@@ -271,9 +270,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		console.log(`Stones = ${stones}`);
 		console.log(`Board = ${getBoardImg().image}`);
 
-
 		endGameButton.classList.add("hidden");
-		if(challenge !== 4) {
+		if (challenge !== 4) {
 			if (stones == null) {
 				board = new WGo.Board(boardContainer, {
 					size: boardsize, // Board size (e.g., 19 for standard)
@@ -304,24 +302,24 @@ document.addEventListener("DOMContentLoaded", () => {
 					background: `${getBoardImg().image}`,
 				});
 			}
-		}else{
+		} else {
 			board = new WGo.Board(boardContainer, {
 				size: boardsize, // Board size (e.g., 19 for standard)
 				width: Math.min(window.innerWidth * 0.8, 600), // Responsive width
 				height: Math.min(window.innerHeight * 0.8, 600), // Responsive height
 				stoneHandler: {
 					stone: {
-						draw: function(args, board) {
+						draw: function (args, board) {
 							const xr = board.getX(args.x),
 								yr = board.getY(args.y),
 								sr = board.stoneRadius;
-		
+
 							this.fillStyle = "gray"; // Set both black and white stones to the same color
 							this.beginPath();
 							this.arc(xr, yr, sr, 0, 2 * Math.PI, true);
 							this.fill();
-						}
-					}
+						},
+					},
 				},
 				background: `${getBoardImg().image}`,
 			});
@@ -339,7 +337,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		// Set initial size
 		resizeBoard();
 		game = new WGo.Game(boardsize, "KO"); // Manages game state and rules
-
 
 		if (getRandomInt(1, 5) === 2) {
 			game_type = "chinese"; // 10% chance of playing chinese gamemode
@@ -366,10 +363,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		//showToast(`Game type: ${properCase(game_type)}`)
 
-		if(challenge > 0){
-			game_type = "normal"
+		if (challenge > 0) {
+			game_type = "normal";
 		}
-
 
 		// Place handicap stones for black (WGo.B)
 		if (game_type === "handicap") {
@@ -457,8 +453,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		console.log(await getCompanion());
 		const companion_display = document.getElementById("companion");
 
-
-
 		if (getCompanion() == null) {
 			console.log("No Companion");
 			document.getElementById("companion-moves").classList.add("hidden");
@@ -478,8 +472,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			);
 		}
 
-		document.getElementById("komispan").textContent = requested_komi
-		komi = requested_komi
+		document.getElementById("komispan").textContent = requested_komi;
+		komi = requested_komi;
 
 		game_id = game_id.gameId;
 		console.log(game_id);
@@ -529,7 +523,6 @@ document.addEventListener("DOMContentLoaded", () => {
 				board.removeObjectsAt(captured.x, captured.y);
 				caps++;
 			});
-
 
 			// Convert move to Go notation (e.g., "D4")
 			const playerMove = convertToCoords(x, y);
@@ -592,30 +585,35 @@ document.addEventListener("DOMContentLoaded", () => {
 				companionToggleButton.classList.contains("bg-blue-500")
 			) {
 				show_ai_hints(game, board, ai_hint);
-				if(move_count % 10 === 0){
-					document.querySelector("#adviceDisplay").innerHTML = ""
-					if(move_count < 20){
-						document.querySelector("#adviceDisplay").appendChild(getAdvice("opening"))
-					}else{
-						document.querySelector("#adviceDisplay").appendChild(getAdvice("none"))
-
+				if (move_count % 10 === 0) {
+					document.querySelector("#adviceDisplay").innerHTML = "";
+					if (move_count < 20) {
+						document
+							.querySelector("#adviceDisplay")
+							.appendChild(getAdvice("opening"));
+					} else {
+						document
+							.querySelector("#adviceDisplay")
+							.appendChild(getAdvice("none"));
 					}
 				}
-			}else{
-				if(convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("10k")){
+			} else {
+				if (convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("10k")) {
 					updateAtariMarkers(game, board);
-					if(move_count % 10 === 0 || move_count <= 2){
-						document.querySelector("#adviceDisplay").innerHTML = ""
-						if(move_count < 15){
-							document.querySelector("#adviceDisplay").appendChild(getAdvice("opening"))
-						}else{
-							document.querySelector("#adviceDisplay").appendChild(getAdvice("none"))
+					if (move_count % 10 === 0 || move_count <= 2) {
+						document.querySelector("#adviceDisplay").innerHTML = "";
+						if (move_count < 15) {
+							document
+								.querySelector("#adviceDisplay")
+								.appendChild(getAdvice("opening"));
+						} else {
+							document
+								.querySelector("#adviceDisplay")
+								.appendChild(getAdvice("none"));
 						}
-
 					}
 				}
 			}
-
 		});
 
 		// Function to handle AI's move
@@ -729,7 +727,6 @@ document.addEventListener("DOMContentLoaded", () => {
 				adjustRank(-1);
 			}
 			incrementGamesPlayed();
-
 		}
 		// Modal button handlers
 		document.getElementById("endgameModalYes").addEventListener("click", () => {
@@ -737,16 +734,16 @@ document.addEventListener("DOMContentLoaded", () => {
 			setTimeout(() => {
 				//document.querySelector('[data-tab="play"]').click();
 				// maybe send signal to server to kill the process ?
-				setChallenge(0)
-				window.location.reload()
+				setChallenge(0);
+				window.location.reload();
 			}, 300);
 		});
 		document.getElementById("challengeGame").addEventListener("click", () => {
 			hideNewGameModal();
 			setTimeout(() => {
 				//document.querySelector('[data-tab="play"]').click();
-				setChallenge(getRandomInt(1,4))
-				window.location.reload()
+				setChallenge(getRandomInt(1, 4));
+				window.location.reload();
 			}, 300);
 		});
 		function hideNewGameModal() {
@@ -757,14 +754,14 @@ document.addEventListener("DOMContentLoaded", () => {
 		function showNewGameModal() {
 			const modal = document.getElementById("newGameModal");
 			modal.classList.remove("hidden");
-			if(convertKyuDanToLevel("29k") <= convertKyuDanToLevel(getRank())){
+			if (convertKyuDanToLevel("29k") <= convertKyuDanToLevel(getRank())) {
 				// if user is stronger than 25k then custom games allowed
-				if(getRandomInt(0,5) === 2){
+				if (getRandomInt(0, 5) === 2) {
 					// make it so challenge mode appears randomly
 					document.getElementById("challengeGame").classList.remove("hidden");
 				}
-			}else{
-				document.getElementById("challengeGame").classList.add("hidden")
+			} else {
+				document.getElementById("challengeGame").classList.add("hidden");
 			}
 		}
 		move_count = 0;

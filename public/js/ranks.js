@@ -14,54 +14,54 @@ const ALL_RANKS = (() => {
 })();
 
 function getDisplayRank() {
-    const levelTitles = [ 
-        "Novice Adventurer",
-        "Aspiring Student",
-        "Rising Strategist",
-        "Tactical Adept",
-        "Shape Master",
-        "Fuseki Scholar",
-        "Joseki Explorer",
-        "Sabaki Artist",
-        "Tenuki Wanderer",
-        "Endgame Virtuoso",
-        "Territory Architect",
-        "Ko Trickster",
-        "Judan Aspirant",
-        "Kisei Visionary",
-        "Tengen Mystic",
-        "Tanuki Gambler",
-        "Honinbo Contender",
-        "Meijin Challenger",
-        "Kitsune Deceiver",
-        "Oni of Influence",
-        "Tatsu of the Board",
-        "Grandmaster of Go"
-    ];
-    
-    const expandedRanks = [];
-    
-    for (const title of levelTitles) {
-        expandedRanks.push(`${title} I`);
-        expandedRanks.push(`${title} II`);
-        expandedRanks.push(`${title} III`);
-        expandedRanks.push(`${title} IV`);
-        expandedRanks.push(`${title} V`);
-        expandedRanks.push(`${title} VI`);
-        expandedRanks.push(`${title} VII`);
-        expandedRanks.push(`${title} VIII`);
-        expandedRanks.push(`${title} IX`);
-        expandedRanks.push(`${title} X`);
-        expandedRanks.push(`The ${title}`);
-    }
-    
-    console.log(`Named rank count: ${expandedRanks.length}`)
+	const levelTitles = [
+		"Novice Adventurer",
+		"Aspiring Student",
+		"Rising Strategist",
+		"Tactical Adept",
+		"Shape Master",
+		"Fuseki Scholar",
+		"Joseki Explorer",
+		"Sabaki Artist",
+		"Tenuki Wanderer",
+		"Endgame Virtuoso",
+		"Territory Architect",
+		"Ko Trickster",
+		"Judan Aspirant",
+		"Kisei Visionary",
+		"Tengen Mystic",
+		"Tanuki Gambler",
+		"Honinbo Contender",
+		"Meijin Challenger",
+		"Kitsune Deceiver",
+		"Oni of Influence",
+		"Tatsu of the Board",
+		"Grandmaster of Go",
+	];
+
+	const expandedRanks = [];
+
+	for (const title of levelTitles) {
+		expandedRanks.push(`${title} I`);
+		expandedRanks.push(`${title} II`);
+		expandedRanks.push(`${title} III`);
+		expandedRanks.push(`${title} IV`);
+		expandedRanks.push(`${title} V`);
+		expandedRanks.push(`${title} VI`);
+		expandedRanks.push(`${title} VII`);
+		expandedRanks.push(`${title} VIII`);
+		expandedRanks.push(`${title} IX`);
+		expandedRanks.push(`${title} X`);
+		expandedRanks.push(`The ${title}`);
+	}
+
+	console.log(`Named rank count: ${expandedRanks.length}`);
 	if (convertKyuDanToLevel(getHighestRank()) >= convertKyuDanToLevel("25k")) {
-		return `${expandedRanks[Math.min(Math.floor((getLevel() - 1)), expandedRanks.length - 1)]} (${getRank()})`;
+		return `${expandedRanks[Math.min(Math.floor(getLevel() - 1), expandedRanks.length - 1)]} (${getRank()})`;
 	}
 
 	return expandedRanks[
-		Math.min(Math.floor((getLevel() - 1)), expandedRanks.length - 1)
+		Math.min(Math.floor(getLevel() - 1), expandedRanks.length - 1)
 	];
 }
 
@@ -137,11 +137,10 @@ function updateBelt() {
 		"brown",
 		"black",
 	];
-    // 160 fits so the user goes from 1k to 1d correctly. 
+	// 160 fits so the user goes from 1k to 1d correctly.
 	const free_levels_until = 160;
 
-    delta += Math.floor(Math.min(getLevel(), free_levels_until) / 5);
-
+	delta += Math.floor(Math.min(getLevel(), free_levels_until) / 5);
 
 	let stripe_index = delta % colors.length;
 	let belt_index = Math.floor(delta / colors.length);
@@ -169,19 +168,19 @@ function updateBelt() {
 }
 
 function setRank(newRank) {
-    if (ALL_RANKS.includes(newRank)) {
-        localStorage.setItem("local_rank", newRank);
-    } else {
-        console.error(`Invalid rank: ${newRank}`);
-        return;
-    }
+	if (ALL_RANKS.includes(newRank)) {
+		localStorage.setItem("local_rank", newRank);
+	} else {
+		console.error(`Invalid rank: ${newRank}`);
+		return;
+	}
 
-    console.log(`New rank -> ${getRank()}`);
+	console.log(`New rank -> ${getRank()}`);
 
-    if (convertKyuDanToLevel(newRank) > convertKyuDanToLevel(getHighestRank())) {
-        setHighestRank(newRank);
-        createParticles(25); // Celebrate milestone
-    }
+	if (convertKyuDanToLevel(newRank) > convertKyuDanToLevel(getHighestRank())) {
+		setHighestRank(newRank);
+		createParticles(25); // Celebrate milestone
+	}
 	setRankHistory(newRank);
 }
 
@@ -190,12 +189,12 @@ function setRank(newRank) {
  * If an entry exists for today, it overwrites the previous value.
  */
 function setRankHistory(rank) {
-	const today = getCurrentDate()
-    localStorage.setItem(`rankhistory_${today}`, rank);
+	const today = getCurrentDate();
+	localStorage.setItem(`rankhistory_${today}`, rank);
 }
-function getCurrentDate(){
-    const today = new Date().toISOString().split("T")[0]; // Format YYYY-MM-DD
-	return today
+function getCurrentDate() {
+	const today = new Date().toISOString().split("T")[0]; // Format YYYY-MM-DD
+	return today;
 }
 
 /**
@@ -204,7 +203,7 @@ function getCurrentDate(){
  * @returns {string|null} - The rank on that date, or null if not found.
  */
 function getRankHistory(date) {
-    return localStorage.getItem(`rankhistory_${date}`);
+	return localStorage.getItem(`rankhistory_${date}`);
 }
 
 function setHighestRank(newRank) {
@@ -214,7 +213,6 @@ function setHighestRank(newRank) {
 		console.error(`Invalid rank: ${newRank}`);
 	}
 	console.log(`New rank -> ${getRank()}`);
-
 }
 
 function adjustRank(amount) {
@@ -239,6 +237,6 @@ function adjustRank(amount) {
 
 	setRank(newRank);
 
-	updateBelt()
+	updateBelt();
 	return newRank;
 }

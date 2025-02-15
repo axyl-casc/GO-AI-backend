@@ -1,6 +1,9 @@
-const { convertKyuDanToLevel, convertLevelToKyuDan } = require('./rank_conversion');
-const fs = require('fs').promises; // Use the promises API
-const path = require('path');
+const {
+	convertKyuDanToLevel,
+	convertLevelToKyuDan,
+} = require("./rank_conversion");
+const fs = require("fs").promises; // Use the promises API
+const path = require("path");
 
 /**
  * Selects a random element from an array.
@@ -8,22 +11,22 @@ const path = require('path');
  * @returns {*} - A random element from the array.
  */
 async function getRandomElement(array) {
-  const randomIndex = Math.floor(Math.random() * array.length);
-  return array[randomIndex];
+	const randomIndex = Math.floor(Math.random() * array.length);
+	return array[randomIndex];
 }
 
 async function insertTEAfterCorrect(input) {
-  // Regular expression to match C[...] containing 'correct' but not 'incorrect'
-  const regex = /C\[(?!.*incorrect)(.*?correct.*?)\]/gi;
+	// Regular expression to match C[...] containing 'correct' but not 'incorrect'
+	const regex = /C\[(?!.*incorrect)(.*?correct.*?)\]/gi;
 
-  // Replace function to insert TE[1] after the matched C[...]
-  return input.replace(regex, (match, content) => `C[${content}]TE[1]`);
+	// Replace function to insert TE[1] after the matched C[...]
+	return input.replace(regex, (match, content) => `C[${content}]TE[1]`);
 }
 
 async function parseSGFAndAddVW(sgf) {
-  return await insertTEAfterCorrect(sgf)
-  // Valid letters for a 19x19 board, skipping 'i'
-  /*
+	return await insertTEAfterCorrect(sgf);
+	// Valid letters for a 19x19 board, skipping 'i'
+	/*
     const validLetters = "abcdefghjklmnopqrst";
 
   // Regex to find B[...] or W[...] with two coordinates
@@ -78,45 +81,44 @@ async function parseSGFAndAddVW(sgf) {
   */
 }
 
-
 /**
  * Generates a random Tsumego (Go problem) from the "puzzles" directory.
  * @returns {string|null} - The content of a randomly selected Tsumego file, or null if the directory is empty.
  */
 async function generateTsumego(difficulty, type, tsumego_sql, delta) {
-  try {
-    // Directory containing the Tsumego puzzles
-    const puzzlesDir = path.join(__dirname, 'puzzles');
+	try {
+		// Directory containing the Tsumego puzzles
+		const puzzlesDir = path.join(__dirname, "puzzles");
 
-    // Read all files in the puzzles directory
-    const files = await fs.readdir(puzzlesDir);
+		// Read all files in the puzzles directory
+		const files = await fs.readdir(puzzlesDir);
 
-    if (files.length === 0) {
-      console.warn('No Tsumego puzzles found in the directory.');
-      return null;
-    }
+		if (files.length === 0) {
+			console.warn("No Tsumego puzzles found in the directory.");
+			return null;
+		}
 
-    // Convert difficulty to ELO level
-    let elo = await convertKyuDanToLevel(difficulty);
-    elo = elo + delta
-    console.log(`Requested difficulty: ${difficulty} -> ELO: ${elo}`);
-    const puzzle = await tsumego_sql.getRandomPuzzle(elo);
+		// Convert difficulty to ELO level
+		let elo = await convertKyuDanToLevel(difficulty);
+		elo = elo + delta;
+		console.log(`Requested difficulty: ${difficulty} -> ELO: ${elo}`);
+		const puzzle = await tsumego_sql.getRandomPuzzle(elo);
 
-    if (!puzzle || !puzzle.filename) {
-      console.error('No valid puzzle returned from the database.');
-      return null;
-    }
+		if (!puzzle || !puzzle.filename) {
+			console.error("No valid puzzle returned from the database.");
+			return null;
+		}
 
-    // Read and parse the selected file
-    const filePath = path.join(puzzlesDir, puzzle.filename);
-    const contents = await fs.readFile(filePath, 'utf-8'); // Use promises API for reading files
-    const parsedContents = await parseSGFAndAddVW(contents);
+		// Read and parse the selected file
+		const filePath = path.join(puzzlesDir, puzzle.filename);
+		const contents = await fs.readFile(filePath, "utf-8"); // Use promises API for reading files
+		const parsedContents = await parseSGFAndAddVW(contents);
 
-    console.log('Returning puzzle:', puzzle);
-    return { sgf: parsedContents, id: puzzle.id };
-  } catch (err) {
-    console.error('Error generating Tsumego puzzle:', err);
-    return null;
-  }
+		console.log("Returning puzzle:", puzzle);
+		return { sgf: parsedContents, id: puzzle.id };
+	} catch (err) {
+		console.error("Error generating Tsumego puzzle:", err);
+		return null;
+	}
 }
 module.exports = { generateTsumego };

@@ -34,31 +34,39 @@
 <body class="bg-badukWood font-sans m-0">
     <!-- Dialog Box -->
     <dialog id="reviewDialog" class="p-5 bg-white rounded-lg shadow-lg w-[85%] h-[95%]">
-        <button onclick="closeReview()" class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded">Close</button>
+        <button onclick="closeReview()"
+            class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded">Close</button>
         <h2 class="text-xl font-semibold mb-4">Game Review</h2>
         <div id="reviewPlayer" style="width: 100%;"></div>
     </dialog>
-<!-- Dialog -->
-<dialog id="welcomeDialog" class="bg-white rounded-lg shadow-lg w-4/5 h-4/5 p-0">
-    <!-- Modal Header -->
-    <div class="px-4 py-2 bg-blue-600 text-white flex justify-between items-center rounded-t-lg">
-      <h2 class="text-lg font-semibold">Welcome to Go!</h2>
-      <button id="closeDialog" class="text-white hover:text-gray-300"
-        onclick="document.querySelector('#welcomeDialog').close()">&times;</button>
-    </div>
-  
-    <div class="flex space-x-4 m-2">
-      <span id="welcome" class="px-4 py-2 bg-blue-500 text-white font-bold text-lg rounded-lg hover:bg-blue-600 transform hover:scale-105 transition duration-300">Welcome</span>
-      <span id="howToPlay" class="px-4 py-2 bg-green-500 text-white font-bold text-lg rounded-lg hover:bg-green-600 transform hover:scale-105 transition duration-300">How to Play</span>
-      <span id="goRanks" class="px-4 py-2 bg-yellow-500 text-white font-bold text-lg rounded-lg hover:bg-yellow-600 transform hover:scale-105 transition duration-300">Go Ranks</span>
-      <span id="beltInfo" class="px-4 py-2 bg-amber-500 text-white font-bold text-lg rounded-lg hover:bg-amber-600 transform hover:scale-105 transition duration-300">Belt System</span>
-    </div>
-  
-    <p id="info-box" class="p-2 text-gray-700 mt-4">Click on a topic to see its description.</p>
-  
-    <script>
-      const infoContent = {
-        welcome: `
+    <!-- Dialog -->
+    <dialog id="welcomeDialog" class="bg-white rounded-lg shadow-lg w-4/5 h-4/5 p-0">
+        <!-- Modal Header -->
+        <div class="px-4 py-2 bg-blue-600 text-white flex justify-between items-center rounded-t-lg">
+            <h2 class="text-lg font-semibold">Welcome to Go!</h2>
+            <button id="closeDialog" class="text-white hover:text-gray-300"
+                onclick="document.querySelector('#welcomeDialog').close()">&times;</button>
+        </div>
+
+        <div class="flex space-x-4 m-2">
+            <span id="welcome"
+                class="px-4 py-2 bg-blue-500 text-white font-bold text-lg rounded-lg hover:bg-blue-600 transform hover:scale-105 transition duration-300">Welcome</span>
+            <span id="howToPlay"
+                class="px-4 py-2 bg-green-500 text-white font-bold text-lg rounded-lg hover:bg-green-600 transform hover:scale-105 transition duration-300">How
+                to Play</span>
+            <span id="goRanks"
+                class="px-4 py-2 bg-yellow-500 text-white font-bold text-lg rounded-lg hover:bg-yellow-600 transform hover:scale-105 transition duration-300">Go
+                Ranks</span>
+            <span id="beltInfo"
+                class="px-4 py-2 bg-amber-500 text-white font-bold text-lg rounded-lg hover:bg-amber-600 transform hover:scale-105 transition duration-300">Belt
+                System</span>
+        </div>
+
+        <p id="info-box" class="p-2 text-gray-700 mt-4">Click on a topic to see its description.</p>
+
+        <script>
+            const infoContent = {
+                welcome: `
 <h2 style="font-size: 1.8rem; font-weight: bold; margin-bottom: 12px;">Welcome to Your Go Learning Journey!</h2>
 
 <p style="margin-bottom: 16px; line-height: 1.6;">
@@ -103,7 +111,7 @@
 </blockquote>
 `,
 
-howToPlay: `
+                howToPlay: `
 <h2 style="font-size: 1.8rem; font-weight: bold; margin-bottom: 12px;">How to Play Go</h2>
 
 <p style="margin-bottom: 16px; line-height: 1.6;">
@@ -148,7 +156,7 @@ howToPlay: `
 `,
 
 
-goRanks: `
+                goRanks: `
 <h2 style="font-size: 1.8rem; font-weight: bold; margin-bottom: 12px;">Go Ranks Explained</h2>
 
 <p style="margin-bottom: 16px; line-height: 1.6;">
@@ -188,7 +196,7 @@ goRanks: `
   "A strong player sees further ahead, but the best player sees the whole board." – Go proverb
 </blockquote>
 `,
-beltInfo:`<h3 class="text-xl font-semibold mb-4">Belt Color Progression</h3>
+                beltInfo: `<h3 class="text-xl font-semibold mb-4">Belt Color Progression</h3>
 <div class="overflow-x-auto mb-8">
     <p>Your belt is displayed at the buttom of the screen. </p>
   <table id="beltTable" class="border-collapse w-full text-sm">
@@ -198,74 +206,74 @@ beltInfo:`<h3 class="text-xl font-semibold mb-4">Belt Color Progression</h3>
   </table>
 </div>`
 
-      };
-  
-      function updateInfo(topic) {
-        document.querySelector("#info-box").innerHTML = infoContent[topic];
-      }
-      updateInfo("welcome")
-      document.querySelector("#welcome").addEventListener("click", () => updateInfo("welcome"));
-      document.querySelector("#howToPlay").addEventListener("click", () => updateInfo("howToPlay"));
-      document.querySelector("#goRanks").addEventListener("click", () => updateInfo("goRanks"));
-      document.querySelector("#beltInfo").addEventListener("click", () => {
-        updateInfo("beltInfo")
-          // Define the belt colors and stripe colors
-  const baseColors = [
-    "bg-white", // White
-    "bg-yellow-400", // Yellow
-    "bg-orange-400", // Orange
-    "bg-green-400", // Green
-    "bg-blue-400", // Blue
-    "bg-purple-400", // Purple
-    "bg-red-400", // Red
-    "bg-amber-700", // Brown
-    "bg-gray-800", // Black
-  ];
+            };
 
-  const stripeColors = [
-    "bg-white", // White
-    "bg-yellow-400", // Yellow
-    "bg-orange-400", // Orange
-    "bg-green-400", // Green
-    "bg-blue-400", // Blue
-    "bg-purple-400", // Purple
-    "bg-red-400", // Red
-    "bg-amber-700", // Brown
-    "bg-gray-800", // Black
-  ];
+            function updateInfo(topic) {
+                document.querySelector("#info-box").innerHTML = infoContent[topic];
+            }
+            updateInfo("welcome")
+            document.querySelector("#welcome").addEventListener("click", () => updateInfo("welcome"));
+            document.querySelector("#howToPlay").addEventListener("click", () => updateInfo("howToPlay"));
+            document.querySelector("#goRanks").addEventListener("click", () => updateInfo("goRanks"));
+            document.querySelector("#beltInfo").addEventListener("click", () => {
+                updateInfo("beltInfo")
+                // Define the belt colors and stripe colors
+                const baseColors = [
+                    "bg-white", // White
+                    "bg-yellow-400", // Yellow
+                    "bg-orange-400", // Orange
+                    "bg-green-400", // Green
+                    "bg-blue-400", // Blue
+                    "bg-purple-400", // Purple
+                    "bg-red-400", // Red
+                    "bg-amber-700", // Brown
+                    "bg-gray-800", // Black
+                ];
 
-  // Get the table body element
-  const tableBody = document.querySelector("#beltTable tbody");
+                const stripeColors = [
+                    "bg-white", // White
+                    "bg-yellow-400", // Yellow
+                    "bg-orange-400", // Orange
+                    "bg-green-400", // Green
+                    "bg-blue-400", // Blue
+                    "bg-purple-400", // Purple
+                    "bg-red-400", // Red
+                    "bg-amber-700", // Brown
+                    "bg-gray-800", // Black
+                ];
 
-  // Generate the table rows and cells
-  baseColors.forEach((baseColor, baseIndex) => {
-    const row = document.createElement("tr");
-    // Add the belt cells with vertical stripes
-    stripeColors.forEach((stripeColor) => {
-      const cell = document.createElement("td");
-      cell.className = `m-2 border h-16 relative ${baseColor}`;
+                // Get the table body element
+                const tableBody = document.querySelector("#beltTable tbody");
 
-      // Add the vertical stripe
-      const stripe = document.createElement("div");
-      stripe.className = `left-2 mx-4 w-4 h-full ${stripeColor}`;
-      cell.appendChild(stripe);
+                // Generate the table rows and cells
+                baseColors.forEach((baseColor, baseIndex) => {
+                    const row = document.createElement("tr");
+                    // Add the belt cells with vertical stripes
+                    stripeColors.forEach((stripeColor) => {
+                        const cell = document.createElement("td");
+                        cell.className = `m-2 border h-16 relative ${baseColor}`;
 
-      row.appendChild(cell);
-    });
+                        // Add the vertical stripe
+                        const stripe = document.createElement("div");
+                        stripe.className = `left-2 mx-4 w-4 h-full ${stripeColor}`;
+                        cell.appendChild(stripe);
 
-    tableBody.appendChild(row);
-  });
-    });
-    </script>
-  
-    <div class="absolute bottom-0 left-0 w-full px-4 py-2 bg-gray-100 flex justify-end rounded-b-lg">
-      <button id="closeDialogFooter" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-        onclick="document.querySelector('#welcomeDialog').close()">
-        Close
-      </button>
-    </div>
-  </dialog>
-  
+                        row.appendChild(cell);
+                    });
+
+                    tableBody.appendChild(row);
+                });
+            });
+        </script>
+
+        <div class="absolute bottom-0 left-0 w-full px-4 py-2 bg-gray-100 flex justify-end rounded-b-lg">
+            <button id="closeDialogFooter" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                onclick="document.querySelector('#welcomeDialog').close()">
+                Close
+            </button>
+        </div>
+    </dialog>
+
 
     <!-- Toast Container -->
     <div id="toast-container" class="fixed top-1/2 right-20 hidden z-50">
@@ -282,20 +290,22 @@ beltInfo:`<h3 class="text-xl font-semibold mb-4">Belt Color Progression</h3>
         </div>
     </div>
 
-<!-- Modified Modal HTML -->
-<div id="newGameModal" class="fixed top-32 left-0 right-0 z-[1000] hidden">
-      <div class="bg-white rounded-t-xl shadow-lg mx-auto max-w-md w-full p-6 border-t-4 border-blue-500">
-        <div class="flex justify-between gap-3">
-          <button id="endgameModalYes" class="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-transform duration-200 active:scale-95">
-            Start New Game
-          </button>
-          <button id="challengeGame" class="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-transform duration-200 active:scale-95">
-            Begin Custom Challenge Game
-          </button>
+    <!-- Modified Modal HTML -->
+    <div id="newGameModal" class="fixed top-32 left-0 right-0 z-[1000] hidden">
+        <div class="bg-white rounded-t-xl shadow-lg mx-auto max-w-md w-full p-6 border-t-4 border-blue-500">
+            <div class="flex justify-between gap-3">
+                <button id="endgameModalYes"
+                    class="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-transform duration-200 active:scale-95">
+                    Start New Game
+                </button>
+                <button id="challengeGame"
+                    class="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-transform duration-200 active:scale-95">
+                    Begin Custom Challenge Game
+                </button>
+            </div>
         </div>
     </div>
-  </div>
-  
+
     <!-- Header -->
     <header class="sticky fixed top-0 left-0 right-0 bg-badukBlack shadow-md z-50">
         <nav class="flex border-b border-gray-300">
@@ -325,8 +335,7 @@ beltInfo:`<h3 class="text-xl font-semibold mb-4">Belt Color Progression</h3>
             <!-- Play Tab -->
             <div id="play" class="sticky top-0 tab-content block bg-badukWhite overflow-auto">
                 <!-- Main Container -->
-                <div
-                    class="flex flex-col lg:flex-row justify-center items-start w-full max-w-screen-xl mx-auto">
+                <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-screen-xl mx-auto">
 
                     <!-- Companion Container -->
                     <div id="companion-display" class="w-full lg:w-1/3 flex flex-col items-center space-y-4 p-12">
@@ -409,7 +418,7 @@ beltInfo:`<h3 class="text-xl font-semibold mb-4">Belt Color Progression</h3>
                                 </button>
                                 <button id="save-sgf-button"
                                     class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Save SGF</button>
-                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -566,72 +575,79 @@ beltInfo:`<h3 class="text-xl font-semibold mb-4">Belt Color Progression</h3>
                     <p>Rank: <span id="profile-rank">Unranked</span></p>
                     <p>Highest Rank: <span id="profile-highestrank">Unranked</span></p>
                     <br>
-    <!-- Dropdown Container -->
-    <div class="relative inline-block">
-        <!-- Dropdown Toggle Button -->
-        <button id="dropdownBtn" class="px-4 py-2 bg-gray-700 text-white rounded-lg shadow-md flex items-center">
-            Cheat Menu
-            <svg id="arrowIcon" class="w-5 h-5 ml-2 transition-transform duration-300 transform" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-        </button>
+                    <!-- Dropdown Container -->
+                    <div class="relative inline-block">
+                        <!-- Dropdown Toggle Button -->
+                        <button id="dropdownBtn"
+                            class="px-4 py-2 bg-gray-700 text-white rounded-lg shadow-md flex items-center">
+                            Cheat Menu
+                            <svg id="arrowIcon" class="w-5 h-5 ml-2 transition-transform duration-300 transform"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
 
-        <!-- Dropdown Menu -->
-        <div id="dropdownMenu" class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 scale-95 transform transition-all duration-300 pointer-events-none">
-            <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-t-lg shadow"
-                onclick="resetStats()">Reset Profile</button>
-            <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 shadow"
-                onclick="adjustRank(1)">Increase Rank</button>
-            <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 shadow"
-                onclick="adjustRank(-1);updateBelt()">Decrease Rank</button>
-                <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-b-lg shadow"
-                onclick="incrementExperience(2)">Increase Experience (2)</button>
-        </div>
-        <button onclick="openFeedbackTab()" class="mt-4 bg-badukAccent text-white p-2 rounded mb-4">Give Feedback</button>
-
-    </div>
-
-    <script>
-        const dropdownBtn = document.getElementById("dropdownBtn");
-        const dropdownMenu = document.getElementById("dropdownMenu");
-        const arrowIcon = document.getElementById("arrowIcon");
-
-        dropdownBtn.addEventListener("click", () => {
-            const isOpen = dropdownMenu.classList.contains("opacity-100");
-            
-            if (isOpen) {
-                closeDropdown();
-            } else {
-                openDropdown();
-            }
-        });
-
-        function openDropdown() {
-            dropdownMenu.classList.add("opacity-100", "scale-100");
-            dropdownMenu.classList.remove("opacity-0", "scale-95", "pointer-events-none");
-            arrowIcon.classList.add("rotate-180"); // Rotate arrow down
-        }
-
-        function closeDropdown() {
-            dropdownMenu.classList.remove("opacity-100", "scale-100");
-            dropdownMenu.classList.add("opacity-0", "scale-95", "pointer-events-none");
-            arrowIcon.classList.remove("rotate-180"); // Rotate arrow up
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener("click", (event) => {
-            if (!dropdownBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                closeDropdown();
-            }
-        });
-
-    </script>
-                        <div class="my-8">
-                            <p>Notification History:</p>
-                            <div class="my-4 w-80 h-96 border border-gray-300 rounded-lg shadow-lg bg-white p-2 overflow-y-auto" id="scrollableList">
-                                <!-- List items will be populated here -->
-                            </div>
+                        <!-- Dropdown Menu -->
+                        <div id="dropdownMenu"
+                            class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 scale-95 transform transition-all duration-300 pointer-events-none">
+                            <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-t-lg shadow"
+                                onclick="resetStats()">Reset Profile</button>
+                            <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 shadow"
+                                onclick="adjustRank(1)">Increase Rank</button>
+                            <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 shadow"
+                                onclick="adjustRank(-1);updateBelt()">Decrease Rank</button>
+                            <button class="w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-b-lg shadow"
+                                onclick="incrementExperience(2)">Increase Experience (2)</button>
                         </div>
+                        <button onclick="openFeedbackTab()" class="mt-4 bg-badukAccent text-white p-2 rounded mb-4">Give
+                            Feedback</button>
+
+                    </div>
+
+                    <script>
+                        const dropdownBtn = document.getElementById("dropdownBtn");
+                        const dropdownMenu = document.getElementById("dropdownMenu");
+                        const arrowIcon = document.getElementById("arrowIcon");
+
+                        dropdownBtn.addEventListener("click", () => {
+                            const isOpen = dropdownMenu.classList.contains("opacity-100");
+
+                            if (isOpen) {
+                                closeDropdown();
+                            } else {
+                                openDropdown();
+                            }
+                        });
+
+                        function openDropdown() {
+                            dropdownMenu.classList.add("opacity-100", "scale-100");
+                            dropdownMenu.classList.remove("opacity-0", "scale-95", "pointer-events-none");
+                            arrowIcon.classList.add("rotate-180"); // Rotate arrow down
+                        }
+
+                        function closeDropdown() {
+                            dropdownMenu.classList.remove("opacity-100", "scale-100");
+                            dropdownMenu.classList.add("opacity-0", "scale-95", "pointer-events-none");
+                            arrowIcon.classList.remove("rotate-180"); // Rotate arrow up
+                        }
+
+                        // Close dropdown when clicking outside
+                        document.addEventListener("click", (event) => {
+                            if (!dropdownBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                                closeDropdown();
+                            }
+                        });
+
+                    </script>
+                    <div class="my-8">
+                        <p>Notification History:</p>
+                        <div class="my-4 w-80 h-96 border border-gray-300 rounded-lg shadow-lg bg-white p-2 overflow-y-auto"
+                            id="scrollableList">
+                            <!-- List items will be populated here -->
+                        </div>
+                    </div>
                 </div>
                 <div id="profile-inventory" class="w-1/2 ml-4">
                     <h1 class="text-2xl font-bold mb-6 text-badukBlack">Inventory</h1>
@@ -690,13 +706,13 @@ beltInfo:`<h3 class="text-xl font-semibold mb-4">Belt Color Progression</h3>
         </div>
         <span id="right-number" class="text-lg font-bold">100</span>
     </div>
-    
+
     <!-- Bottom Color Bar (Sticky at Bottom) -->
     <div id="colorBar" class="sticky bottom-0 left-0 w-full h-16 bg-yellow-400">
         <!-- Vertical Stripe (Inside the Bottom Bar) -->
         <div id="stripe" class="absolute left-[4rem] w-32 h-full bg-red-500"></div>
     </div>
-    
+
 
     <!-- Script -->
     <script type="text/javascript" src="wgo/wgo.js"></script>
@@ -713,10 +729,10 @@ beltInfo:`<h3 class="text-xl font-semibold mb-4">Belt Color Progression</h3>
     <script type="text/javascript" src="wgo/player.permalink.js"></script>
     <script>
         function getRandomInt(min, max) {
-    const minCeiled = Math.ceil(min);
-    const maxFloored = Math.floor(max);
-    return Math.floor(Math.random() * (maxFloored - minCeiled + 1)) + minCeiled; // The maximum is inclusive and the minimum is inclusive
-}
+            const minCeiled = Math.ceil(min);
+            const maxFloored = Math.floor(max);
+            return Math.floor(Math.random() * (maxFloored - minCeiled + 1)) + minCeiled; // The maximum is inclusive and the minimum is inclusive
+        }
     </script>
     <script src="js/sound.js"></script>
     <script src="js/particles.js"></script>
@@ -745,32 +761,32 @@ beltInfo:`<h3 class="text-xl font-semibold mb-4">Belt Color Progression</h3>
         });
 
     </script>
-<!-- Add this at the end of your body -->
-<div id="loadingSpinner" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50">
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-      <div class="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+    <!-- Add this at the end of your body -->
+    <div id="loadingSpinner" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div class="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+        </div>
     </div>
-  </div>
-  
-  <script>
-    window.is_game_loading = true
 
-    function updateLoadingSpinner() {
-        const spinner = document.getElementById('loadingSpinner');
-        if (window.is_game_loading) {
-            spinner.classList.remove('hidden');
-            setTimeout(updateLoadingSpinner, 500);
-        } else {
-            spinner.classList.add('hidden');
-            setTimeout(updateLoadingSpinner, 2000);
+    <script>
+        window.is_game_loading = true
+
+        function updateLoadingSpinner() {
+            const spinner = document.getElementById('loadingSpinner');
+            if (window.is_game_loading) {
+                spinner.classList.remove('hidden');
+                setTimeout(updateLoadingSpinner, 500);
+            } else {
+                spinner.classList.add('hidden');
+                setTimeout(updateLoadingSpinner, 2000);
+            }
         }
-    }
 
-    updateLoadingSpinner()
-    // Simulate loading state change
-    setTimeout(updateLoadingSpinner, 2000);
+        updateLoadingSpinner()
+        // Simulate loading state change
+        setTimeout(updateLoadingSpinner, 2000);
 
-</script>
+    </script>
 </body>
 
 </html>
