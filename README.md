@@ -29,6 +29,8 @@ python ./run_server.py
 ```
 This will initialize the backend and make it ready for handling Go game requests.
 
+You can access it via http://localhost:3001 on your local network. 
+
 ## Features
 - Supports **game logic processing** for the Go AI.
 - Interfaces with **Go engines** like KataGo and GTP-based AI.
