@@ -276,7 +276,6 @@ async function task() {
 	try {
 		if (Object.keys(aiInstances).length < 1) {
 			console.log(`Training game started at ${new Date().toISOString()}`);
-			await trainingGame(sql, 7);
 			await trainingGame(sql, 9);
 			await trainingGame(sql, 13);
 			await trainingGame(sql, 19);

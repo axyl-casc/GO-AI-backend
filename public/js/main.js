@@ -453,6 +453,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		console.log(await getCompanion());
 		const companion_display = document.getElementById("companion");
 
+		if(requested_komi === 6.5 && boardsize < 13){
+			requested_komi = 4.5
+		}
+
 		if (getCompanion() == null) {
 			console.log("No Companion");
 			document.getElementById("companion-moves").classList.add("hidden");

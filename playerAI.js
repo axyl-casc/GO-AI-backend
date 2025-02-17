@@ -42,7 +42,7 @@ class PlayerAI {
 		target_level = convertLevelToKyuDan(
 			convertKyuDanToLevel(target_level) + delta,
 		);
-		let search_boardsize = 19;
+		let search_boardsize = 9;
 		if (boardsize === 19 || boardsize === 13 || boardsize === 9) {
 			search_boardsize = boardsize;
 		}
