@@ -77,7 +77,33 @@ const proverbs = [
 	"Don’t let your groups become lonely. Tip: Isolated groups are easier to attack and harder to save.",
 	"The first move in the corner is often the most valuable. Tip: The corners are the most efficient places to secure territory.",
 ];
-
+const beginnerProverbs = [
+	"Separate your opponent’s stones and keep yours connected. - Connected stones are safer and harder to capture. Split your opponent’s groups to make them weaker.",
+	"Always check if your groups are in Atari (one liberty left). - If your stones have only 1 liberty, add a stone to escape or connect them to a safer group.",
+	"Make sure your groups can form two eyes to survive. - Two eyes (empty spaces inside your group) mean it can’t be captured. Corners are easiest for making eyes!",
+	"Fix urgent problems before making big moves. - Save your weak/in-danger groups first, then focus on claiming territory.",
+	"Every move should do something useful. - Don’t play random stones. Defend weak groups, attack opponents, or expand your territory.",
+	"Two weak groups will get you into trouble. Strengthen one or connect them. - Focus on making one group safe instead of splitting your effort.",
+	"Don’t chase your opponent’s stones too much. - Chasing lets them build strong shapes. Focus on your own weak spots instead.",
+	"Play away from your opponent’s strong areas. - Avoid placing stones right next to their thick walls or strong groups.",
+	"If stuck, play near the biggest empty area. - Empty spaces = potential territory. On 9x9 boards, the center is often important!",
+	"Don’t attach to strong stones unless you have a plan. - Placing a stone directly next to their strong group usually helps them more than you.",
+	"Sacrifice a few stones to gain something bigger. - Let them capture 1-2 stones if it helps you build a wall or control the board.",
+	"A ‘peep’ (threat to cut) forces your opponent to respond. - Use peeps to create weaknesses in their shape for future attacks.",
+	"Good moves do two things at once. - Example: A stone that defends your group AND attacks your opponent’s weak stones.",
+	"Don’t push from behind—extend instead. - Pushing strengthens their stones. Extend sideways to build influence safely.",
+	"Don’t help your opponent fix their weak groups. - If their stones are disconnected, don’t play a move that lets them connect.",
+	"Attack your opponent’s weak groups before defending yours. - Keeping pressure on them gives you time to fix your own problems later.",
+	"Count liberties in capturing races! - The group with more liberties wins. Add liberties to yours and reduce theirs.",
+	"Avoid the ‘empty triangle’ shape. - Three stones in a triangle waste a liberty. Use looser shapes like a bamboo joint.",
+	"Don’t cram too many stones in one area. - Spread out to control more territory efficiently.",
+	"Corners first, then sides, then center. - Corners are easiest to secure (use two edges for protection).",
+	"Don’t start fights too early. - Build a safe base (like a corner group) before attacking.",
+	"Balance territory and influence. - Claim corners/sides for points, but use center stones to influence the board.",
+	"Never start a ko fight you can’t win. - Ko fights require ‘threats’ to win. If you lack threats, avoid starting one.",
+	"Don’t respond to every threat—ask: ‘Is this really dangerous?’. - Small threats can often be ignored for bigger moves.",
+	"Don’t let your groups become lonely. - Connect isolated stones to friends or give them space to breathe.",
+  ];
 // Glossary of Key Go Terms
 const definitions = {
 	Atari:
@@ -174,11 +200,13 @@ const definitions = {
 
 function getAdvice(topic) {
 	let selectedProverb;
-
-	if (topic.toLowerCase() === "none") {
+	console.log(`Generating Advice : ${topic}`)
+	if(topic.toLowerCase() === "beginner"){
+		selectedProverb = beginnerProverbs[getRandomInt(0, beginnerProverbs.length - 1)];
+	}else if (topic.toLowerCase() === "none") {
 		// Original behavior: pick any random proverb
 		selectedProverb = proverbs[getRandomInt(0, proverbs.length - 1)];
-	} else {
+	} else{
 		// Filter proverbs by the given topic (case-insensitive)
 		const filteredProverbs = proverbs.filter((p) =>
 			p.toLowerCase().includes(topic.toLowerCase()),

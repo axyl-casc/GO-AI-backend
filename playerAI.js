@@ -73,7 +73,6 @@ class PlayerAI {
 		}
 		await this.analysisEngine.sendCommand(`boardsize ${boardsize}`);
 		if (type === "handicap") {
-			komi = 0.5;
 			for (const i of this.instances) {
 				const starDistance = boardsize >= 13 ? 3 : 2; // 4th line for boards >= 13x13, 3rd line for smaller boards
 
@@ -103,6 +102,7 @@ class PlayerAI {
 				}
 			}
 		}
+		this.komi = komi
 		for (const ai of this.instances) {
 			await ai.sendCommand(`komi ${komi}`);
 		}

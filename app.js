@@ -23,7 +23,7 @@ const sql = new SqlConnection("./AI_Data.db");
 const tsumego_sql = new TsumegoConnection("./tsumego_sets.db");
 const aiInstances = {};
 
-const AI_game_delay_seconds = 20;
+const AI_game_delay_seconds = 60;
 let is_train = true;
 const DEBUG = false;
 

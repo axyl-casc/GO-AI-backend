@@ -453,8 +453,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		console.log(await getCompanion());
 		const companion_display = document.getElementById("companion");
 
-		if(requested_komi === 6.5 && boardsize < 13){
-			requested_komi = 4.5
+		if (requested_komi === 6.5 && boardsize < 13) {
+			requested_komi = 1.5;
 		}
 
 		if (getCompanion() == null) {
@@ -545,7 +545,8 @@ document.addEventListener("DOMContentLoaded", () => {
 				if (
 					parseInt(
 						document.querySelector("#scorespan").textContent.split("+")[1],
-					) > 30 &&
+					) >
+						(boardsize * boardsize) / 10 &&
 					game_type !== "handicap"
 				) {
 					endGameButton.classList.remove("hidden"); // when difference in score is greater than 30
@@ -584,37 +585,37 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (has_passed) {
 				endGameButton.classList.remove("hidden"); // always remove if the AI has passed
 			}
+
+			function updateAdvice(){
+				document.querySelector("#adviceDisplay").innerHTML = "";
+				if (convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("20k")) {
+					document
+						.querySelector("#adviceDisplay")
+						.appendChild(getAdvice("beginner"));
+				} else if (move_count < 20) {
+					document
+						.querySelector("#adviceDisplay")
+						.appendChild(getAdvice("opening"));
+				} else {
+					document
+						.querySelector("#adviceDisplay")
+						.appendChild(getAdvice("none"));
+				}
+			}
+
 			if (
 				has_ai_hint &&
 				companionToggleButton.classList.contains("bg-blue-500")
 			) {
 				show_ai_hints(game, board, ai_hint);
 				if (move_count % 10 === 0) {
-					document.querySelector("#adviceDisplay").innerHTML = "";
-					if (move_count < 20) {
-						document
-							.querySelector("#adviceDisplay")
-							.appendChild(getAdvice("opening"));
-					} else {
-						document
-							.querySelector("#adviceDisplay")
-							.appendChild(getAdvice("none"));
-					}
+					updateAdvice()
 				}
 			} else {
-				if (convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("10k")) {
+				if (convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")) {
 					updateAtariMarkers(game, board);
 					if (move_count % 10 === 0 || move_count <= 2) {
-						document.querySelector("#adviceDisplay").innerHTML = "";
-						if (move_count < 15) {
-							document
-								.querySelector("#adviceDisplay")
-								.appendChild(getAdvice("opening"));
-						} else {
-							document
-								.querySelector("#adviceDisplay")
-								.appendChild(getAdvice("none"));
-						}
+						updateAdvice()
 					}
 				}
 			}
@@ -1115,3 +1116,6 @@ function handleCompanionToggle() {
 	const lastMove = move_history[move_history.length - 1];
 	addMarker(lastMove.x, lastMove.y, board, lastMove.c);
 }
+
+
+
