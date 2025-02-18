@@ -112,7 +112,7 @@ function updateBelt() {
 			green: "#22c55e",
 			blue: "#3b82f6",
 			purple: "#a855f7",
-			red: "#ef4444",
+			red: "#e30000",
 			brown: "#8b5a2b",
 			black: "#000000",
 		};
@@ -137,10 +137,13 @@ function updateBelt() {
 		"brown",
 		"black",
 	];
-	// 160 fits so the user goes from 1k to 1d correctly.
-	const free_levels_until = 160;
 
-	delta += Math.floor((Math.min(getLevel(), free_levels_until) / 5) + (getPlayerLoss() / 5));
+	// 160 fits so the user goes from 1k to 1d correctly.
+	let aux_levels = (getGamesPlayed() / 20) + (getPlayerLoss() / 100)
+	aux_levels = Math.floor(aux_levels)
+	const free_levels_until = 160 - aux_levels * 5;
+
+	delta += Math.floor((Math.min(getLevel(), free_levels_until) / 5) + aux_levels);
 
 	let stripe_index = delta % colors.length;
 	let belt_index = Math.floor(delta / colors.length);
