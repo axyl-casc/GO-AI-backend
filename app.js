@@ -426,7 +426,7 @@ app.get("/move", async (req, res) => {
 			getRandomInt(lower_time, upper_time) + db.getValues().AIPlayspeedDelta;
 		const sleepTime = Math.max(totalTime - moveTime, 0); // Ensure it's not negative
 
-		if (game.ai.moveCount > 2 && sleepTime > 0 && !DEBUG) {
+		if (game.ai.moveCount >= 5 && sleepTime > 0 && !DEBUG) {
 			console.log(
 				`Sleeping for ${sleepTime.toFixed(3)} seconds to meet delay target...`,
 			);

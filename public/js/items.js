@@ -156,12 +156,12 @@ const ALL_ITEMS = [
 		title: "Meijin Title Game",
 		description: "Meijin title Game 1976",
 		image: "wgo/black_128.png",
-		price: 100,
+		price: 150,
 		shoppable: true,
 		category: ["sgf"],
 		dropchance: 100,
 		sgf: "SGF/Mei-1976-1.sgf",
-	},
+	}
 ];
 
 // Function to equip an item and unequip others in the same category (excluding "featured")

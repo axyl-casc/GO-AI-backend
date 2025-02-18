@@ -140,7 +140,7 @@ function updateBelt() {
 	// 160 fits so the user goes from 1k to 1d correctly.
 	const free_levels_until = 160;
 
-	delta += Math.floor(Math.min(getLevel(), free_levels_until) / 5);
+	delta += Math.floor((Math.min(getLevel(), free_levels_until) / 5) + (getPlayerLoss() / 5));
 
 	let stripe_index = delta % colors.length;
 	let belt_index = Math.floor(delta / colors.length);

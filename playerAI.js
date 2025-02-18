@@ -107,6 +107,7 @@ class PlayerAI {
 			await ai.sendCommand(`komi ${komi}`);
 		}
 		await this.analysisEngine.sendCommand(`komi ${komi}`);
+		await this.analysisEngine.sendCommand("kata-set-rules aga");
 
 		// Place alternating black (B) and white (W) stones on opposite corners
 		if (type === "chinese") {

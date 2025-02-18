@@ -21,7 +21,7 @@ let previous_movelist = null;
 let previous_boardsize = 0;
 let previous_komi = 0;
 let ai_hint = false;
-let komi = 6.5;
+let komi = 7.5;
 let has_passed = false;
 
 window.is_game_loading = true;
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		let game_type = "normal";
 		let handicap_stones = 0;
 		let requested_rank = getRank();
-		let requested_komi = 6.5;
+		let requested_komi = 7.5;
 		has_passed = false;
 		window.is_game_loading = true;
 		document.getElementById("rankspan").innerHTML = getDisplayRank();
@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		let challenge = getChallenge();
 		if (challenge > 0) {
 			game_type = "normal";
-			komi = 6.5;
+			komi = 7.5;
 		}
 
 		// set up for challenge game

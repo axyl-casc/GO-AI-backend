@@ -141,6 +141,10 @@ function setHasLost(value) {
 	localStorage.setItem("hasLost", JSON.stringify(value));
 }
 
+function getPlayerLoss(){
+	return getGamesPlayed() - getPlayerWins()
+}
+
 // For retrieving the number of games played
 function getGamesPlayed() {
 	// Check if "gamesPlayed" exists in local storage
