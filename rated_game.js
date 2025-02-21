@@ -12,7 +12,7 @@ function getDist(a, b) {
 async function playRatedGame(ai1_path, ai2_path, boardsize, sql) {
 	const rank1 = await sql.getRank(ai1_path, boardsize);
 	const rank2 = await sql.getRank(ai2_path, boardsize);
-	let komi = 6.5;
+	let komi = 7.5;
 	let rank_diff = getDist(rank1, rank2);
 	if (rank_diff > 9) {
 		return "err";

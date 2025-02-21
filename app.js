@@ -340,9 +340,8 @@ app.get("/create-game", async (req, res) => {
 
 	console.log("Query parameters:", req.query);
 
-	// Convert values to proper types
-	// If komi needs to be a decimal, consider using parseFloat instead of parseInt.
 	komi = parseInt(komi);
+	komi = Math.floor(komi) + 0.5
 	handicap = parseInt(handicap);
 	boardsize = parseInt(boardsize);
 

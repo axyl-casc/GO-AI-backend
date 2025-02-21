@@ -366,6 +366,9 @@
                             <button
                                 class="btn mt-2 px-4 py-2 text-white bg-green-500 hover:bg-green-600 rounded-lg shadow"
                                 onclick="document.querySelector('#welcomeDialog').showModal()">How to play?</button>
+                                <button
+                                id="doubleButton" class="btn mt-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg shadow"
+                                onclick="challengeDouble()">Double or nothing</button>
                         </div>
                     </div>
 
@@ -686,7 +689,11 @@
                         </li>
                         <li
                             class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
-                            <span data-category="sgf">Historic Games</span>
+                            <span data-category="games">Historic Games</span>
+                        </li>
+                        <li
+                            class="cursor-pointer text-lg font-medium text-badukBlack hover:text-white border border-gray-300 bg-white hover:bg-badukBlack rounded-lg px-4 py-2 shadow-md transition">
+                            <span data-category="documents">Documents</span>
                         </li>
                     </ul>
                 </div>

@@ -23,6 +23,18 @@ let previous_komi = 0;
 let ai_hint = false;
 let komi = 7.5;
 let has_passed = false;
+let double_or_nothing = false;
+function challengeDouble(){
+	double_or_nothing = true
+	document.getElementById("doubleButton").classList.add("hidden")
+	colorTheme("red")
+	showToast("Double or nothing mode activated...")
+}
+
+function colorTheme(color){
+	document.querySelector("body").style.backgroundColor = color
+	document.querySelector("main").style.opacity = 0.95
+}
 
 window.is_game_loading = true;
 
@@ -58,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				element.style.display = "none"; // Properly hides the elements
 			});
 			if (targetTab === "play") {
+				window.location.reload() // since AI seems to break if you do not reload (?)
 				window.is_game_loading = true;
 				updateLoadingSpinner();
 				const startGameButton = document.getElementById("startGame");
@@ -338,12 +351,12 @@ document.addEventListener("DOMContentLoaded", () => {
 		resizeBoard();
 		game = new WGo.Game(boardsize, "KO"); // Manages game state and rules
 
-		if (getRandomInt(1, 5) === 2) {
-			game_type = "chinese"; // 10% chance of playing chinese gamemode
+		if (getRandomInt(1, 4) === 2) {
+			game_type = "chinese";
 		}
 
 		if (game_type === "normal") {
-			if (getRandomInt(1, 5) === 2 && getLevel() > 10 && boardsize >= 13) {
+			if (getRandomInt(1, 4) === 2 && boardsize >= 13) {
 				game_type = "handicap"; // 25% chance of playing handicap game
 				handicap_stones = getRandomInt(2, 5);
 				komi = 0.5;
@@ -506,6 +519,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				previous_komi = komi;
 				previous_boardsize = boardsize;
 				previous_movelist = [...move_history];
+				document.getElementById("doubleButton").classList.add("hidden")
 			}
 
 			// Play the move and validate using WGo.Game
@@ -714,19 +728,26 @@ document.addEventListener("DOMContentLoaded", () => {
 		playEndGame();
 		game_id = "0";
 		const score = document.querySelector("#scorespan").textContent;
+
+		let winMultiplier = 1
+		let lossMultiplier = 1
+		if(double_or_nothing){
+			winMultiplier = 2;
+			lossMultiplier = 0
+		}
+
 		if (score[0] === "B" && move_count !== 0) {
 			showToast("You won!");
 			incrementPlayerWins();
 			incrementGamesPlayed();
-
 			adjustRank(1); // increase rank by 1 on win
-			incrementExperience(Math.floor(move_count / 4) + getRandomInt(1, 10));
-			adjustCurrency(Math.floor(move_count / 2) + getLevel()); // increase money earned by your level
+			incrementExperience((Math.floor(move_count / 4) + getRandomInt(1, 10) )* winMultiplier);
+			adjustCurrency((Math.floor(move_count / 2) + getLevel() )* winMultiplier); // increase money earned by your level
 		} else if (move_count !== 0) {
-			incrementExperience(Math.floor(move_count / 8) + getRandomInt(1, 5));
+			incrementExperience((Math.floor(move_count / 8) + getRandomInt(1, 5) )* lossMultiplier);
 			showToast("You lost!");
 			setHasLost(true);
-			adjustCurrency((Math.floor(move_count / 2) + getLevel()) / 2);
+			adjustCurrency(((Math.floor(move_count / 2) + getLevel()) / 2) * lossMultiplier);
 			adjustRank(-1); // decrease rank by 1 on loss
 			if (convertKyuDanToLevel(getRank()) <= convertKyuDanToLevel("15k")) {
 				adjustRank(-1);
@@ -773,6 +794,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		showNewGameModal();
 		document.getElementById("rankspan").innerHTML = getDisplayRank();
 		document.getElementById("movecountspan").innerHTML = "...";
+
 	});
 
 	// Update lessons visibility based on rank

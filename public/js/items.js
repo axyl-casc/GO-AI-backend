@@ -158,9 +158,19 @@ const ALL_ITEMS = [
 		image: "wgo/black_128.png",
 		price: 150,
 		shoppable: true,
-		category: ["sgf"],
+		category: ["games"],
 		dropchance: 100,
 		sgf: "SGF/Mei-1976-1.sgf",
+	},
+	{
+		title: "AGA Rules",
+		description: "Official AGA rulebook",
+		image: "wgo/black_128.png",
+		price: 10,
+		shoppable: true,
+		category: ["documents"],
+		dropchance: 10,
+		pdf: "PDF/AGA_Rules_of_Go.pdf",
 	}
 ];
 
@@ -217,7 +227,7 @@ function renderInventory() {
 		displayContainer.className =
 			"w-full h-40 flex justify-center items-center mb-4";
 
-		if (item.category.includes("sgf")) {
+		if (item.category.includes("games") || item.category.includes("documents")) {
 			// Create an image element for SGF preview
 			const img = document.createElement("img");
 			img.src = item.image;
@@ -243,9 +253,13 @@ function renderInventory() {
 			const reviewButton = document.createElement("button");
 			reviewButton.className =
 				"px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition";
-			reviewButton.textContent = "Review";
-			reviewButton.onclick = () => reviewGame(item.sgf);
-
+			reviewButton.textContent = "View";
+			if(item.category.includes("documents")){
+				reviewButton.onclick = () => window.open(item.pdf, '_blank')
+			}else if(item.category.includes("games")){
+				reviewButton.onclick = () => reviewGame(item.sgf);
+			}
+			
 			// Create Sell Button
 			const sellButton = document.createElement("button");
 			sellButton.className =
@@ -355,7 +369,7 @@ function renderInventory() {
 
 				// Save updated inventory back to localStorage
 				localStorage.setItem("inventory", JSON.stringify(inventory));
-
+				showToast(`Sold ${item.title} for $${itemPrice / 2}`)
 				// Re-render the inventory to reflect changes
 				renderInventory();
 			}

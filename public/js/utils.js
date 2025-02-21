@@ -73,6 +73,35 @@ function isNewAccount() {
 	}
 }
 
+function getQualificationLevel(){
+	// level 0 - ?
+	// indicating the expericnce of account
+
+	if(getLevel() < 3){
+		return 0
+	}else if(getGamesPlayed() < 10 || hasLost() === false){
+		return 1
+	}else{
+		return Math.ceil((convertKyuDanToLevel(getRank()) - convertKyuDanToLevel(LOWEST_RANK)) / 10)
+	}
+}
+
+// check if game is special to add special effects and stuff (?)
+function getIsSpecialGame(){
+	let vals = convertKyuDanToLevel("40k")
+	const playerLevel = convertKyuDanToLevel(getRank())
+	while(vals <= convertKyuDanToLevel("20d")){
+		vals += 5;
+		if(playerLevel === vals){
+			return true;
+		}
+		if(vals > playerLevel){
+			return false;
+		}
+	}
+	return false;
+}
+
 function populateNotifications() {
 	const listContainer = document.getElementById("scrollableList");
 	listContainer.innerHTML = ""; // Clear the list
