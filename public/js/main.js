@@ -502,6 +502,13 @@ document.addEventListener("DOMContentLoaded", () => {
 		// Restrict to one color (e.g., black)
 		const stoneColor = WGo.B; // WGo.B for Black, WGo.W for White
 
+
+		document.getElementById("pass-button").addEventListener("click", async () => {
+			move_count++;
+			game.pass()
+			handleAIMove("PASS", board)
+		});
+
 		// Add a click event listener to place a stone// Board click event listener for player's move
 		board.addEventListener("click", async (x, y) => {
 			if (!game.isOnBoard(x, y)) return; // Ignore invalid clicks

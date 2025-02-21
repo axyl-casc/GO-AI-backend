@@ -19,7 +19,6 @@ def get_vram_info():
 def main():
     ram = get_ram_info()
     vram = get_vram_info()
-    print("SERVER_READY")
     sys.stdout.flush()  # Force immediate output
 
     print(f"Total RAM: {ram} GB")
