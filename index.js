@@ -1,33 +1,62 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, screen  } = require("electron");
 const { exec } = require("child_process");
 const path = require("path");
 const url = require("url");
 
 function createWindow() {
-	// Run app.js before opening the window
-	const appProcess = exec("node app.js", (error, stdout, stderr) => {
-		if (error) {
-			console.error(`Error starting app.js: ${error.message}`);
-			return;
-		}
-		if (stderr) {
-			console.error(`app.js stderr: ${stderr}`);
-			return;
-		}
-		console.log(`app.js stdout: ${stdout}`);
+  // Start Express server
+  
+  const serverProcess = exec("server.exe");
+
+  // Listen for server readiness
+  serverProcess.stdout.on('data', (data) => {
+    const output = data.toString();
+	process.stdout.write(output);
+
+    
+    if (output.includes("SERVER_READY")) {
+      createBrowserWindow();
+    }
+  });
+
+  // Error handling
+  serverProcess.stderr.on('data', (data) => {
+    console.error(`[Express Error] ${data}`);
+  });
+
+  serverProcess.on('error', (error) => {
+    console.error(`Failed to start server: ${error.message}`);
+  });
+}
+
+function createBrowserWindow() {
+	const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
+	let zoomFactor = 1;
+	if (width <= 1280) {
+	  zoomFactor = 0.8; // Scale down for small screens
+	} else if (width < 1920) {
+	  zoomFactor = 0.9; // Slightly smaller for medium screens
+	}
+  
+	const win = new BrowserWindow({
+	  width,
+	  height,
+	  fullscreen: true,
+	  webPreferences: {
+		nodeIntegration: true,
+		contextIsolation: false,
+		zoomFactor: zoomFactor, // Adjust zoom level
+	  },
 	});
-
-	// Create the browser window.
-	const win = new BrowserWindow({ width: 800, height: 600 });
-
-	// Load the index.html of the app.
-	win.loadURL(
-		url.format({
-			pathname: path.join(__dirname, "public/index.html"),
-			protocol: "file:",
-			slashes: true,
-		}),
-	);
+  
+  // Load the Express server
+  win.loadURL("http://localhost:3001");
 }
 
 app.on("ready", createWindow);
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") app.quit();
+});
+// npx electron .

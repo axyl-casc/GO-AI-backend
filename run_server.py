@@ -1,10 +1,7 @@
 import subprocess
 import psutil
 import GPUtil
-import os
-import signal
 import sys
-import webbrowser
 
 def get_ram_info():
     """Returns total system RAM in GB."""
@@ -22,12 +19,12 @@ def get_vram_info():
 def main():
     ram = get_ram_info()
     vram = get_vram_info()
+    print("SERVER_READY")
+    sys.stdout.flush()  # Force immediate output
 
     print(f"Total RAM: {ram} GB")
     print(f"Total VRAM: {vram} GB")
-
     print("\nRunning 'node forever.js' with parameters...\n")
-
     try:
         subprocess.run(["node", "forever.js", ram, vram], check=True)
     except KeyboardInterrupt:

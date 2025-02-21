@@ -5,3 +5,5 @@
 ./gtp_logs
 *.log
 /node_modules
+*.exe
+*.spec

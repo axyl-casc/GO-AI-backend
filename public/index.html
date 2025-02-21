@@ -310,21 +310,25 @@
     <header class="sticky fixed top-0 left-0 right-0 bg-badukBlack shadow-md z-50">
         <nav class="flex border-b border-gray-300">
             <button class="flex-1 text-white py-4 px-2 focus:outline-none active-tab border-b-4 border-badukAccent"
-                data-tab="play" id="play-tab">
-                Play
-            </button>
-            <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="puzzles">
-                Puzzles
-            </button>
-            <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="learn">
-                Learn
-            </button>
-            <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="shop">
-                Shop
-            </button>
-            <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="profile">
-                Profile
-            </button>
+            data-tab="play" id="play-tab">
+            Play
+        </button>
+        <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="puzzles">
+            Puzzles
+        </button>
+        <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="learn">
+            Learn
+        </button>
+        <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="shop">
+            Shop
+        </button>
+        <button class="flex-1 text-white py-4 px-2 focus:outline-none" data-tab="profile">
+            Profile
+        </button>
+        <button class="w-16 py-4 flex items-center justify-center text-white bg-red-600 hover:bg-red-700 focus:outline-none"
+        onclick="window.close();">
+        X
+    </button>
         </nav>
     </header>
     <div id="particle-container" class="fixed inset-[50%] pointer-events-none z-50"></div>
@@ -421,6 +425,8 @@
                                 </button>
                                 <button id="save-sgf-button"
                                     class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Save SGF</button>
+                                <button id="pass-button"
+                                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Pass</button>
                             </div>
                         </div>
                     </div>

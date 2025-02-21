@@ -187,16 +187,16 @@ class PlayerAI {
 			);
 		}
 		let score = "";
-		if (this.moveCount % 2 === 0) {
-			this.score_estimate = [];
-			// Update score estimate
-			for (const i of this.instances) {
-				score = await i.sendCommand("final_score"); // Wait for each command
-				this.score_estimate.push(cleanMove(score[0]));
-			}
-			score = await this.analysisEngine.sendCommand("final_score"); // Wait for each command
+
+		this.score_estimate = [];
+		// Update score estimate
+		for (const i of this.instances) {
+			score = await i.sendCommand("final_score"); // Wait for each command
 			this.score_estimate.push(cleanMove(score[0]));
 		}
+		score = await this.analysisEngine.sendCommand("final_score"); // Wait for each command
+		this.score_estimate.push(cleanMove(score[0]));
+	
 		await this.analysisEngine.sendCommand(
 			`play ${this.ai_color} ${cleanMove(response[0])}`,
 		);
