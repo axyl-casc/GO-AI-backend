@@ -31,5 +31,30 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "electron": "^34.2.0"
-  }
+  },
+  "build": {
+    "productName": "serve",
+    "win": {
+      "target": "portable"
+    },
+    "files": [
+      "**/*",
+      "!**/*.map",
+      "!gtp_logs",
+      "!Launcher.spec",
+      "!node_modules/**/test",
+      "!node_modules/**/example",
+      "!node_modules/**/benchmark",
+      "!node_modules/**/.bin",
+      "!*.py",
+      "!*.jsonc",
+      "!dist",
+      "!readme.md",
+      "!*.txt"
+    ],
+  "asarUnpack": [
+    "app.js",
+    "*.db"
+  ]
+}
 }

@@ -29,11 +29,22 @@ const DEBUG = false;
 
 // app.js
 
-// Read arguments (excluding 'node' and 'app.js')
-const args = process.argv.slice(2);
+const CONFIG_PATH = 'data/config.json';
 
-global.VRAM = parseInt(args[1]);
-global.RAM = parseInt(args[0]);
+try {
+    // Read and parse the JSON file
+    const configData = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+
+    // Assign global values
+    global.RAM = parseInt(configData.RAM, 10);
+    global.VRAM = parseInt(configData.VRAM, 10);
+
+    console.log(`RAM: ${global.RAM} GB`);
+    console.log(`VRAM: ${global.VRAM} GB`);
+} catch (error) {
+    console.error('Error reading config.json:', error);
+}
+
 console.log(`Total RAM: ${global.RAM} GB`);
 console.log(`Total VRAM: ${global.VRAM} GB`);
 if (global.VRAM < 4 || global.RAM < 12) {
@@ -297,7 +308,7 @@ async function task() {
 // Modify the cleanup function's finally block
 async function cleanup() {
 	try {
-		const min = 5 * 60 * 1000;
+		const min = 2 * 60 * 1000;
 		const now = Date.now();
 
 		for (const key in aiInstances) {
