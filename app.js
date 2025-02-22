@@ -341,7 +341,7 @@ app.get("/create-game", async (req, res) => {
 	console.log("Query parameters:", req.query);
 
 	komi = parseInt(komi);
-	komi = Math.floor(komi) + 0.5
+	komi = Math.floor(komi) + 0.5;
 	handicap = parseInt(handicap);
 	boardsize = parseInt(boardsize);
 
@@ -502,9 +502,27 @@ cleanup();
 if (is_train) {
 	task();
 }
+
+//
+function deleteDirectorySync(targetPath) {
+	if (fs.existsSync(targetPath)) {
+		// Delete directory with all contents
+		fs.rmSync(targetPath, {
+			recursive: true,
+			force: true,
+			maxRetries: 3,
+			retryDelay: 100,
+		});
+		console.log(`Successfully deleted ${targetPath}`);
+	}
+}
+
+// Usage
+const directoryToDelete = path.join(__dirname, "gtp-logs");
+deleteDirectorySync(directoryToDelete);
 // Start the server
 app.listen(PORT, () => {
-	console.log("SERVER_READY")
+	console.log("SERVER_READY");
 	console.log(`Server is running on http://localhost:${PORT}`);
 });
 

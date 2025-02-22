@@ -66,3 +66,4 @@ app.on("window-all-closed", () => {
 });
 
 // npx electron .
+// npx electron-builder build --win portable

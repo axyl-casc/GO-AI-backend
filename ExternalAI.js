@@ -1,4 +1,3 @@
-const { getAvailableVRAM } = require("./gfxtst");
 
 const { spawn } = require("child_process");
 const { warn } = require("console");

@@ -32,3 +32,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+#pyinstaller --onefile --clean --name server --distpath . run_server.py ; Remove-Item -Recurse -Force build
