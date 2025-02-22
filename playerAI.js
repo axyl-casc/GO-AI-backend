@@ -190,10 +190,11 @@ class PlayerAI {
 
 		this.score_estimate = [];
 		// Update score estimate
-		for (const i of this.instances) {
-			score = await i.sendCommand("final_score"); // Wait for each command
-			this.score_estimate.push(cleanMove(score[0]));
-		}
+		//for (const i of this.instances) {
+		//	score = await i.sendCommand("final_score"); // Wait for each command
+		//	this.score_estimate.push(cleanMove(score[0]));
+		//}
+
 		score = await this.analysisEngine.sendCommand("final_score"); // Wait for each command
 		this.score_estimate.push(cleanMove(score[0]));
 	

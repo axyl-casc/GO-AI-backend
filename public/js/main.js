@@ -24,6 +24,8 @@ let ai_hint = false;
 let komi = 7.5;
 let has_passed = false;
 let double_or_nothing = false;
+let game_running = true
+
 function challengeDouble(){
 	double_or_nothing = true
 	document.getElementById("doubleButton").classList.add("hidden")
@@ -504,6 +506,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 		document.getElementById("pass-button").addEventListener("click", async () => {
+			if(!game_running){return;}
 			move_count++;
 			game.pass()
 			handleAIMove("PASS", board)
@@ -511,6 +514,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		// Add a click event listener to place a stone// Board click event listener for player's move
 		board.addEventListener("click", async (x, y) => {
+			if(!game_running){return;}
 			if (!game.isOnBoard(x, y)) return; // Ignore invalid clicks
 
 			// Check if it's the player's turn
@@ -732,6 +736,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		rankSelector.classList.add("hidden");
 	});
 	endGameButton.addEventListener("click", async () => {
+		if(!game_running){
+			return
+		}
+		game_running = false
 		playEndGame();
 		game_id = "0";
 		const score = document.querySelector("#scorespan").textContent;

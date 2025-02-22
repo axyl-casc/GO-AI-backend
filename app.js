@@ -297,7 +297,7 @@ async function task() {
 // Modify the cleanup function's finally block
 async function cleanup() {
 	try {
-		const min = 15 * 60 * 1000;
+		const min = 5 * 60 * 1000;
 		const now = Date.now();
 
 		for (const key in aiInstances) {
