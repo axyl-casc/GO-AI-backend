@@ -1,7 +1,9 @@
+// main.js or index.js
 const { app, BrowserWindow, screen } = require("electron");
-const { exec } = require("child_process");
+const { fork } = require("child_process");
 const path = require("path");
 
+let mainWindow;
 let serverProcess;
 
 function createWindow() {
@@ -14,7 +16,7 @@ function createWindow() {
     zoomFactor = 0.9; // Slightly smaller for medium screens
   }
 
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width,
     height,
     fullscreen: true,
@@ -25,20 +27,31 @@ function createWindow() {
     },
   });
 
-  // Load the Express server
-  win.loadURL("http://localhost:3001"); 
+  // Load your Express server's URL
+  mainWindow.loadURL("http://localhost:3001");
+
+  // When the main window is closed, request child server to stop
+  mainWindow.on("closed", () => {
+    console.log("Main window closed. Stopping Express server...");
+    stopServer();
+    mainWindow = null;
+  });
 }
 
 function startServerAndOpenWindow() {
   console.log("Starting Express server...");
 
-  // Start the Express server
-  serverProcess = exec("node app.js 2 2"); // patchy, but makes it work
+  // Fork the Express server
+  serverProcess = fork(path.join(__dirname, "app.js"), {
+    stdio: ["ignore", "pipe", "pipe", "ipc"], // Allow IPC
+  });
 
-  // Listen for server readiness
+  // Listen for server output
   serverProcess.stdout.on("data", (data) => {
-    process.stdout.write(data);
-    if (data.includes("SERVER_READY")) {
+    const message = data.toString();
+    process.stdout.write(message); // Show server logs in Electron console
+
+    if (message.includes("SERVER_READY")) {
       console.log("Server is ready. Launching Electron window...");
       createWindow();
     }
@@ -48,21 +61,31 @@ function startServerAndOpenWindow() {
     console.error(`[Express Error] ${data}`);
   });
 
-  serverProcess.on("error", (error) => {
-    console.error(`Failed to start server: ${error.message}`);
+  serverProcess.on("exit", (code) => {
+    console.log(`Express server exited with code ${code}`);
   });
+}
+
+// Send a "stop-server" message to the child process
+function stopServer() {
+  if (serverProcess?.connected) {
+    console.log("Sending 'stop-server' IPC message to child process...");
+    serverProcess.send("stop-server");
+  }
 }
 
 app.whenReady().then(startServerAndOpenWindow);
 
-// Close server when Electron app quits
+// Also stop the server when the app is explicitly quitting
 app.on("before-quit", () => {
-  if (serverProcess) serverProcess.kill();
+  stopServer();
 });
 
-// Handle macOS app behavior
+// For non-macOS, quit the app when all windows are closed
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
 });
 
 // npx electron .
