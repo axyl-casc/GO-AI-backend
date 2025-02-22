@@ -50,11 +50,13 @@
       "!*.jsonc",
       "!dist",
       "!readme.md",
-      "!*.txt"
+      "!*.txt",
+      "!*.db",
+      "!baduk_AI/**",
+      "!baduk_AI"
     ],
   "asarUnpack": [
-    "app.js",
-    "*.db"
+    "app.js"
   ]
 }
 }
