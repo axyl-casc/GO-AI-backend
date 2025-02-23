@@ -4,7 +4,11 @@ const {
 	convertLevelToKyuDan,
 } = require("./rank_conversion");
 const path = require("path");
-
+function getRandomInt(min, max) {
+	const minCeiled = Math.ceil(min);
+	const maxFloored = Math.floor(max);
+	return Math.floor(Math.random() * (maxFloored - minCeiled + 1)) + minCeiled; // The maximum is inclusive and the minimum is inclusive
+}
 class SQLiteReader {
 	constructor(dbPath) {
 		this.db = new sqlite3.Database(dbPath, (err) => {
@@ -387,7 +391,7 @@ class TsumegoConnection {
             SELECT *, ABS(rating - ${rating}) AS diff
             FROM puzzles
             ORDER BY 10 * diff - happy_score, attempts ASC
-            LIMIT ${Math.max(Math.floor(puzzlecount / 10), 50)}
+            LIMIT ${getRandomInt(10,20)}
           )
           SELECT * FROM Nearest;
       `;

@@ -434,7 +434,7 @@ app.get("/move", async (req, res) => {
 
 		// Determine the total time the request should take
 		const upper_time = Math.floor(boardsize / 2);
-		const lower_time = 2;
+		const lower_time = 0.5;
 		const totalTime =
 			getRandomInt(lower_time, upper_time) + db.getValues().AIPlayspeedDelta;
 		const sleepTime = Math.max(totalTime - moveTime, 0); // Ensure it's not negative
