@@ -1,5 +1,3 @@
-// npm start
-// to run
 
 const { SqlConnection, TsumegoConnection } = require("./sql_connection");
 const { trainingGame } = require("./train_database");
@@ -23,6 +21,10 @@ const sql = new SqlConnection("./AI_Data.db");
 const tsumego_sql = new TsumegoConnection("./tsumego_sets.db");
 const aiInstances = {};
 
+// seconds per week = 604800
+// seconds per day = 86400
+// seconds per hour = 3600
+// seconds per minute = 60
 const AI_game_delay_seconds = 60;
 let is_train = true;
 const DEBUG = false;
@@ -47,14 +49,8 @@ try {
 
 console.log(`Total RAM: ${global.RAM} GB`);
 console.log(`Total VRAM: ${global.VRAM} GB`);
-if (global.VRAM < 4 || global.RAM < 12) {
-	is_train = false;
-}
 
-// seconds per week = 604800
-// seconds per day = 86400
-// seconds per hour = 3600
-// seconds per minute = 60
+
 
 function getRandomInt(min, max) {
 	const minCeiled = Math.ceil(min);
@@ -359,18 +355,25 @@ app.get("/create-game", async (req, res) => {
 	// Create a new game
 	const gameId = uuidv4();
 	const pAI = new PlayerAI();
-
-	await pAI.create(
-		sql,
-		komi,
-		boardsize,
-		handicap,
-		rank,
-		ai_color,
-		type,
-		companion_key,
-		await db.getValues().AIDelta,
-	);
+	let game_created = false
+	while(game_created === false){
+		try{
+			await pAI.create(
+				sql,
+				komi,
+				boardsize,
+				handicap,
+				rank,
+				ai_color,
+				type,
+				companion_key,
+				await db.getValues().AIDelta,
+			);
+			game_created = true;
+		}catch{
+			console.log("Error creating game, trying again...")
+		}
+	}
 
 	for (const key in aiInstances) {
 		if (aiInstances[key].client_id === client_id) {
