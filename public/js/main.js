@@ -508,8 +508,9 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.getElementById("pass-button").addEventListener("click", async () => {
 			if(!game_running){return;}
 			move_count++;
-			game.pass()
-			handleAIMove("PASS", board)
+			game.pass();
+			handleAIMove("PASS", board);
+			showToast("Passed your turn.");
 		});
 
 		// Add a click event listener to place a stone// Board click event listener for player's move

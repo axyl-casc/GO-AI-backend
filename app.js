@@ -38,7 +38,7 @@ try {
     // Assign global values
     global.RAM = parseInt(configData.RAM, 10);
     global.VRAM = parseInt(configData.VRAM, 10);
-
+	is_train = configData.is_train
     console.log(`RAM: ${global.RAM} GB`);
     console.log(`VRAM: ${global.VRAM} GB`);
 } catch (error) {
