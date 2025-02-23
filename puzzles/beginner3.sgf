@@ -1,0 +1,30 @@
+(;FF[4]GM[1]CA[UTF-8]AP[besogo:0.0.2-alpha]SZ[9]ST[0]
+AB[bb][bc][bd][be][bf]AW[bg][cb][cc][cd][ce][cf][cg]
+(;B[ba]
+;W[af]
+;B[ae]
+(;W[ac]
+;B[ab]
+C[Correct])
+(;W[ab]
+;B[ac]
+C[Correct]))
+(;B[ca]
+;W[af]
+;B[ae]
+;W[ba]
+;B[aa]
+;W[da]
+;B[ba]
+;W[ac]
+C[Now black is dead])
+(;B[af]
+;W[ba]
+;B[ab]
+;W[ad]
+C[Now black is dead])
+(;B[ab]
+;W[ba]
+;B[af]
+;W[ad]
+C[Now black is dead]))
