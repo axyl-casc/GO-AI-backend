@@ -304,7 +304,8 @@ async function task() {
 // Modify the cleanup function's finally block
 async function cleanup() {
 	try {
-		const min = 2 * 60 * 1000;
+		const min = 3 * 60 * 1000;
+		// ~3 mins per move should be plenty of time?
 		const now = Date.now();
 
 		for (const key in aiInstances) {
