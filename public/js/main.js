@@ -513,9 +513,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.getElementById("pass-button").addEventListener("click", async () => {
 			if(!game_running){return;}
 			move_count++;
+			timer.pauseTimer()
 			game.pass();
-			handleAIMove("PASS", board);
 			showToast("Passed your turn.");
+			await handleAIMove("PASS", board);
+			timer.resetMoveTimer()
 		});
 
 		// Add a click event listener to place a stone// Board click event listener for player's move
