@@ -15,6 +15,7 @@ deleteFolder("dist")
 deleteFolder("gtp_logs")
 run_command("npx electron-builder build")
 run_command("pyinstaller --onefile --clean --name RunGOGame --exclude-module pygame --distpath ./dist/win-unpacked/ launcher.py")
+run_command("pyinstaller --onefile --clean --name reset_tsumego --exclude-module pygame --distpath ./dist/win-unpacked/ init_tsumego_db.py")
 deleteFolder("build")
 
 src = "data"
