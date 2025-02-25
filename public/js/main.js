@@ -25,6 +25,10 @@ let komi = 7.5;
 let has_passed = false;
 let double_or_nothing = false;
 let game_running = true
+// Example usage
+const time_per_move = 200
+const timer = new MoveTimer(time_per_move, "moveTimerDisplay");
+timer.pauseTimer();	
 
 function challengeDouble(){
 	double_or_nothing = true
@@ -490,6 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				`/create-game?boardsize=${boardsize}&rank=${requested_rank}&type=${game_type}&handicap=${handicap_stones}&komi=${requested_komi}&companion_key=${companion_key}&client_id=${client_id}`,
 			);
 		}
+		timer.resetMoveTimer() // start timer
 
 		document.getElementById("komispan").textContent = requested_komi;
 		komi = requested_komi;
@@ -606,7 +611,14 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 			playPlaceSound();
 			playCapSound(caps);
+
+			// before AI move
+			timer.pauseTimer()
+
 			ai_hint = await handleAIMove(playerMove, board);
+
+			// after AI move
+			timer.resetMoveTimer()
 
 			if (has_passed) {
 				endGameButton.classList.remove("hidden"); // always remove if the AI has passed
@@ -657,7 +669,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 				// Fetch AI move, passing player's move as a parameter
 				const response = await fetchData(
-					`/move?id=${game_id}&move=${playerMove}&boardsize=${boardsize}`,
+					`/move?id=${game_id}&move=${playerMove}&boardsize=${boardsize}&movetime=${timer.getTimeElapsed()}`,
 				);
 				console.log(response);
 				const score = response.aiScore[0];
