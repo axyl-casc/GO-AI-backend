@@ -410,13 +410,13 @@ app.get("/move", async (req, res) => {
 	console.log(move);
 	console.log(`Boardsize: ${boardsize}`);
 	console.log(`Move time taken: ${movetime}`)
-	const player_move_time = movetime
+	const player_move_time = parseInt(movetime)
 	if (!id || !move) {
 		return res.status(400).json({ error: "Game ID and move are required." });
 	}
 
 	const game = aiInstances[id];
-	game.player_move_time = movetime;
+	game.player_move_time = player_move_time;
 	if (!game) {
 		return res.status(404).json({ error: "Game not found." });
 	}
@@ -440,21 +440,28 @@ app.get("/move", async (req, res) => {
 		const lower_time = 1;
 		const totalTime =
 			getRandomInt(lower_time, upper_time) + db.getValues().AIPlayspeedDelta;
+		console.log(`Random sleep time -> ${totalTime}`)
 		let sleepTime = totalTime;
-		const ai_sleep_weight = 2;
-		sleepTime = (ai_sleep_weight*sleepTime + player_move_time) / (ai_sleep_weight + 1);
+		const ai_sleep_ratio = 0.5;
+		sleepTime = ((ai_sleep_ratio)*sleepTime + (1 - ai_sleep_ratio)*player_move_time);
+		console.log(`Weighted sleep time -> ${sleepTime}`)
 		sleepTime -= moveTime; // remove time taken to generate move
+		console.log(`Sleep time after move delay -> ${sleepTime}`)
 
+		sleepTime = Math.ceil(sleepTime);
 		// clamp time
 		sleepTime = Math.max(1, sleepTime);
 		sleepTime = Math.min(30, sleepTime);
 		// sleep for at least 1 second
 		// sleep no longer than 30 seconds
+
+		console.log(
+			`Attempting sleep for ${sleepTime.toFixed(3)} seconds to meet delay target...`,
+		);
 		if (game.ai.moveCount >= 5 && sleepTime > 1 && !DEBUG) {
-			console.log(
-				`Sleeping for ${sleepTime.toFixed(3)} seconds to meet delay target...`,
-			);
+			console.log("Sleeping...");
 			await sleep(sleepTime * 1000); // Convert to milliseconds
+			console.log("Done sleeping")
 		}
 
 		res.json({

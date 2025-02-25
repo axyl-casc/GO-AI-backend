@@ -32,6 +32,7 @@ class MoveTimer {
             this.timer = null;
             this.isPaused = true;
         }
+        return this.isDead
     }
 
     getTimeElapsed(){
@@ -46,10 +47,7 @@ class MoveTimer {
         this.updateDisplay();
         this.startTimer(); // Automatically restart
         // Note: `isDead` is NOT reset here to track if it has ever reached 0
-    }
-
-    getIsDead() {
-        return this.isDead;
+        return this.isDead
     }
 
     updateDisplay() {

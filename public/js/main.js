@@ -26,7 +26,7 @@ let has_passed = false;
 let double_or_nothing = false;
 let game_running = true
 // Example usage
-const time_per_move = 200
+const time_per_move = 120
 const timer = new MoveTimer(time_per_move, "moveTimerDisplay");
 timer.pauseTimer();	
 
@@ -615,12 +615,18 @@ document.addEventListener("DOMContentLoaded", () => {
 			playCapSound(caps);
 
 			// before AI move
-			timer.pauseTimer()
 
-			ai_hint = await handleAIMove(playerMove, board);
-
-			// after AI move
-			timer.resetMoveTimer()
+			// check if the user ran out of time
+			const run_out_of_time = timer.pauseTimer()
+			if(run_out_of_time){
+				document.querySelector("#scorespan").textContent = "W+T"; // AI won
+				endGameButton.classList.remove("hidden");
+				endGameButton.click();
+			}else{
+				ai_hint = await handleAIMove(playerMove, board);
+				// after AI move
+				timer.resetMoveTimer()
+			}
 
 			if (has_passed) {
 				endGameButton.classList.remove("hidden"); // always remove if the AI has passed
