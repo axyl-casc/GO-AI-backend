@@ -4,7 +4,7 @@
   "description": "Node JS application serving as the backend of a GO playing program",
   "main": "index.js",
   "scripts": {
-        "forever": "node run_forever.js"
+    "forever": "node run_forever.js"
   },
   "repository": {
     "type": "git",
@@ -55,8 +55,8 @@
       "!baduk_AI/**",
       "!baduk_AI"
     ],
-  "asarUnpack": [
-    "app.js"
-  ]
-}
+    "asarUnpack": [
+      "app.js"
+    ]
+  }
 }

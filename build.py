@@ -22,24 +22,31 @@ src = "data"
 dest = "dist/win-unpacked/data"
 
 # Copy entire folder (works on Windows, Mac, and Linux)
-shutil.copytree(src, dest, dirs_exist_ok=True)  # `dirs_exist_ok=True` allows overwriting
+shutil.copytree(src, dest, dirs_exist_ok=True)
+
 src = "baduk_AI"
 dest = "dist/win-unpacked/baduk_AI"
 
-# Copy entire folder (works on Windows, Mac, and Linux)
-shutil.copytree(src, dest, dirs_exist_ok=True)  # `dirs_exist_ok=True` allows overwriting
+shutil.copytree(src, dest, dirs_exist_ok=True)
 
 src = "AI_Data.db"
 dest = "dist/win-unpacked/"
 
-# Copy entire folder (works on Windows, Mac, and Linux)
-shutil.copy(src, dest)  # `dirs_exist_ok=True` allows overwriting
+shutil.copy(src, dest)
 
 src = "tsumego_sets.db"
 dest = "dist/win-unpacked/"
 
-# Copy entire folder (works on Windows, Mac, and Linux)
-shutil.copy(src, dest)  # `dirs_exist_ok=True` allows overwriting
+shutil.copy(src, dest)
 
+# Rename "dist/win-unpacked" to "dist/GO-Game"
+old_path = "dist/win-unpacked"
+new_path = "dist/GO-Game"
+
+if os.path.exists(old_path):
+    os.rename(old_path, new_path)
+
+# Zip "dist/GO-Game" into "dist/GO-Game.zip"
+shutil.make_archive("dist/GO-Game", 'zip', new_path)
 
 print("\nBuild process completed successfully!")
