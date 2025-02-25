@@ -450,7 +450,7 @@ app.get("/move", async (req, res) => {
 		sleepTime = Math.min(30, sleepTime);
 		// sleep for at least 1 second
 		// sleep no longer than 30 seconds
-		if (game.ai.moveCount >= 5 && sleepTime > 0 && !DEBUG) {
+		if (game.ai.moveCount >= 5 && sleepTime > 1 && !DEBUG) {
 			console.log(
 				`Sleeping for ${sleepTime.toFixed(3)} seconds to meet delay target...`,
 			);
