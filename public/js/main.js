@@ -798,7 +798,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			modal.classList.remove("hidden");
 			if (convertKyuDanToLevel("29k") <= convertKyuDanToLevel(getRank())) {
 				// if user is stronger than 25k then custom games allowed
-				if (getRandomInt(0, 5) === 2) {
+				if (getRandomInt(0, 2) === 1) {
 					// make it so challenge mode appears randomly
 					document.getElementById("challengeGame").classList.remove("hidden");
 				}
