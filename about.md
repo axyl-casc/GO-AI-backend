@@ -14,6 +14,13 @@ Game modes include:
 
 Occasionally, a **Challenge Mode** button appears, launching a non-standard game variant. The options are intentionally a surprise for the player.
 
+
+### Server Mode
+
+If you have a high-end computer, you can run this application on that computer and play against the AI from other systems on your network. 
+
+This can be done by going to "http://(computer_ip):3001" on your favourite web browser. 
+
 ## PUZZLES
 
 This section generates a **Go puzzle** (Tsumego) for the player to solve. An **info box** at the top provides relevant hints or explanations.
