@@ -1,0 +1,4 @@
+1. Place each puzzle as an individual SGF in the puzzles folder.
+2. Ensure that the word "Correct" is added as a comment on the correct final move
+3. Add "easy", "intermediate", or "hard" into the name of the SGF file for setting the starting level
+4. Run the reset_tsumego.exe to add the puzzles into the database

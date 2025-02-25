@@ -50,7 +50,7 @@
       "!*.jsonc",
       "!dist",
       "!readme.md",
-      "!*.txt",
+      "!notes.txt",
       "!*.db",
       "!baduk_AI/**",
       "!baduk_AI"
