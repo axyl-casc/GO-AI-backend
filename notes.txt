@@ -2,7 +2,6 @@
 tsumego lesson?
 joseki lesson? pick random from joseki.sgf
 
-
 lose 100 games achievement
 
 spend on
@@ -16,36 +15,30 @@ gamemodes?
 todo
 --------------------------------------------
 fix tsumego board sizing 
-add lessons or lesson structure
-modularize lessons to be easier - javascript side
-
-Timeout value for each tsumego so non repating
 
 opening popup - ask for initial rank, explain basic rules
-
-make a different server for database handling, and a different server for AI running
-
-make range of selected puzzles 1/10 of database size
 
 Character ai to play against - daily missions
 
 record games -> if winrate or score drops significantly on player move, save as a puzzle and set rank to user rating
 
-Consumables - gold pouch, health potion, aged shell stones, default stones
+Consumables - gold pouch, health potion, 
 
-Send error message on ai invalid move or ai full - check by viewing ip using Express methods to end old ai
-
-disable play button when the playing AI slots are full
-
-
-challenge game modes
+challenge game modes (x -> means completed / added)
 -------------------------
-1 - 5x5 game 0 komi against stronger AI
-2 - GO against high level opponent with high negative komi
-3 - 17x17 board - normal game
-4 - same color GO - slightly weaker AI
+1 - 5x5 game 0 komi against stronger AI x
+2 - GO against high level opponent with high negative komi x
+3 - 17x17 board - normal game x
+4 - same color GO - slightly weaker AI x
 5 - You play W in handicap game - might have to rework a lot
 6 - Disappearing stones - the last stone placed disappears
 7 - swap colors randomly
 8 - simultainious stone placement with AI and player
 9 - time limit go - player has a time limit for their moves. 30s per move ?
+
+msg ->
+I created a beginner-friendly Go program that starts with an easy AI and gradually increases in difficulty as you play. Try it out here: https://zxnashx.itch.io/beginner-go-game. (Windows only)
+
+So far, it has worked well on the computers I've tested. My goal was to make each game feel unique and keep the experience fresh through random challenges and a variety of AI opponents.
+
+I'd love to hear your thoughts! Any feedback would be greatly appreciated: https://forms.gle/tSRa7JJkYUg7eswz6

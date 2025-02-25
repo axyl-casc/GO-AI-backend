@@ -8,7 +8,6 @@
 - **Pachi** - A Monte Carlo Tree Search-based Go AI that can play at a relatively high level. It is used for research and development in Go AI.
 - **Tenuki** - A Go engine designed for browser-based play and analysis, emphasizing accessibility and ease of use. Used in the backend to ensure the games were played correctly.
 - **Go Playing Program "Aya" Ver 6.34 (English, 2008/01/13)** - A long-standing Go AI developed in Japan that has been used in various tournaments and research applications.
-- **GoGameGuru puzzles** - A collection of Go problems and puzzles designed to help players improve their reading ability, tactical skills, and overall game understanding.
 - **AGA Rules** - The American Go Association's official rule set, used in tournaments and online play, which influences many modern implementations of Go-playing software.
 - **DeepSeek** - An AI-assisted code generation tool that has been used for implementing and optimizing Go-related algorithms and systems.
 - **ChatGPT** - Utilized for generating images and assisting in content creation for various Go-related educational and instructional materials.
